@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt para Análise de Perfil do Cliente | Negociação para Vendas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1B4F72 0%, #2874A6 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-bottom: 15px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #1ABC9C, #16A085);
+            color: white;
+            padding: 20px 25px;
+        }
+
+        .card-header.purple {
+            background: linear-gradient(135deg, #8E44AD, #9B59B6);
+        }
+
+        .card-header.blue {
+            background: linear-gradient(135deg, #3498DB, #2980B9);
+        }
+
+        .card-header.orange {
+            background: linear-gradient(135deg, #E67E22, #D35400);
+        }
+
+        .card-header h2 {
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-body {
+            padding: 25px;
+        }
+
+        /* Intro Box */
+        .intro-box {
+            background: linear-gradient(135deg, #E8F6F3, #D1F2EB);
+            border-left: 4px solid #1ABC9C;
+            padding: 20px;
+            border-radius: 0 12px 12px 0;
+            margin-bottom: 25px;
+        }
+
+        .intro-box h3 {
+            color: #0E6655;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .intro-box p {
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .intro-box ul {
+            margin-top: 10px;
+            margin-left: 20px;
+            color: #333;
+        }
+
+        .intro-box li {
+            margin-bottom: 5px;
+        }
+
+        /* Steps */
+        .steps-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .step {
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+            padding: 15px;
+            background: #F8F9FA;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .step-number {
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, #1ABC9C, #16A085);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin: 0 auto 10px;
+        }
+
+        .step h4 {
+            font-size: 0.9em;
+            color: #1B4F72;
+        }
+
+        /* Form Groups */
+        .section-title {
+            font-size: 1.1em;
+            color: #1B4F72;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #E0E0E0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+        .form-group label .hint {
+            font-weight: normal;
+            color: #666;
+            font-size: 0.85em;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            font-size: 0.95em;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: #1ABC9C;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        /* Prompt Output */
+        .prompt-output {
+            background: #1E1E1E;
+            color: #D4D4D4;
+            border-radius: 12px;
+            padding: 25px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            max-height: 500px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .prompt-output .highlight {
+            color: #4EC9B0;
+            font-weight: bold;
+        }
+
+        .prompt-output .section-marker {
+            color: #CE9178;
+            font-weight: bold;
+        }
+
+        .prompt-output .variable {
+            color: #9CDCFE;
+            background: rgba(156, 220, 254, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* Copy Button */
+        .copy-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .copy-info {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1ABC9C, #16A085);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(26, 188, 156, 0.4);
+        }
+
+        .btn-secondary {
+            background: #E0E0E0;
+            color: #555;
+        }
+
+        .btn-secondary:hover {
+            background: #D0D0D0;
+        }
+
+        .btn-copy {
+            background: linear-gradient(135deg, #3498DB, #2980B9);
+            color: white;
+        }
+
+        .btn-copy:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+        }
+
+        .btn-copy.copied {
+            background: linear-gradient(135deg, #27AE60, #2ECC71);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        /* Tips Box */
+        .tips-box {
+            background: #FEF9E7;
+            border-left: 4px solid #F39C12;
+            padding: 20px;
+            border-radius: 0 12px 12px 0;
+            margin-top: 20px;
+        }
+
+        .tips-box h4 {
+            color: #9A7D0A;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tips-box ul {
+            margin-left: 20px;
+            color: #333;
+        }
+
+        .tips-box li {
+            margin-bottom: 8px;
+        }
+
+        /* Analysis Types */
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .analysis-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .analysis-item {
+            background: #F8F9FA;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .analysis-item:hover {
+            border-color: #1ABC9C;
+        }
+
+        .analysis-item.selected {
+            border-color: #1ABC9C;
+            background: #E8F6F3;
+        }
+
+        .analysis-item input {
+            display: none;
+        }
+
+        .analysis-item h5 {
+            font-size: 0.85em;
+            color: #1B4F72;
+            margin-bottom: 5px;
+        }
+
+        .analysis-item p {
+            font-size: 0.75em;
+            color: #666;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: white;
+            opacity: 0.8;
+            margin-top: 20px;
+            padding: 20px;
+        }
+
+        /* Print */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .btn, .btn-group {
+                display: none;
+            }
+            .prompt-output {
+                background: #F5F5F5;
+                color: #333;
+                border: 1px solid #DDD;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="badge">📥 RECURSO - SEÇÃO 5.3</div>
+            <h1>🤖 Prompt para Análise de Perfil do Cliente</h1>
+            <p>Use IA para preparar suas negociações de forma estratégica</p>
+        </div>
+
+        <!-- Instruções -->
+        <div class="card">
+            <div class="card-header">
+                <h2>📋 Como Usar Este Recurso</h2>
+            </div>
+            <div class="card-body">
+                <div class="intro-box">
+                    <h3>🎯 Objetivo</h3>
+                    <p>
+                        Este gerador cria um <strong>prompt personalizado</strong> para você usar em ferramentas de IA 
+                        (ChatGPT, Claude, Gemini, etc.) e obter uma análise estratégica completa do perfil do seu cliente 
+                        antes de uma negociação importante.
+                    </p>
+                </div>
+
+                <div class="steps-container">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <h4>Preencha os dados do cliente</h4>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <h4>Selecione as análises desejadas</h4>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <h4>Gere o prompt personalizado</h4>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <h4>Copie e cole na sua IA</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dados da Empresa -->
+        <div class="card">
+            <div class="card-header purple">
+                <h2>🏢 Dados da Empresa do Cliente</h2>
+            </div>
+            <div class="card-body">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Nome da Empresa</label>
+                        <input type="text" id="empresa-nome" placeholder="Ex: Distribuidora ABC Ltda">
+                    </div>
+                    <div class="form-group">
+                        <label>Setor de Atuação</label>
+                        <input type="text" id="empresa-setor" placeholder="Ex: Comércio atacadista de alimentos">
+                    </div>
+                    <div class="form-group">
+                        <label>Porte da Empresa</label>
+                        <select id="empresa-porte">
+                            <option value="">Selecione...</option>
+                            <option value="Microempresa (até 9 funcionários)">Microempresa (até 9 funcionários)</option>
+                            <option value="Pequena empresa (10-49 funcionários)">Pequena empresa (10-49 funcionários)</option>
+                            <option value="Média empresa (50-249 funcionários)">Média empresa (50-249 funcionários)</option>
+                            <option value="Grande empresa (250+ funcionários)">Grande empresa (250+ funcionários)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Localização <span class="hint">(cidade/estado)</span></label>
+                        <input type="text" id="empresa-local" placeholder="Ex: São Paulo, SP">
+                    </div>
+                    <div class="form-group">
+                        <label>Tempo de Mercado</label>
+                        <input type="text" id="empresa-tempo" placeholder="Ex: 15 anos">
+                    </div>
+                    <div class="form-group">
+                        <label>Faturamento Anual <span class="hint">(se souber)</span></label>
+                        <input type="text" id="empresa-faturamento" placeholder="Ex: R$ 5 a 10 milhões/ano">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dados do Decisor -->
+        <div class="card">
+            <div class="card-header blue">
+                <h2>👤 Perfil do Decisor</h2>
+            </div>
+            <div class="card-body">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Nome do Decisor</label>
+                        <input type="text" id="decisor-nome" placeholder="Ex: Carlos Roberto Silva">
+                    </div>
+                    <div class="form-group">
+                        <label>Cargo</label>
+                        <input type="text" id="decisor-cargo" placeholder="Ex: Diretor Comercial">
+                    </div>
+                    <div class="form-group">
+                        <label>Idade Aproximada</label>
+                        <select id="decisor-idade">
+                            <option value="">Selecione...</option>
+                            <option value="25-35 anos">25-35 anos</option>
+                            <option value="35-45 anos">35-45 anos</option>
+                            <option value="45-55 anos">45-55 anos</option>
+                            <option value="55-65 anos">55-65 anos</option>
+                            <option value="65+ anos">65+ anos</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Formação <span class="hint">(se souber)</span></label>
+                        <input type="text" id="decisor-formacao" placeholder="Ex: Administração">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Comportamento Observado <span class="hint">(o que você percebeu nos contatos anteriores)</span></label>
+                    <textarea id="decisor-comportamento" placeholder="Ex: Pessoa direta, faz muitas perguntas técnicas, responde rápido por WhatsApp, pediu várias referências de outros clientes..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contexto da Negociação -->
+        <div class="card">
+            <div class="card-header orange">
+                <h2>💼 Contexto da Negociação</h2>
+            </div>
+            <div class="card-body">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Seu Produto/Serviço</label>
+                        <input type="text" id="produto" placeholder="Ex: Sistema de gestão comercial">
+                    </div>
+                    <div class="form-group">
+                        <label>Valor Aproximado</label>
+                        <input type="text" id="valor" placeholder="Ex: R$ 50.000">
+                    </div>
+                    <div class="form-group">
+                        <label>Histórico de Relacionamento</label>
+                        <select id="historico">
+                            <option value="">Selecione...</option>
+                            <option value="Primeiro contato">Primeiro contato</option>
+                            <option value="Já houve contatos anteriores">Já houve contatos anteriores</option>
+                            <option value="Cliente antigo que voltou">Cliente antigo que voltou</option>
+                            <option value="Indicação de outro cliente">Indicação de outro cliente</option>
+                            <option value="Cliente ativo comprando mais">Cliente ativo comprando mais</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Urgência Percebida</label>
+                        <select id="urgencia">
+                            <option value="">Selecione...</option>
+                            <option value="Alta - precisa resolver rapidamente">Alta - precisa resolver rapidamente</option>
+                            <option value="Média - tem prazo mas não imediato">Média - tem prazo mas não imediato</option>
+                            <option value="Baixa - está pesquisando para o futuro">Baixa - está pesquisando para o futuro</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Necessidade/Problema Identificado</label>
+                    <textarea id="necessidade" placeholder="Ex: A empresa está crescendo e o sistema atual não suporta o volume de pedidos. Já tiveram problemas de perda de informação e retrabalho."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Concorrentes que Estão Avaliando <span class="hint">(se souber)</span></label>
+                    <textarea id="concorrentes" placeholder="Ex: Estão cotando também com a Empresa X e com a Empresa Y. Já usaram o sistema Z no passado e não gostaram."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tipo de Análise -->
+        <div class="card">
+            <div class="card-header">
+                <h2>🔍 Selecione as Análises Desejadas</h2>
+            </div>
+            <div class="card-body">
+                <p style="color: #666; margin-bottom: 15px;">Clique para selecionar quais análises você quer que a IA faça:</p>
+                
+                <div class="analysis-grid">
+                    <label class="analysis-item selected">
+                        <input type="checkbox" id="analise-perfil" checked>
+                        <h5>🎭 Perfil Comportamental</h5>
+                        <p>Estilo de comunicação e motivadores</p>
+                    </label>
+                    <label class="analysis-item selected">
+                        <input type="checkbox" id="analise-estrategia" checked>
+                        <h5>🎯 Estratégia de Reunião</h5>
+                        <p>Como abordar e conduzir</p>
+                    </label>
+                    <label class="analysis-item selected">
+                        <input type="checkbox" id="analise-valor" checked>
+                        <h5>💎 Proposta de Valor</h5>
+                        <p>Argumentos personalizados</p>
+                    </label>
+                    <label class="analysis-item selected">
+                        <input type="checkbox" id="analise-objecoes" checked>
+                        <h5>🛡️ Antecipação de Objeções</h5>
+                        <p>Top 5 objeções e respostas</p>
+                    </label>
+                    <label class="analysis-item">
+                        <input type="checkbox" id="analise-relacionamento">
+                        <h5>🤝 Estratégias de Relacionamento</h5>
+                        <p>Como construir rapport</p>
+                    </label>
+                    <label class="analysis-item">
+                        <input type="checkbox" id="analise-fechamento">
+                        <h5>✅ Táticas de Fechamento</h5>
+                        <p>Sinais e técnicas</p>
+                    </label>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="gerarPrompt()">🚀 Gerar Prompt Personalizado</button>
+                    <button class="btn btn-secondary" onclick="limparFormulario()">🗑️ Limpar Tudo</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Prompt Gerado -->
+        <div class="card" id="prompt-card" style="display: none;">
+            <div class="card-header" style="background: linear-gradient(135deg, #2C3E50, #34495E);">
+                <h2>📝 Seu Prompt Personalizado</h2>
+            </div>
+            <div class="card-body">
+                <div class="copy-container">
+                    <span class="copy-info">💡 Copie o texto abaixo e cole no ChatGPT, Claude ou sua IA preferida</span>
+                    <button class="btn btn-copy" id="btn-copiar" onclick="copiarPrompt()">📋 Copiar Prompt</button>
+                </div>
+                
+                <div class="prompt-output" id="prompt-output"></div>
+
+                <div class="tips-box">
+                    <h4>💡 Dicas para Melhores Resultados</h4>
+                    <ul>
+                        <li><strong>Quanto mais dados você fornecer</strong>, mais precisa será a análise da IA</li>
+                        <li><strong>Use a resposta como ponto de partida</strong> - ajuste com seu conhecimento do cliente</li>
+                        <li><strong>Faça perguntas de follow-up</strong> para aprofundar pontos específicos</li>
+                        <li><strong>Não compartilhe dados confidenciais</strong> do cliente em ferramentas públicas</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>Negociação para Vendas: Método do Professor</strong></p>
+            <p>Prof. Paulo H. Donassolo</p>
+            <p style="font-size: 0.9em; margin-top: 10px;">📚 Seção 5.3 - INFORMAÇÃO</p>
+        </div>
+    </div>
+
+    <script>
+        // Toggle análise selection
+        document.querySelectorAll('.analysis-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const checkbox = this.querySelector('input[type="checkbox"]');
+                checkbox.checked = !checkbox.checked;
+                this.classList.toggle('selected', checkbox.checked);
+            });
+        });
+
+        function gerarPrompt() {
+            // Coletar dados
+            const empresaNome = document.getElementById('empresa-nome').value || '[nome da empresa]';
+            const empresaSetor = document.getElementById('empresa-setor').value || '[setor de atuação]';
+            const empresaPorte = document.getElementById('empresa-porte').value || '[porte da empresa]';
+            const empresaLocal = document.getElementById('empresa-local').value || '[localização]';
+            const empresaTempo = document.getElementById('empresa-tempo').value || '[tempo de mercado]';
+            const empresaFaturamento = document.getElementById('empresa-faturamento').value || '[não informado]';
+            
+            const decisorNome = document.getElementById('decisor-nome').value || '[nome do decisor]';
+            const decisorCargo = document.getElementById('decisor-cargo').value || '[cargo]';
+            const decisorIdade = document.getElementById('decisor-idade').value || '[faixa etária]';
+            const decisorFormacao = document.getElementById('decisor-formacao').value || '[não informado]';
+            const decisorComportamento = document.getElementById('decisor-comportamento').value || '[descrever comportamento observado]';
+            
+            const produto = document.getElementById('produto').value || '[produto/serviço]';
+            const valor = document.getElementById('valor').value || '[valor]';
+            const historico = document.getElementById('historico').value || '[histórico]';
+            const urgencia = document.getElementById('urgencia').value || '[urgência]';
+            const necessidade = document.getElementById('necessidade').value || '[necessidade identificada]';
+            const concorrentes = document.getElementById('concorrentes').value || '[não informado]';
+
+            // Verificar análises selecionadas
+            const analisePerfil = document.getElementById('analise-perfil').checked;
+            const analiseEstrategia = document.getElementById('analise-estrategia').checked;
+            const analiseValor = document.getElementById('analise-valor').checked;
+            const analiseObjecoes = document.getElementById('analise-objecoes').checked;
+            const analiseRelacionamento = document.getElementById('analise-relacionamento').checked;
+            const analiseFechamento = document.getElementById('analise-fechamento').checked;
+
+            // Construir prompt
+            let prompt = `Analise o seguinte perfil de cliente e forneça insights estratégicos detalhados para uma reunião presencial de negociação:
+
+═══════════════════════════════════════════
+           DADOS DO CLIENTE
+═══════════════════════════════════════════
+
+📊 INFORMAÇÕES DA EMPRESA:
+• Nome da empresa: ${empresaNome}
+• Setor de atuação: ${empresaSetor}
+• Porte da empresa: ${empresaPorte}
+• Localização: ${empresaLocal}
+• Tempo de mercado: ${empresaTempo}
+• Faturamento anual: ${empresaFaturamento}
+
+👤 PERFIL DO DECISOR:
+• Nome: ${decisorNome}
+• Cargo: ${decisorCargo}
+• Idade aproximada: ${decisorIdade}
+• Formação: ${decisorFormacao}
+
+🔍 COMPORTAMENTO OBSERVADO:
+${decisorComportamento}
+
+═══════════════════════════════════════════
+        CONTEXTO DA NEGOCIAÇÃO
+═══════════════════════════════════════════
+
+💼 PRODUTO/SERVIÇO OFERECIDO:
+${produto}
+
+💰 VALOR APROXIMADO:
+${valor}
+
+🤝 HISTÓRICO DE RELACIONAMENTO:
+${historico}
+
+⏰ URGÊNCIA PERCEBIDA:
+${urgencia}
+
+🎯 NECESSIDADE/PROBLEMA IDENTIFICADO:
+${necessidade}
+
+🏁 CONCORRENTES AVALIADOS:
+${concorrentes}
+
+═══════════════════════════════════════════
+          ANÁLISE SOLICITADA
+═══════════════════════════════════════════
+
+Com base nestas informações, forneça uma análise estratégica completa:
+
+`;
+
+            // Adicionar seções de análise conforme selecionado
+            let sectionNumber = 1;
+
+            if (analisePerfil) {
+                prompt += `${sectionNumber}. PERFIL COMPORTAMENTAL E ESTILO DE COMUNICAÇÃO
+• Estilo de comunicação preferido (direto, consultivo, técnico, relacional)
+• Principais motivadores de decisão
+• Possíveis resistências ou medos
+• Nível de conhecimento técnico sobre o produto/serviço
+• Preferências de relacionamento comercial
+
+`;
+                sectionNumber++;
+            }
+
+            if (analiseEstrategia) {
+                prompt += `${sectionNumber}. ESTRATÉGIA ESPECÍFICA PARA REUNIÃO PRESENCIAL
+• Melhor abordagem de abertura para este perfil
+• Como estruturar a apresentação para engajar este cliente
+• Linguagem corporal e sinais a observar
+• Ritmo ideal da reunião
+• Ambiente ideal para a conversa
+
+`;
+                sectionNumber++;
+            }
+
+            if (analiseValor) {
+                prompt += `${sectionNumber}. PROPOSTA DE VALOR PERSONALIZADA
+• Benefícios que mais ressoam com este cliente específico
+• ROI e argumentos quantitativos relevantes para o setor
+• Casos de sucesso similares para mencionar
+• Principais diferenciais competitivos a enfatizar
+• Garantias ou reduções de risco a oferecer
+
+`;
+                sectionNumber++;
+            }
+
+            if (analiseObjecoes) {
+                prompt += `${sectionNumber}. ANTECIPAÇÃO DE OBJEÇÕES
+• Top 5 objeções mais prováveis baseadas no perfil
+• Razões reais por trás de cada objeção
+• Estratégias de resposta mais eficazes
+• Momentos ideais para abordar cada ponto
+• Perguntas para validar se resolveu a objeção
+
+`;
+                sectionNumber++;
+            }
+
+            if (analiseRelacionamento) {
+                prompt += `${sectionNumber}. ESTRATÉGIAS DE RELACIONAMENTO
+• Como construir rapport com este perfil
+• Assuntos de interesse pessoal/profissional
+• Canais de comunicação preferidos
+• Frequência ideal de contato
+• Como manter relacionamento pós-venda
+
+`;
+                sectionNumber++;
+            }
+
+            if (analiseFechamento) {
+                prompt += `${sectionNumber}. TÁTICAS DE FECHAMENTO
+• Sinais de compra específicos a observar
+• Melhor momento para apresentar proposta
+• Alternativas de fechamento mais eficazes
+• Como lidar com "preciso pensar"
+• Próximos passos ideais
+
+`;
+                sectionNumber++;
+            }
+
+            prompt += `═══════════════════════════════════════════
+           FORMATO DA RESPOSTA
+═══════════════════════════════════════════
+
+Seja específico, prático e focado na realidade brasileira de PMEs. Use linguagem direta e profissional. Inclua exemplos concretos sempre que possível. Priorize estratégias testadas e comprovadas.
+
+Estruture sua resposta de forma clara com tópicos e subtópicos para facilitar a consulta durante a preparação da reunião.`;
+
+            // Exibir prompt
+            document.getElementById('prompt-output').textContent = prompt;
+            document.getElementById('prompt-card').style.display = 'block';
+            document.getElementById('prompt-card').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function copiarPrompt() {
+            const prompt = document.getElementById('prompt-output').textContent;
+            navigator.clipboard.writeText(prompt).then(() => {
+                const btn = document.getElementById('btn-copiar');
+                btn.innerHTML = '✅ Copiado!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.innerHTML = '📋 Copiar Prompt';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        function limparFormulario() {
+            if (confirm('Tem certeza que deseja limpar todos os campos?')) {
+                document.querySelectorAll('input[type="text"], textarea').forEach(el => {
+                    el.value = '';
+                });
+                document.querySelectorAll('select').forEach(el => {
+                    el.selectedIndex = 0;
+                });
+                document.getElementById('prompt-card').style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
