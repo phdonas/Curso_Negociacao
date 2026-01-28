@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎯 Gerador CVB - Versão Híbrida IA</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+const { useState } = React;
+
+function CVBGerador() {
+  const [step, setStep] = useState(1);
+  const [showPrompt, setShowPrompt] = useState(false);
+  const [generatedPrompt, setGeneratedPrompt] = useState('');
+  const [aiResponse, setAiResponse] = useState('');
+  const [copySuccess, setCopySuccess] = useState(false);
+  const [promptCopied, setPromptCopied] = useState(false);
+  const [error, setError] = useState(null);
+  
+  const [context, setContext] = useState({
+    empresa: '',
+    solucao: '',
+    mercadoAlvo: '',
+    descricao: ''
+  });
+  
+  const [quantities, setQuantities] = useState({
+    caracteristicas: 5,
+    vantagens: 5,
+    beneficios: 5,
+    custos: 3
+  });
+  
+  const [cvbs, setCvbs] = useState([]);
+  const [custos, setCustos] = useState([]);
+  
+  const [clientProfile, setClientProfile] = useState({
+    cargo: '',
+    setor: '',
+    tamanhoEmpresa: 'Média (100-499 funcionários)',
+    desafios: '',
+    objetivos: '',
+    objecoesPrevias: ''
+  });
+  
+  const [aiResults, setAiResults] = useState({
+    argumentosCV: [],
+    argumentosVC: [],
+    matrizObjecoes: []
+  });
+
+  const initializeCVBs = () => {
+    // Preservar dados existentes ou criar novos
+    const newCvbs = [];
+    const max = Math.max(quantities.caracteristicas, quantities.vantagens, quantities.beneficios);
+    for (let i = 0; i < max; i++) {
+      const existing = cvbs[i];
+      newCvbs.push({
+        id: i + 1,
+        caracteristica: existing?.caracteristica !== undefined ? existing.caracteristica : (i < quantities.caracteristicas ? '' : null),
+        vantagem: existing?.vantagem !== undefined ? existing.vantagem : (i < quantities.vantagens ? '' : null),
+        beneficio: existing?.beneficio !== undefined ? existing.beneficio : (i < quantities.beneficios ? '' : null)
+      });
+    }
+    setCvbs(newCvbs);
+    
+    // Preservar custos existentes ou criar novos
+    const newCustos = [];
+    for (let i = 0; i < quantities.custos; i++) {
+      const existing = custos[i];
+      newCustos.push({ 
+        id: i + 1, 
+        tipo: existing?.tipo || '', 
+        descricao: existing?.descricao || '', 
+        valor: existing?.valor || '' 
+      });
+    }
+    setCustos(newCustos);
+    setStep(3);
+  };
+
+  const updateCVB = (id, field, value) => {
+    setCvbs(prev => prev.map(cvb => 
+      cvb.id === id ? { ...cvb, [field]: value } : cvb
+    ));
+  };
+
+  const updateCusto = (id, field, value) => {
+    setCustos(prev => prev.map(c => 
+      c.id === id ? { ...c, [field]: value } : c
+    ));
+  };
+
+  const validateData = () => {
+    const errors = [];
+    if (!context.empresa?.trim()) errors.push("Nome da empresa");
+    if (!context.solucao?.trim()) errors.push("Nome da solução");
+    if (!clientProfile.cargo?.trim()) errors.push("Cargo do cliente");
+    if (!clientProfile.setor?.trim()) errors.push("Setor do cliente");
+    
+    const cvbsPreenchidos = cvbs.filter(c => 
+      c.caracteristica?.trim() || c.vantagem?.trim() || c.beneficio?.trim()
+    );
+    if (cvbsPreenchidos.length === 0) {
+      errors.push("Pelo menos 1 item CVB");
+    }
+    return errors;
+  };
+
+  const generatePrompt = () => {
+    const validationErrors = validateData();
+    if (validationErrors.length > 0) {
+      setError(`Por favor, preencha:\n• ${validationErrors.join('\n• ')}`);
+      return;
+    }
+    
+    setError(null);
+    
+    const cvbsPreenchidos = cvbs.filter(c => 
+      c.caracteristica?.trim() || c.vantagem?.trim() || c.beneficio?.trim()
+    );
+    const custosPreenchidos = custos.filter(c => c.tipo?.trim() || c.descricao?.trim());
+    
+    const prompt = `🎯 GERADOR DE ARGUMENTAÇÃO CVB - PROF. PAULO H. DONASSOLO
+
+Por favor, analise os dados abaixo e gere uma argumentação completa de vendas seguindo a metodologia CVB (Características-Vantagens-Benefícios).
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 CONTEXTO DA SOLUÇÃO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Empresa: ${context.empresa}
+Solução: ${context.solucao}
+Mercado-Alvo: ${context.mercadoAlvo || 'Não especificado'}
+${context.descricao ? `Descrição: ${context.descricao}` : ''}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📊 MATRIZ CVB COMPLETA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+${cvbsPreenchidos.map((c, i) => `
+${i + 1}. CVB ${i + 1}:
+   📌 Característica: ${c.caracteristica || 'N/A'}
+   ⚡ Vantagem: ${c.vantagem || 'N/A'}
+   💎 Benefício: ${c.beneficio || 'N/A'}
+`).join('')}
+
+${custosPreenchidos.length > 0 ? `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+💰 CUSTOS IDENTIFICADOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+${custosPreenchidos.map((c, i) => `${i + 1}. ${c.tipo}: ${c.descricao} (${c.valor})`).join('\n')}
+` : ''}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+👤 PERFIL DO CLIENTE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Cargo: ${clientProfile.cargo}
+Setor: ${clientProfile.setor}
+Tamanho da Empresa: ${clientProfile.tamanhoEmpresa}
+${clientProfile.desafios ? `\nDesafios:\n${clientProfile.desafios}` : ''}
+${clientProfile.objetivos ? `\nObjetivos:\n${clientProfile.objetivos}` : ''}
+${clientProfile.objecoesPrevias ? `\nObjeções Prévias Conhecidas:\n${clientProfile.objecoesPrevias}` : ''}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📝 INSTRUÇÕES DE GERAÇÃO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Com base nas informações acima, gere:
+
+1️⃣ ARGUMENTOS: CARACTERÍSTICA → BENEFÍCIO
+Gere 5 argumentos completos que partem da característica e chegam ao benefício.
+Cada argumento deve:
+- Ser contextualizado para o perfil do cliente
+- Seguir a estrutura CVB de forma natural
+- Incluir uma explicação da estrutura utilizada
+
+2️⃣ ARGUMENTOS: BENEFÍCIO → CARACTERÍSTICA  
+Gere 5 argumentos completos que partem do benefício e chegam na característica.
+Cada argumento deve:
+- Começar pelo problema/necessidade do cliente
+- Conectar ao benefício e depois à característica técnica
+- Incluir uma explicação da estrutura utilizada
+
+3️⃣ MATRIZ DE OBJEÇÕES
+Gere 5 objeções prováveis e para cada uma:
+- 3 perguntas investigativas (técnica SPIN/consultiva)
+- 3 argumentos de resposta (usando os CVBs)
+- 3 evidências/provas que podem ser usadas
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️ FORMATO DA RESPOSTA (COPIE EXATAMENTE ASSIM)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Retorne APENAS o JSON abaixo preenchido (sem explicações antes ou depois):
+
+{
+  "argumentosCaracteristicaParaBeneficio": [
+    {
+      "argumento": "texto completo do argumento",
+      "estrutura": "explicação da estrutura CVB usada"
+    }
+  ],
+  "argumentosBeneficioParaCaracteristica": [
+    {
+      "argumento": "texto completo do argumento",
+      "estrutura": "explicação da estrutura usado"
+    }
+  ],
+  "matrizObjecoes": [
+    {
+      "objecao": "texto da objeção",
+      "perguntasPossiveis": ["pergunta 1", "pergunta 2", "pergunta 3"],
+      "argumentosPossiveis": ["argumento 1", "argumento 2", "argumento 3"],
+      "evidencias": ["evidência 1", "evidência 2", "evidência 3"]
+    }
+  ]
+}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 CONTEXTO ADICIONAL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+- Mercado: Brasil, PMEs (pequenas e médias empresas)
+- Linguagem: Profissional mas acessível
+- Foco: Argumentação prática e aplicável imediatamente
+- Estilo: Prof. Paulo H. Donassolo - cases reais, exemplos do mercado brasileiro
+
+Por favor, gere o JSON completo agora.`;
+
+    setGeneratedPrompt(prompt);
+    setShowPrompt(true);
+  };
+
+  const copyPromptToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(generatedPrompt);
+      setPromptCopied(true);
+      setTimeout(() => setPromptCopied(false), 3000);
+    } catch (err) {
+      setError('Erro ao copiar prompt');
+    }
+  };
+
+  const processAIResponse = () => {
+    if (!aiResponse.trim()) {
+      setError('Cole a resposta da IA no campo acima');
+      return;
+    }
+
+    try {
+      // Limpar a resposta
+      let jsonStr = aiResponse.trim();
+      
+      // Remover blocos de código markdown se existirem
+      jsonStr = jsonStr.replace(/```json\s*/gi, '').replace(/```\s*/g, '');
+      
+      // Tentar extrair apenas o JSON
+      const jsonMatch = jsonStr.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        jsonStr = jsonMatch[0];
+      }
+      
+      // Parse do JSON
+      const parsed = JSON.parse(jsonStr);
+      
+      setAiResults({
+        argumentosCV: parsed.argumentosCaracteristicaParaBeneficio || [],
+        argumentosVC: parsed.argumentosBeneficioParaCaracteristica || [],
+        matrizObjecoes: parsed.matrizObjecoes || []
+      });
+      
+      setShowPrompt(false);
+      setStep(5);
+      setError(null);
+      
+    } catch (err) {
+      setError('Erro ao processar resposta. Verifique se colou o JSON completo da IA.');
+      console.error('Erro:', err);
+    }
+  };
+
+  const copyToClipboard = async () => {
+    try {
+      const htmlContent = `<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><style>
+body{font-family:Arial;line-height:1.6;color:#333;max-width:1200px;margin:0 auto;padding:20px}
+h1{color:#0984e3;font-size:28px;border-bottom:3px solid #0984e3;padding-bottom:10px}
+h2{color:#00b894;font-size:22px;margin-top:30px}
+.header-box{background:linear-gradient(135deg,#00b894,#0984e3);color:white;padding:25px;border-radius:10px;margin-bottom:30px}
+.context-box{background:#e8f5f1;border-left:4px solid #00b894;padding:15px;margin-bottom:25px;border-radius:5px}
+.argumento-box{background:#f8f9fa;border-left:4px solid #4da6ff;padding:20px;margin-bottom:15px;border-radius:8px}
+.argumento-box.verde{border-left-color:#00b894}
+.estrutura-box{background:#e9ecef;padding:12px;border-radius:5px;color:#666}
+table{width:100%;border-collapse:collapse;margin-top:15px}
+th{background:#dc3545;color:white;padding:12px;text-align:left}
+td{padding:12px;border-bottom:1px solid #ddd;vertical-align:top}
+tr:nth-child(even){background:#f8f9fa}
+ul{margin:5px 0;padding-left:20px}
+</style></head><body>
+<div class="header-box">
+<h1 style="color:white;border:none;margin:0">🎯 Argumentação CVB - ${context.solucao}</h1>
+<p style="margin:5px 0 0 0">Prof. Paulo H. Donassolo</p>
+</div>
+<div class="context-box">
+<strong style="color:#00b894">${context.solucao}</strong><br>
+<span>${context.empresa} • ${context.mercadoAlvo}</span>
+</div>
+<h2 style="color:#4da6ff">🔵 Argumentos: Característica → Benefício</h2>
+${aiResults.argumentosCV.map((arg, i) => `
+<div class="argumento-box">
+<div style="font-weight:bold;color:#4da6ff;font-size:12px;margin-bottom:8px">ARGUMENTO ${i + 1}</div>
+<div style="margin-bottom:12px">${arg.argumento}</div>
+<div class="estrutura-box"><strong>Estrutura:</strong> ${arg.estrutura}</div>
+</div>`).join('')}
+<h2 style="color:#00b894">🟢 Argumentos: Benefício → Característica</h2>
+${aiResults.argumentosVC.map((arg, i) => `
+<div class="argumento-box verde">
+<div style="font-weight:bold;color:#00b894;font-size:12px;margin-bottom:8px">ARGUMENTO ${i + 1}</div>
+<div style="margin-bottom:12px">${arg.argumento}</div>
+<div class="estrutura-box"><strong>Estrutura:</strong> ${arg.estrutura}</div>
+</div>`).join('')}
+<h2 style="color:#dc3545">🔴 Matriz de Objeções</h2>
+<table>
+<thead><tr><th>Objeção</th><th>Perguntas</th><th>Argumentos</th><th>Evidências</th></tr></thead>
+<tbody>
+${aiResults.matrizObjecoes.map(obj => `
+<tr>
+<td><strong style="color:#dc3545">${obj.objecao}</strong></td>
+<td><ul>${obj.perguntasPossiveis.map(p => `<li>${p}</li>`).join('')}</ul></td>
+<td><ul>${obj.argumentosPossiveis.map(a => `<li>${a}</li>`).join('')}</ul></td>
+<td><ul>${obj.evidencias.map(e => `<li>${e}</li>`).join('')}</ul></td>
+</tr>`).join('')}
+</tbody></table>
+<div style="margin-top:40px;padding-top:20px;border-top:2px solid #ddd;text-align:center;color:#666">
+<p><strong>💡 VALOR = BENEFÍCIOS - CUSTOS</strong></p>
+<p>Gerado em: ${new Date().toLocaleDateString('pt-BR')}</p>
+</div></body></html>`;
+
+      const textContent = `🎯 ARGUMENTAÇÃO CVB - ${context.solucao}
+Prof. Paulo H. Donassolo
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 CONTEXTO
+${context.solucao} • ${context.empresa}
+
+🔵 ARGUMENTOS: CARACTERÍSTICA → BENEFÍCIO
+${aiResults.argumentosCV.map((arg, i) => `
+▶ ARGUMENTO ${i + 1}
+${arg.argumento}
+Estrutura: ${arg.estrutura}`).join('\n')}
+
+🟢 ARGUMENTOS: BENEFÍCIO → CARACTERÍSTICA
+${aiResults.argumentosVC.map((arg, i) => `
+▶ ARGUMENTO ${i + 1}
+${arg.argumento}
+Estrutura: ${arg.estrutura}`).join('\n')}
+
+🔴 MATRIZ DE OBJEÇÕES
+${aiResults.matrizObjecoes.map((obj, i) => `
+${i + 1}. ${obj.objecao}
+Perguntas: ${obj.perguntasPossiveis.map(p => `• ${p}`).join('\n')}
+Argumentos: ${obj.argumentosPossiveis.map(a => `• ${a}`).join('\n')}
+Evidências: ${obj.evidencias.map(e => `• ${e}`).join('\n')}`).join('\n\n')}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💡 VALOR = BENEFÍCIOS - CUSTOS
+${new Date().toLocaleDateString('pt-BR')}`;
+
+      const clipboardItem = new ClipboardItem({
+        'text/html': new Blob([htmlContent], {type: 'text/html'}),
+        'text/plain': new Blob([textContent], {type: 'text/plain'})
+      });
+
+      await navigator.clipboard.write([clipboardItem]);
+      setCopySuccess(true);
+      setTimeout(() => setCopySuccess(false), 3000);
+
+    } catch (err) {
+      setError('Erro ao copiar');
+    }
+  };
+
+  const styles = {
+    container: {minHeight:'100vh',background:'linear-gradient(135deg,#1a1a2e,#16213e)',color:'#e8e8e8',fontFamily:'system-ui',padding:'20px'},
+    header: {background:'linear-gradient(135deg,#00b894,#0984e3)',padding:'40px',borderRadius:'20px',marginBottom:'30px',textAlign:'center'},
+    title: {fontSize:'2.5rem',marginBottom:'10px',color:'white'},
+    subtitle: {fontSize:'1rem',color:'rgba(255,255,255,0.9)',marginTop:'10px'},
+    progressBar: {display:'flex',justifyContent:'space-between',marginBottom:'30px',gap:'10px',flexWrap:'wrap'},
+    progressStep: (active,completed) => ({flex:'1',minWidth:'150px',padding:'15px',background:completed?'rgba(0,184,148,0.1)':active?'rgba(0,184,148,0.2)':'rgba(255,255,255,0.05)',borderRadius:'12px',textAlign:'center',fontWeight:'600',border:active?'2px solid #00b894':'2px solid transparent',color:active||completed?'#00b894':'#e8e8e8'}),
+    card: {background:'rgba(255,255,255,0.05)',borderRadius:'20px',padding:'30px',marginBottom:'20px',border:'1px solid rgba(255,255,255,0.1)'},
+    cardTitle: {fontSize:'1.8rem',marginBottom:'20px',display:'flex',alignItems:'center',gap:'10px'},
+    formGroup: {marginBottom:'20px'},
+    label: {display:'block',marginBottom:'8px',fontWeight:'600',color:'#00b894'},
+    input: {width:'100%',padding:'12px',background:'rgba(255,255,255,0.08)',border:'1px solid rgba(255,255,255,0.1)',borderRadius:'8px',color:'#e8e8e8',fontSize:'1rem'},
+    textarea: {width:'100%',padding:'12px',background:'rgba(255,255,255,0.08)',border:'1px solid rgba(255,255,255,0.1)',borderRadius:'8px',color:'#e8e8e8',fontSize:'1rem',minHeight:'100px',resize:'vertical',fontFamily:'monospace'},
+    formRow: {display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(250px,1fr))',gap:'20px'},
+    buttonGroup: {display:'flex',justifyContent:'space-between',marginTop:'30px',gap:'15px',flexWrap:'wrap'},
+    button: {padding:'15px 30px',border:'none',borderRadius:'12px',fontSize:'1rem',fontWeight:'600',cursor:'pointer',transition:'all 0.3s',display:'inline-flex',alignItems:'center',gap:'8px'},
+    buttonPrimary: {background:'linear-gradient(135deg,#00b894,#0984e3)',color:'white'},
+    buttonSecondary: {background:'rgba(255,255,255,0.1)',color:'#e8e8e8'},
+    buttonSuccess: {background:'linear-gradient(135deg,#00b894,#55efc4)',color:'white'},
+    buttonWarning: {background:'linear-gradient(135deg,#fdcb6e,#e17055)',color:'white'},
+    table: {width:'100%',borderCollapse:'collapse',marginTop:'20px'},
+    th: {background:'rgba(0,184,148,0.2)',padding:'12px',textAlign:'left',fontWeight:'600'},
+    td: {padding:'10px',borderBottom:'1px solid rgba(255,255,255,0.05)'},
+    resultCard: (color) => ({background:'rgba(255,255,255,0.05)',borderRadius:'12px',padding:'20px',marginBottom:'15px',borderLeft:`4px solid ${color}`}),
+    modal: {position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.9)',display:'flex',alignItems:'center',justifyContent:'center',padding:'20px',zIndex:1000,overflowY:'auto'},
+    modalContent: {background:'#1a1a2e',borderRadius:'20px',padding:'30px',maxWidth:'900px',width:'100%',maxHeight:'90vh',overflowY:'auto',border:'2px solid #00b894'},
+    promptBox: {background:'rgba(0,0,0,0.3)',padding:'20px',borderRadius:'12px',fontFamily:'monospace',fontSize:'14px',lineHeight:'1.6',whiteSpace:'pre-wrap',marginBottom:'20px',border:'1px solid rgba(0,184,148,0.3)',maxHeight:'500px',overflowY:'auto'}
+  };
+
+  return (
+    <div style={styles.container}>
+      <header style={styles.header}>
+        <h1 style={styles.title}>🎯 Gerador CVB - Versão Híbrida</h1>
+        <p style={styles.subtitle}>Workflow com IA Externa | Prof. Paulo H. Donassolo</p>
+        <p style={{fontSize:'0.9rem',color:'rgba(255,255,255,0.7)',marginTop:'15px'}}>
+          📋 Você preenche → 📤 Copia prompt → 🤖 Cola na IA → 📥 Cola resposta → ✨ Resultado formatado
+        </p>
+      </header>
+      
+      <div style={styles.progressBar}>
+        {['Contexto','Quantidades','CVB & Custos','Perfil Cliente','Resultados'].map((label,i) => (
+          <div key={i} style={styles.progressStep(step===i+1,step>i+1)}>
+            {step>i+1?'✓':i+1} {label}
+          </div>
+        ))}
+      </div>
+      
+      {step===1 && (
+        <div style={styles.card}>
+          <h2 style={styles.cardTitle}>📋 Contexto da Solução</h2>
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Nome da Empresa *</label>
+            <input style={styles.input} value={context.empresa} onChange={e=>setContext({...context,empresa:e.target.value})} placeholder="Ex: TechSolutions Brasil"/>
+          </div>
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Nome da Solução/Produto *</label>
+            <input style={styles.input} value={context.solucao} onChange={e=>setContext({...context,solucao:e.target.value})} placeholder="Ex: ERP Cloud Integrado"/>
+          </div>
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Mercado-Alvo</label>
+            <input style={styles.input} value={context.mercadoAlvo} onChange={e=>setContext({...context,mercadoAlvo:e.target.value})} placeholder="Ex: PMEs do setor de varejo"/>
+          </div>
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Descrição Adicional</label>
+            <textarea style={styles.textarea} value={context.descricao} onChange={e=>setContext({...context,descricao:e.target.value})} placeholder="Descreva características importantes da solução..."/>
+          </div>
+          <div style={styles.buttonGroup}>
+            <button style={{...styles.button,...styles.buttonPrimary}} onClick={()=>setStep(2)}>Próximo →</button>
+          </div>
+        </div>
+      )}
+
+      {step===2 && (
+        <div style={styles.card}>
+          <h2 style={styles.cardTitle}>🔢 Definir Quantidades</h2>
+          <p style={{marginBottom:'20px',color:'#8892b0'}}>Quantos itens você quer preencher em cada categoria?</p>
+          {cvbs.length>0 && (
+            <div style={{background:'rgba(0,184,148,0.1)',border:'1px solid rgba(0,184,148,0.3)',borderRadius:'8px',padding:'15px',marginBottom:'20px'}}>
+              <p style={{margin:0,color:'#00b894'}}>✅ Campos já gerados! Você pode avançar ou alterar as quantidades e regenerar.</p>
+            </div>
+          )}
+          <div style={styles.formRow}>
+            {['caracteristicas','vantagens','beneficios','custos'].map(k=>(
+              <div key={k} style={styles.formGroup}>
+                <label style={styles.label}>{k.charAt(0).toUpperCase()+k.slice(1)}</label>
+                <input type="number" style={styles.input} value={quantities[k]} onChange={e=>setQuantities({...quantities,[k]:parseInt(e.target.value)})} min={k==='custos'?'0':'1'} max="10"/>
+              </div>
+            ))}
+          </div>
+          <div style={styles.buttonGroup}>
+            <button style={{...styles.button,...styles.buttonSecondary}} onClick={()=>setStep(1)}>← Voltar</button>
+            {cvbs.length>0 && (
+              <button style={{...styles.button,...styles.buttonSecondary}} onClick={initializeCVBs}>
+                🔄 Regenerar Campos
+              </button>
+            )}
+            <button style={{...styles.button,...styles.buttonPrimary}} onClick={cvbs.length>0?()=>setStep(3):initializeCVBs}>
+              {cvbs.length>0?'Próximo →':'Gerar Campos →'}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {step===3 && (
+        <>
+          <div style={styles.card}>
+            <h2 style={styles.cardTitle}>📝 Matriz CVB</h2>
+            <p style={{marginBottom:'20px',color:'#8892b0'}}>Preencha as características, vantagens e benefícios da sua solução</p>
+            <div style={{overflowX:'auto'}}>
+              <table style={styles.table}>
+                <thead><tr><th style={styles.th}>#</th><th style={styles.th}>Característica</th><th style={styles.th}>Vantagem</th><th style={styles.th}>Benefício</th></tr></thead>
+                <tbody>
+                  {cvbs.map(cvb=>(
+                    <tr key={cvb.id}>
+                      <td style={styles.td}>{cvb.id}</td>
+                      <td style={styles.td}>
+                        {cvb.caracteristica!==null?<input style={styles.input} value={cvb.caracteristica} onChange={e=>updateCVB(cvb.id,'caracteristica',e.target.value)} placeholder="O que é?"/>:<span style={{opacity:0.3}}>-</span>}
+                      </td>
+                      <td style={styles.td}>
+                        {cvb.vantagem!==null?<input style={styles.input} value={cvb.vantagem} onChange={e=>updateCVB(cvb.id,'vantagem',e.target.value)} placeholder="Para que serve?"/>:<span style={{opacity:0.3}}>-</span>}
+                      </td>
+                      <td style={styles.td}>
+                        {cvb.beneficio!==null?<input style={styles.input} value={cvb.beneficio} onChange={e=>updateCVB(cvb.id,'beneficio',e.target.value)} placeholder="O que ganha?"/>:<span style={{opacity:0.3}}>-</span>}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div style={styles.card}>
+            <h2 style={styles.cardTitle}>💰 Custos da Solução</h2>
+            <p style={{marginBottom:'20px',color:'#8892b0'}}>Liste os custos associados (investimento, implementação, treinamento, etc.)</p>
+            {custos.length>0?(
+              <div style={{overflowX:'auto'}}>
+                <table style={styles.table}>
+                  <thead><tr><th style={styles.th}>#</th><th style={styles.th}>Tipo de Custo</th><th style={styles.th}>Descrição</th><th style={styles.th}>Valor Estimado</th></tr></thead>
+                  <tbody>
+                    {custos.map(c=>(
+                      <tr key={c.id}>
+                        <td style={styles.td}>{c.id}</td>
+                        <td style={styles.td}><input style={styles.input} value={c.tipo} onChange={e=>updateCusto(c.id,'tipo',e.target.value)} placeholder="Ex: Implementação"/></td>
+                        <td style={styles.td}><input style={styles.input} value={c.descricao} onChange={e=>updateCusto(c.id,'descricao',e.target.value)} placeholder="Detalhes do custo"/></td>
+                        <td style={styles.td}><input style={styles.input} value={c.valor} onChange={e=>updateCusto(c.id,'valor',e.target.value)} placeholder="R$ 0,00"/></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ):<p style={{color:'#8892b0',padding:'20px',textAlign:'center'}}>Nenhum custo definido</p>}
+          </div>
+          <div style={styles.buttonGroup}>
+            <button style={{...styles.button,...styles.buttonSecondary}} onClick={()=>setStep(2)}>← Voltar</button>
+            <button style={{...styles.button,...styles.buttonPrimary}} onClick={()=>setStep(4)}>Próximo →</button>
+          </div>
+        </>
+      )}
+
+      {step===4 && (
+        <>
+          <div style={styles.card}>
+            <h2 style={styles.cardTitle}>👤 Perfil do Cliente-Alvo</h2>
+            <p style={{marginBottom:'20px',color:'#8892b0'}}>Descreva o cliente ideal para personalizar a argumentação</p>
+            <div style={styles.formRow}>
+              <div style={styles.formGroup}>
+                <label style={styles.label}>Cargo do Decisor *</label>
+                <input style={styles.input} value={clientProfile.cargo} onChange={e=>setClientProfile({...clientProfile,cargo:e.target.value})} placeholder="Ex: Diretor Comercial"/>
+              </div>
+              <div style={styles.formGroup}>
+                <label style={styles.label}>Setor de Atuação *</label>
+                <input style={styles.input} value={clientProfile.setor} onChange={e=>setClientProfile({...clientProfile,setor:e.target.value})} placeholder="Ex: Varejo Alimentício"/>
+              </div>
+              <div style={styles.formGroup}>
+                <label style={styles.label}>Tamanho da Empresa</label>
+                <select style={styles.input} value={clientProfile.tamanhoEmpresa} onChange={e=>setClientProfile({...clientProfile,tamanhoEmpresa:e.target.value})}>
+                  <option>Microempresa (até 19 funcionários)</option>
+                  <option>Pequena (20-99 funcionários)</option>
+                  <option>Média (100-499 funcionários)</option>
+                  <option>Grande (500+ funcionários)</option>
+                </select>
+              </div>
+            </div>
+            <div style={styles.formGroup}>
+              <label style={styles.label}>Principais Desafios do Cliente</label>
+              <textarea style={styles.textarea} value={clientProfile.desafios} onChange={e=>setClientProfile({...clientProfile,desafios:e.target.value})} placeholder="Ex: Dificuldade em controlar estoque, perda de vendas por falta de integração..."/>
+            </div>
+            <div style={styles.formGroup}>
+              <label style={styles.label}>Objetivos do Cliente</label>
+              <textarea style={styles.textarea} value={clientProfile.objetivos} onChange={e=>setClientProfile({...clientProfile,objetivos:e.target.value})} placeholder="Ex: Aumentar eficiência operacional, reduzir custos, melhorar atendimento..."/>
+            </div>
+            <div style={styles.formGroup}>
+              <label style={styles.label}>Objeções Prévias Conhecidas</label>
+              <textarea style={styles.textarea} value={clientProfile.objecoesPrevias} onChange={e=>setClientProfile({...clientProfile,objecoesPrevias:e.target.value})} placeholder="Ex: Preço alto, complexidade de implementação, resistência da equipe..."/>
+            </div>
+            <div style={styles.buttonGroup}>
+              <button style={{...styles.button,...styles.buttonSecondary}} onClick={()=>setStep(3)}>← Voltar</button>
+              <button style={{...styles.button,...styles.buttonWarning}} onClick={generatePrompt}>
+                📤 Gerar Prompt para IA
+              </button>
+            </div>
+          </div>
+          {error && <div style={{background:'rgba(220,53,69,0.1)',border:'1px solid rgba(220,53,69,0.3)',borderRadius:'12px',padding:'20px',color:'#ff6b6b',whiteSpace:'pre-line'}}><span style={{fontSize:'20px'}}>⚠️</span> {error}</div>}
+        </>
+      )}
+
+      {showPrompt && (
+        <div style={styles.modal} onClick={()=>setShowPrompt(false)}>
+          <div style={styles.modalContent} onClick={e=>e.stopPropagation()}>
+            <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'20px'}}>
+              <h2 style={{margin:0,color:'#00b894'}}>📤 Prompt para a IA</h2>
+              <button style={{...styles.button,...styles.buttonSecondary,padding:'10px 20px'}} onClick={()=>setShowPrompt(false)}>✕</button>
+            </div>
+            
+            <div style={{background:'rgba(0,184,148,0.1)',border:'1px solid rgba(0,184,148,0.3)',borderRadius:'8px',padding:'15px',marginBottom:'20px'}}>
+              <p style={{margin:0,fontSize:'14px',lineHeight:'1.6'}}>
+                <strong>📋 INSTRUÇÕES:</strong><br/>
+                1. Clique em "Copiar Prompt" abaixo<br/>
+                2. Abra o Claude, ChatGPT ou qualquer IA de sua preferência<br/>
+                3. Cole o prompt copiado<br/>
+                4. Copie a resposta JSON que a IA gerar<br/>
+                5. Cole na área "Resposta da IA" abaixo<br/>
+                6. Clique em "Processar Resposta"
+              </p>
+            </div>
+
+            <div style={styles.promptBox}>
+              {generatedPrompt}
+            </div>
+
+            <button 
+              style={{...styles.button,...styles.buttonSuccess,width:'100%',justifyContent:'center',marginBottom:'20px',background:promptCopied?'linear-gradient(135deg,#00b894,#00d2a0)':'linear-gradient(135deg,#00b894,#55efc4)'}} 
+              onClick={copyPromptToClipboard}
+            >
+              {promptCopied?'✅ Prompt Copiado!':'📋 Copiar Prompt'}
+            </button>
+
+            <div style={styles.formGroup}>
+              <label style={styles.label}>📥 Cole a Resposta JSON da IA Aqui:</label>
+              <textarea 
+                style={{...styles.textarea,minHeight:'200px',fontFamily:'monospace',fontSize:'13px'}} 
+                value={aiResponse} 
+                onChange={e=>setAiResponse(e.target.value)}
+                placeholder='Cole aqui o JSON completo que a IA gerou...'
+              />
+            </div>
+
+            <div style={{display:'flex',gap:'15px'}}>
+              <button style={{...styles.button,...styles.buttonSecondary,flex:1}} onClick={()=>setShowPrompt(false)}>
+                Cancelar
+              </button>
+              <button style={{...styles.button,...styles.buttonPrimary,flex:1}} onClick={processAIResponse}>
+                🎯 Processar Resposta
+              </button>
+            </div>
+
+            {error && <div style={{marginTop:'15px',background:'rgba(220,53,69,0.1)',border:'1px solid rgba(220,53,69,0.3)',borderRadius:'8px',padding:'15px',color:'#ff6b6b'}}><span style={{fontSize:'18px'}}>⚠️</span> {error}</div>}
+          </div>
+        </div>
+      )}
+
+      {step===5 && (
+        <div>
+          <div style={styles.card}>
+            <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'24px',flexWrap:'wrap',gap:'15px'}}>
+              <h2 style={{...styles.cardTitle,margin:0}}>✨ Argumentação Gerada</h2>
+              <button style={{...styles.button,...styles.buttonSuccess,background:copySuccess?'linear-gradient(135deg,#00b894,#00d2a0)':'linear-gradient(135deg,#00b894,#55efc4)'}} onClick={copyToClipboard}>
+                {copySuccess?'✅ Copiado!':'📋 Copiar Tudo'}
+              </button>
+            </div>
+            {copySuccess && <div style={{background:'rgba(0,184,148,0.1)',border:'1px solid rgba(0,184,148,0.3)',borderRadius:'8px',padding:'15px',marginBottom:'20px',color:'#00b894'}}>✅ Copiado! Cole no Word/Google Docs com formatação completa.</div>}
+            <div style={{background:'rgba(0,184,148,0.1)',borderRadius:'12px',padding:'20px',border:'1px solid rgba(0,184,148,0.2)'}}><strong style={{color:'#00b894'}}>{context.solucao}</strong><span style={{color:'#8892b0'}}> • {context.empresa} • {context.mercadoAlvo}</span></div>
+          </div>
+
+          <div style={styles.card}>
+            <h2 style={{...styles.cardTitle,color:'#4da6ff'}}>🔵 Argumentos: Característica → Benefício</h2>
+            {aiResults.argumentosCV.map((arg,i)=>(
+              <div key={i} style={styles.resultCard('#4da6ff')}>
+                <div style={{fontSize:'12px',color:'#4da6ff',fontWeight:'700',marginBottom:'8px'}}>ARGUMENTO {i+1}</div>
+                <p style={{color:'#e8e8e8',lineHeight:'1.7',marginBottom:'12px'}}>{arg.argumento}</p>
+                <div style={{background:'rgba(0,0,0,0.2)',padding:'12px',borderRadius:'8px',fontSize:'13px',color:'#8892b0'}}><strong>Estrutura:</strong> {arg.estrutura}</div>
+              </div>
+            ))}
+          </div>
+
+          <div style={styles.card}>
+            <h2 style={{...styles.cardTitle,color:'#00b894'}}>🟢 Argumentos: Benefício → Característica</h2>
+            {aiResults.argumentosVC.map((arg,i)=>(
+              <div key={i} style={styles.resultCard('#00b894')}>
+                <div style={{fontSize:'12px',color:'#00b894',fontWeight:'700',marginBottom:'8px'}}>ARGUMENTO {i+1}</div>
+                <p style={{color:'#e8e8e8',lineHeight:'1.7',marginBottom:'12px'}}>{arg.argumento}</p>
+                <div style={{background:'rgba(0,0,0,0.2)',padding:'12px',borderRadius:'8px',fontSize:'13px',color:'#8892b0'}}><strong>Estrutura:</strong> {arg.estrutura}</div>
+              </div>
+            ))}
+          </div>
+
+          <div style={styles.card}>
+            <h2 style={{...styles.cardTitle,color:'#dc3545'}}>🔴 Matriz de Objeções</h2>
+            <div style={{overflowX:'auto'}}>
+              <table style={{...styles.table,borderCollapse:'collapse'}}>
+                <thead><tr><th style={{...styles.th,background:'rgba(220,53,69,0.2)'}}>Objeção</th><th style={{...styles.th,background:'rgba(220,53,69,0.2)'}}>Perguntas Investigativas</th><th style={{...styles.th,background:'rgba(220,53,69,0.2)'}}>Argumentos de Resposta</th><th style={{...styles.th,background:'rgba(220,53,69,0.2)'}}>Evidências/Provas</th></tr></thead>
+                <tbody>
+                  {aiResults.matrizObjecoes.map((obj,i)=>(
+                    <tr key={i} style={{background:i%2===0?'rgba(255,255,255,0.02)':'transparent'}}>
+                      <td style={{...styles.td,padding:'16px',verticalAlign:'top'}}><strong style={{color:'#dc3545'}}>{obj.objecao}</strong></td>
+                      <td style={{...styles.td,padding:'16px',verticalAlign:'top'}}><ul style={{margin:0,paddingLeft:'20px',color:'#b8c1d9'}}>{obj.perguntasPossiveis.map((p,j)=><li key={j} style={{marginBottom:'8px'}}>{p}</li>)}</ul></td>
+                      <td style={{...styles.td,padding:'16px',verticalAlign:'top'}}><ul style={{margin:0,paddingLeft:'20px',color:'#b8c1d9'}}>{obj.argumentosPossiveis.map((a,j)=><li key={j} style={{marginBottom:'8px'}}>{a}</li>)}</ul></td>
+                      <td style={{...styles.td,padding:'16px',verticalAlign:'top'}}><ul style={{margin:0,paddingLeft:'20px',color:'#b8c1d9'}}>{obj.evidencias.map((e,j)=><li key={j} style={{marginBottom:'8px'}}>{e}</li>)}</ul></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div style={styles.buttonGroup}>
+            <button style={{...styles.button,...styles.buttonSecondary}} onClick={()=>{setStep(4);setShowPrompt(false);setAiResponse('');}}>← Nova Geração</button>
+            <button style={{...styles.button,...styles.buttonSuccess,background:copySuccess?'linear-gradient(135deg,#00b894,#00d2a0)':'linear-gradient(135deg,#00b894,#55efc4)'}} onClick={copyToClipboard}>
+              {copySuccess?'✅ Copiado!':'📋 Copiar Documento Completo'}
+            </button>
+          </div>
+        </div>
+      )}
+
+      <footer style={{textAlign:'center',marginTop:'40px',padding:'24px',color:'#6c757d',fontSize:'13px',borderTop:'1px solid rgba(255,255,255,0.05)'}}>
+        <p style={{marginBottom:'8px'}}>💡 <strong>VALOR = BENEFÍCIOS - CUSTOS</strong></p>
+        <p style={{marginTop:'8px'}}>Módulo 2.2 - Criando Valor | Prof. Paulo H. Donassolo</p>
+        <p style={{fontSize:'12px',marginTop:'12px',color:'#555'}}>
+          Workflow Híbrido: Compatível com Claude, ChatGPT, Gemini e outras IAs
+        </p>
+      </footer>
+    </div>
+  );
+}
+
+ReactDOM.render(<CVBGerador />, document.getElementById('root'));
+    </script>
+</body>
+</html>
