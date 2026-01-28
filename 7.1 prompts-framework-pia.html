@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Framework PIA - Planejamento Inteligente Assistido</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+
+        .framework-overview {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .overview-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .overview-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 5px solid;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+        }
+
+        .card.fase1 { border-left-color: #4facfe; }
+        .card.fase2 { border-left-color: #43e97b; }
+        .card.fase3 { border-left-color: #fa709a; }
+        .card.template { border-left-color: #ffecd2; }
+        .card.prompt { border-left-color: #a8edea; }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-right: 15px;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .card-subtitle {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .card-content {
+            color: #34495e;
+            line-height: 1.8;
+        }
+
+        .checklist {
+            list-style: none;
+            margin: 15px 0;
+        }
+
+        .checklist li {
+            padding: 8px 0;
+            border-bottom: 1px solid #ecf0f1;
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .checklist li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .prompt-box {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+
+        .template-box {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin: 5px 5px 5px 0;
+        }
+
+        .section-divider {
+            height: 3px;
+            background: linear-gradient(90deg, transparent 0%, #3498db 50%, transparent 100%);
+            margin: 40px 0;
+            border-radius: 2px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2rem; }
+            .cards-grid { grid-template-columns: 1fr; }
+            .card { padding: 20px; }
+            .prompt-box, .template-box { 
+                font-size: 0.8rem;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Framework PIA</h1>
+            <p><strong>Planejamento Inteligente Assistido</strong></p>
+            <p>Revolucionando Negociações Presenciais com Inteligência Artificial</p>
+        </div>
+
+        <div class="framework-overview">
+            <h2 style="text-align: center; color: #2c3e50; margin-bottom: 20px;">📊 Visão Geral do Framework</h2>
+            <div class="overview-grid">
+                <div class="overview-card">
+                    <h3>📥 30% COLETA</h3>
+                    <p>Dados históricos, padrões de clientes, mapeamento digital e análise da concorrência</p>
+                </div>
+                <div class="overview-card">
+                    <h3>🔮 40% ANÁLISE</h3>
+                    <p>Simulações, probabilidades, gatilhos de decisão e estratégias personalizadas</p>
+                </div>
+                <div class="overview-card">
+                    <h3>⚡ 30% EXECUÇÃO</h3>
+                    <p>Scripts personalizados, acompanhamento e ajustes baseados em feedback</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="cards-grid">
+            <!-- FASE 1: COLETA INTELIGENTE -->
+            <div class="card fase1">
+                <div class="card-header">
+                    <div class="card-icon">📥</div>
+                    <div>
+                        <div class="card-title">FASE 1: COLETA INTELIGENTE</div>
+                        <div class="card-subtitle">30% do tempo • Base para decisões estratégicas</div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <p><strong>Objetivo:</strong> Reunir o máximo de informações relevantes sobre o cliente, mercado e contexto da negociação usando IA para otimizar o processo.</p>
+                    
+                    <h4 style="margin: 20px 0 10px 0; color: #2c3e50;">✅ Checklist de Atividades:</h4>
+                    <ul class="checklist">
+                        <li>Upload dados históricos de vendas similares</li>
+                        <li>Análise de padrões de clientes do mesmo perfil</li>
+                        <li>Mapeamento digital completo do prospect</li>
+                        <li>Pesquisa automatizada da concorrência</li>
+                        <li>Coleta de informações financeiras e setoriais</li>
+                        <li>Análise do timing de mercado e sazonalidade</li>
+                    </ul>
+
+                    <span class="badge">⏱️ Tempo: 30-45 min</span>
+                    <span class="badge">🤖 IA: Alto uso</span>
+                    <span class="badge">📊 Output: Base de dados</span>
+                </div>
+            </div>
+
+            <!-- FASE 2: ANÁLISE PREDITIVA -->
+            <div class="card fase2">
+                <div class="card-header">
+                    <div class="card-icon">🔮</div>
+                    <div>
+                        <div class="card-title">FASE 2: ANÁLISE PREDITIVA</div>
+                        <div class="card-subtitle">40% do tempo • Inteligência estratégica</div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <p><strong>Objetivo:</strong> Transformar dados coletados em insights estratégicos e previsões para construir a abordagem mais eficaz.</p>
+                    
+                    <h4 style="margin: 20px 0 10px 0; color: #2c3e50;">✅ Checklist de Atividades:</h4>
+                    <ul class="checklist">
+                        <li>Simulação de múltiplos cenários de negociação</li>
+                        <li>Identificação de gatilhos de decisão específicos</li>
+                        <li>Cálculo de probabilidades de fechamento</li>
+                        <li>Definição de estratégias personalizadas</li>
+                        <li>Análise de objeções mais prováveis</li>
+                        <li>Determinação do timing ideal para cada etapa</li>
+                    </ul>
+
+                    <span class="badge">⏱️ Tempo: 60-90 min</span>
+                    <span class="badge">🤖 IA: Uso intensivo</span>
+                    <span class="badge">🎯 Output: Estratégia definida</span>
+                </div>
+            </div>
+
+            <!-- FASE 3: EXECUÇÃO ASSISTIDA -->
+            <div class="card fase3">
+                <div class="card-header">
+                    <div class="card-icon">⚡</div>
+                    <div>
+                        <div class="card-title">FASE 3: EXECUÇÃO ASSISTIDA</div>
+                        <div class="card-subtitle">30% do tempo • Implementação inteligente</div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <p><strong>Objetivo:</strong> Executar a negociação presencial com suporte contínuo da IA, permitindo ajustes em tempo real baseados no feedback do cliente.</p>
+                    
+                    <h4 style="margin: 20px 0 10px 0; color: #2c3e50;">✅ Checklist de Atividades:</h4>
+                    <ul class="checklist">
+                        <li>Scripts personalizados para abertura da reunião</li>
+                        <li>Roteiro de apresentação adaptado ao perfil</li>
+                        <li>Sistema de acompanhamento em tempo real</li>
+                        <li>Respostas preparadas para objeções esperadas</li>
+                        <li>Ajustes dinâmicos baseados no feedback</li>
+                        <li>Análise pós-negociação automatizada</li>
+                    </ul>
+
+                    <span class="badge">⏱️ Tempo: 45-60 min</span>
+                    <span class="badge">🤖 IA: Suporte ativo</span>
+                    <span class="badge">🎯 Output: Negociação executada</span>
+                </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <!-- TEMPLATE: PLANO IA-ASSISTIDO -->
+            <div class="card template">
+                <div class="card-header">
+                    <div class="card-icon">📋</div>
+                    <div>
+                        <div class="card-title">TEMPLATE: PLANO IA-ASSISTIDO</div>
+                        <div class="card-subtitle">Estrutura completa para negociações presenciais</div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="template-box">═══════════════════════════════════════════════════
+           PLANO DE NEGOCIAÇÃO IA-ASSISTIDO
+           (ESPECIAL PARA REUNIÕES PRESENCIAIS)
+═══════════════════════════════════════════════════
+
+📊 DADOS DO CLIENTE (gerados por IA)
+Cliente: _________________________________
+Segmento: _______________________________
+Decisor Principal: ______________________
+Influenciadores: ________________________
+Localização Reunião: ____________________
+Data/Hora: ______________________________
+
+🔍 ANÁLISE PREDITIVA (resultado da IA)
+Probabilidade Fechamento: _______________
+Valor Ideal Negociação: __________________
+Desconto Máximo Viável: _________________
+Prazo Esperado Decisão: _________________
+Nível Autoridade Decisor: _______________
+
+💡 ESTRATÉGIA PRESENCIAL (definida pela IA)
+Abordagem de Abertura: __________________
+Foco Principal Reunião: _________________
+Gatilho Decisão Identificado: __________
+Momento Ideal para Proposta: ____________
+Estilo Comunicação Recomendado: __________
+
+📝 ROTEIRO DA REUNIÃO PRESENCIAL
+┌─ ABERTURA (10 min)
+│  Script personalizado: _________________
+│  Quebra-gelo sugerido: _________________
+│  
+├─ DIAGNÓSTICO (20 min)  
+│  Perguntas estratégicas: _______________
+│  Pontos de dor a explorar: _____________
+│  
+├─ APRESENTAÇÃO (25 min)
+│  Proposta de valor única: ______________
+│  Demonstração/Prova: ____________________
+│  
+├─ TRATAMENTO OBJEÇÕES (15 min)
+│  Top 3 objeções esperadas: _____________
+│  Respostas preparadas: __________________
+│  
+└─ FECHAMENTO (10 min)
+   Call-to-action: ______________________
+   Próximos passos: ______________________
+
+📈 MÉTRICAS PÓS-REUNIÃO
+Objetivo Alcançado: _____________________
+Feedback Cliente: _______________________
+Próxima Ação: ___________________________
+Data Follow-up: _________________________
+Probabilidade Atualizada: ______________
+
+🎯 OBSERVAÇÕES IMPORTANTES
+Material Levar: _________________________
+Backup Propostas: _______________________
+Contingências: __________________________
+Responsável Follow-up: __________________</div>
+                </div>
+            </div>
+
+            <!-- PROMPT: ANÁLISE DE PERFIL -->
+            <div class="card prompt">
+                <div class="card-header">
+                    <div class="card-icon">🧠</div>
+                    <div>
+                        <div class="card-title">PROMPT: ANÁLISE DE PERFIL</div>
+                        <div class="card-subtitle">Para identificar estratégias personalizadas</div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <p><strong>Use este prompt para analisar o perfil do seu cliente antes da reunião presencial:</strong></p>
+                    <div class="prompt-box">Atue como consultor especialista em negociação B2B presencial no Brasil. 
+
+Analise o seguinte perfil e forneça insights estratégicos para uma reunião presencial:
+
+DADOS DO CLIENTE:
+- Empresa: [nome, setor, porte, faturamento]
+- Decisor: [nome, cargo, tempo na empresa, formação]
+- Localização: [cidade, endereço da reunião]
+- Histórico: [relacionamento anterior, compras passadas]
+- Contexto: [momento da empresa, projetos em andamento]
+- Concorrência: [principais fornecedores atuais]
+
+INFORMAÇÕES ADICIONAIS:
+- Produto/Serviço oferecido: [descrição detalhada]
+- Valor da proposta: [faixa de investimento]
+- Urgência: [timing do cliente]
+- Complexidade: [técnica/comercial/política]
+
+FORNEÇA UMA ANÁLISE COMPLETA COM:
+
+1. PERFIL COMPORTAMENTAL
+   - Estilo de comunicação preferido
+   - Motivadores principais de decisão
+   - Possíveis resistências ou objeções
+   - Melhor abordagem para este perfil
+
+2. ESTRATÉGIA PARA REUNIÃO PRESENCIAL
+   - Como iniciar a conversa (quebra-gelo)
+   - Sequência ideal de apresentação
+   - Momentos críticos para atenção
+   - Linguagem corporal a observar
+
+3. PROPOSTA DE VALOR PERSONALIZADA
+   - Benefícios que mais ressoam com este cliente
+   - ROI específico para o segmento dele
+   - Casos de sucesso relevantes para mencionar
+   - Diferenciais competitivos importantes
+
+4. ANTECIPAÇÃO DE OBJEÇÕES
+   - Top 5 objeções mais prováveis
+   - Respostas eficazes para cada uma
+   - Momentos ideais para abordar cada ponto
+   - Estratégias de contorno
+
+5. TÁTICAS PARA FECHAMENTO
+   - Sinais de compra a observar
+   - Momento ideal para proposta final
+   - Alternativas de fechamento
+   - Próximos passos recomendados
+
+Seja específico, prático e focado na realidade brasileira de PMEs.</div>
+                </div>
+            </div>
+
+            <!-- PROMPT: GERAÇÃO DE PROPOSTA -->
+            <div class="card prompt">
+                <div class="card-header">
+                    <div class="card-icon">💼</div>
+                    <div>
+                        <div class="card-title">PROMPT: GERAÇÃO DE PROPOSTA</div>
+                        <div class="card-subtitle">Para criar propostas persuasivas e personalizadas</div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <p><strong>Use este prompt para gerar propostas comerciais impactantes:</strong></p>
+                    <div class="prompt-box">Atue como especialista em propostas comerciais B2B para reuniões presenciais no Brasil.
+
+Crie uma proposta comercial personalizada e persuasiva com base nos seguintes dados:
+
+CONTEXTO DA NEGOCIAÇÃO:
+- Cliente: [empresa, segmento, porte]
+- Decisor: [perfil, cargo, estilo]
+- Necessidade identificada: [problema específico]
+- Solução oferecida: [produto/serviço detalhado]
+- Valor investimento: [faixa de preços]
+- Prazo decisão: [urgência do cliente]
+- Concorrência: [principais players]
+
+OBJETIVOS DA PROPOSTA:
+- Diferenciação clara da concorrência
+- ROI quantificado e específico
+- Redução de riscos percebidos
+- Call-to-action persuasivo
+
+GERE UMA PROPOSTA ESTRUTURADA COM:
+
+1. TÍTULO IMPACTANTE
+   - Frase que resume o valor único
+   - Desperte curiosidade e interesse
+
+2. RESUMO EXECUTIVO (máximo 150 palavras)
+   - Problema identificado
+   - Solução proposta
+   - Benefício principal quantificado
+
+3. ANÁLISE DA SITUAÇÃO ATUAL
+   - Diagnóstico dos desafios
+   - Impacto na operação/resultados
+   - Custo de não resolver (dor)
+
+4. SOLUÇÃO PROPOSTA
+   - Descrição clara do que oferecemos
+   - Como resolve especificamente cada dor
+   - Diferenciais únicos vs concorrência
+
+5. BENEFÍCIOS QUANTIFICADOS
+   - ROI esperado em números
+   - Economia de tempo/recursos
+   - Aumento de produtividade/vendas
+   - Payback período
+
+6. ESTRUTURA DE INVESTIMENTO
+   - 3 opções de pacotes (bom, melhor, premium)
+   - Formas de pagamento flexíveis
+   - Condições especiais se aplicável
+
+7. PRÓXIMOS PASSOS
+   - Cronograma de implementação
+   - Responsabilidades de cada parte
+   - Marcos e entregas principais
+
+8. CALL-TO-ACTION PERSUASIVO
+   - Ação específica solicitada
+   - Senso de urgência (sem pressão)
+   - Facilite a tomada de decisão
+
+IMPORTANTE:
+- Use linguagem do segmento do cliente
+- Inclua dados do mercado brasileiro
+- Mencione cases de sucesso similares
+- Antecipe e neutralize objeções
+- Mantenha foco em resultados de negócio</div>
+                </div>
+            </div>
+
+            <!-- PROMPT: SIMULAÇÃO DE OBJEÇÕES -->
+            <div class="card prompt">
+                <div class="card-header">
+                    <div class="card-icon">🎭</div>
+                    <div>
+                        <div class="card-title">PROMPT: SIMULAÇÃO DE OBJEÇÕES</div>
+                        <div class="card-subtitle">Para antecipar resistências e preparar respostas</div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <p><strong>Use este prompt para simular objeções e preparar respostas eficazes:</strong></p>
+                    <div class="prompt-box">Atue como especialista em tratamento de objeções para negociações B2B presenciais no Brasil.
+
+Simule uma negociação presencial e antecipe as principais objeções para o seguinte cenário:
+
+CENÁRIO DA NEGOCIAÇÃO:
+- Vendedor: [seu perfil, empresa, experiência]
+- Cliente: [empresa, segmento, porte, cultura]
+- Decisor: [nome, cargo, perfil comportamental]
+- Produto/Serviço: [descrição detalhada]
+- Valor proposto: [investimento total]
+- Contexto: [situação específica, urgência, histórico]
+- Concorrência: [alternativas disponíveis]
+
+ANÁLISE SOLICITADA:
+
+1. TOP 10 OBJEÇÕES MAIS PROVÁVEIS
+   Ranqueie por probabilidade de ocorrência:
+   - Objeção relacionada a PREÇO
+   - Objeção relacionada a TIMING  
+   - Objeção relacionada a AUTORIDADE
+   - Objeção relacionada a NECESSIDADE
+   - Objeção relacionada a CONFIANÇA
+   - Objeção relacionada a CONCORRÊNCIA
+   - Objeção relacionada a BUDGET
+   - Objeção relacionada a EXPERIÊNCIA
+   - Objeção relacionada a SUPORTE
+   - Objeção relacionada a RISCO
+
+2. PARA CADA OBJEÇÃO, FORNEÇA:
+   
+   A) FRASEADO EXATO ESPERADO
+   "Como o cliente provavelmente dirá isso"
+   
+   B) RAZÃO REAL POR TRÁS DA OBJEÇÃO
+   O que realmente está preocupando
+   
+   C) ESTRATÉGIA DE RESPOSTA
+   - Técnica recomendada (questionar, concordar, reformular)
+   - Sequência de abordagem
+   
+   D) RESPOSTA PRÁTICA EFICAZ
+   Script exato para usar na hora
+   
+   E) PERGUNTA DE CONFIRMAÇÃO
+   Como validar se resolveu a objeção
+
+3. SIMULAÇÃO DE DIÁLOGO
+   Para as 3 objeções mais críticas, crie um diálogo completo:
+   CLIENTE: [objeção]
+   VENDEDOR: [resposta + pergunta]
+   CLIENTE: [reação provável]
+   VENDEDOR: [fechamento]
+
+4. ESTRATÉGIAS PREVENTIVAS
+   - Como abordar objeções antes delas surgirem
+   - Pontos para reforçar durante apresentação
+   - Evidências/provas para levar à reunião
+
+5. SINAIS DE ALERTA
+   - Linguagem corporal que indica objeção
+   - Tonalidade de voz reveladora
+   - Perguntas que precedem objeções
+
+6. CONTRA-ATAQUES DO CLIENTE
+   - Possíveis contra-argumentos após sua resposta
+   - Como manter controle da conversa
+   - Quando recuar vs quando insistir
+
+IMPORTANTE:
+- Considere a cultura empresarial brasileira
+- Adapte ao perfil específico do decisor
+- Foque em objeções realistas e comuns
+- Forneça respostas práticas e testadas
+- Mantenha tom profissional mas humano</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
