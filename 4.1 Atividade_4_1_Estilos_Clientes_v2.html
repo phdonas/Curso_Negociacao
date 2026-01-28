@@ -1,0 +1,1547 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atividade 4.1 - Identificar Estilos de Clientes | Negociação para Vendas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --azul-principal: #1e3a5f;
+            --azul-claro: #2d5a87;
+            --vermelho-principal: #c41e3a;
+            --vermelho-claro: #e63946;
+            --verde: #28a745;
+            --amarelo: #f1c40f;
+            --roxo: #8e44ad;
+            --laranja: #e67e22;
+            --cinza-fundo: #f8f9fa;
+            --cinza-borda: #dee2e6;
+            --branco: #ffffff;
+            --texto-escuro: #212529;
+            --texto-medio: #495057;
+            /* Cores dos estilos */
+            --analitico: #1abc9c;
+            --analitico-bg: #e8f6f3;
+            --condutor: #e74c3c;
+            --condutor-bg: #fdedec;
+            --amigavel: #3498db;
+            --amigavel-bg: #ebf5fb;
+            --expressivo: #f1c40f;
+            --expressivo-bg: #fef9e7;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 50%, #1e3a5f 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Cabeçalho */
+        .header {
+            text-align: center;
+            color: var(--branco);
+            margin-bottom: 30px;
+            padding: 20px;
+        }
+
+        .header-badge {
+            display: inline-block;
+            background: var(--vermelho-principal);
+            color: var(--branco);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--branco);
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--azul-principal), var(--azul-claro));
+            color: var(--branco);
+            padding: 20px 25px;
+        }
+
+        .card-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-body {
+            padding: 25px;
+        }
+
+        /* Identificação */
+        .identificacao {
+            background: var(--cinza-fundo);
+            padding: 20px 25px;
+            border-bottom: 1px solid var(--cinza-borda);
+        }
+
+        .identificacao-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .identificacao h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--azul-principal);
+            font-size: 1.1rem;
+        }
+
+        .status-salvamento {
+            font-size: 0.85rem;
+            color: var(--verde);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .status-salvamento.visivel {
+            opacity: 1;
+        }
+
+        .identificacao-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .campo {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .campo label {
+            font-weight: 600;
+            color: var(--azul-principal);
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        .campo input,
+        .campo select,
+        .campo textarea {
+            padding: 10px 12px;
+            border: 2px solid var(--cinza-borda);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-family: 'Source Sans Pro', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .campo input:focus,
+        .campo select:focus,
+        .campo textarea:focus {
+            outline: none;
+            border-color: var(--azul-claro);
+            box-shadow: 0 0 0 3px rgba(45, 90, 135, 0.1);
+        }
+
+        /* Barra de Progresso */
+        .progress-container {
+            background: var(--branco);
+            border-radius: 16px;
+            padding: 20px 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .progress-title {
+            font-weight: 600;
+            color: var(--azul-principal);
+        }
+
+        .progress-stats {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+        }
+
+        .stat-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--branco);
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        .stat-analitico { background: var(--analitico); }
+        .stat-condutor { background: var(--condutor); }
+        .stat-amigavel { background: var(--amigavel); }
+        .stat-expressivo { background: var(--expressivo); color: var(--texto-escuro); }
+
+        .progress-bar {
+            height: 10px;
+            background: var(--cinza-borda);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--verde), #2ecc71);
+            border-radius: 5px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        /* Matriz de Referência */
+        .matrix-reference {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .matrix-item {
+            padding: 15px 10px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: help;
+            border: 2px solid;
+            transition: transform 0.2s ease;
+        }
+
+        .matrix-item:hover {
+            transform: scale(1.03);
+        }
+
+        .matrix-item h4 {
+            font-size: 0.95rem;
+            margin-bottom: 5px;
+        }
+
+        .matrix-item p {
+            font-size: 0.75rem;
+            opacity: 0.9;
+        }
+
+        .matrix-analitico { background: var(--analitico-bg); color: #0e6655; border-color: var(--analitico); }
+        .matrix-condutor { background: var(--condutor-bg); color: #922b21; border-color: var(--condutor); }
+        .matrix-amigavel { background: var(--amigavel-bg); color: #1a5276; border-color: var(--amigavel); }
+        .matrix-expressivo { background: var(--expressivo-bg); color: #9a7d0a; border-color: var(--expressivo); }
+
+        /* Intro Box */
+        .intro-box {
+            background: #e8f4fd;
+            border-left: 4px solid var(--azul-claro);
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 25px;
+        }
+
+        .intro-box h3 {
+            color: var(--azul-principal);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .intro-box p {
+            color: var(--texto-medio);
+            line-height: 1.6;
+        }
+
+        /* Client Entry */
+        .client-entry {
+            background: var(--cinza-fundo);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .client-entry:hover {
+            border-color: var(--azul-claro);
+        }
+
+        .client-entry.completed {
+            border-color: var(--verde);
+            background: linear-gradient(135deg, #f0fff4, #e8f8f5);
+        }
+
+        .entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .entry-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .entry-number {
+            background: linear-gradient(135deg, var(--azul-principal), var(--azul-claro));
+            color: var(--branco);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .entry-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--texto-escuro);
+        }
+
+        .entry-status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-complete {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        /* Form Groups */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: var(--texto-escuro);
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--cinza-borda);
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: 'Source Sans Pro', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--azul-claro);
+            box-shadow: 0 0 0 3px rgba(45, 90, 135, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        /* Style Selector */
+        .style-selector {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .style-btn {
+            padding: 15px 10px;
+            border: 3px solid var(--cinza-borda);
+            border-radius: 12px;
+            background: var(--branco);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .style-btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .style-btn.active {
+            transform: scale(1.05);
+        }
+
+        .style-btn.analitico { border-color: var(--analitico); }
+        .style-btn.analitico.active { background: var(--analitico-bg); box-shadow: 0 5px 15px rgba(26, 188, 156, 0.3); }
+
+        .style-btn.condutor { border-color: var(--condutor); }
+        .style-btn.condutor.active { background: var(--condutor-bg); box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3); }
+
+        .style-btn.amigavel { border-color: var(--amigavel); }
+        .style-btn.amigavel.active { background: var(--amigavel-bg); box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3); }
+
+        .style-btn.expressivo { border-color: var(--expressivo); }
+        .style-btn.expressivo.active { background: var(--expressivo-bg); box-shadow: 0 5px 15px rgba(241, 196, 15, 0.3); }
+
+        .style-btn .icon {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .style-btn .name {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        /* Observations Grid */
+        .observations-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .observation-section h4 {
+            color: var(--azul-principal);
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            background: var(--branco);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.2s ease;
+        }
+
+        .checkbox-item:hover {
+            background: #f0f0f0;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        /* Strategy Section */
+        .strategy-section {
+            background: linear-gradient(135deg, #fff8e6, #fffbf0);
+            border-left: 4px solid var(--amarelo);
+            padding: 20px;
+            border-radius: 0 12px 12px 0;
+            margin-top: 20px;
+        }
+
+        .strategy-section h4 {
+            color: var(--texto-escuro);
+            margin-bottom: 15px;
+        }
+
+        /* Reflection Box */
+        .reflection-box {
+            background: linear-gradient(135deg, #fef5e7, #fdf2e9);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .reflection-box h4 {
+            color: var(--laranja);
+            margin-bottom: 15px;
+        }
+
+        .reflection-questions {
+            list-style: none;
+        }
+
+        .reflection-questions li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            color: var(--texto-escuro);
+        }
+
+        .reflection-questions li::before {
+            content: "🤔";
+            position: absolute;
+            left: 0;
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 14px 30px;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--verde), #2ecc71);
+            color: var(--branco);
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--branco);
+            color: var(--vermelho-principal);
+            border: 2px solid var(--vermelho-principal);
+        }
+
+        .btn-secondary:hover {
+            background: var(--vermelho-principal);
+            color: var(--branco);
+        }
+
+        .btn-export {
+            background: linear-gradient(135deg, var(--azul-principal), var(--azul-claro));
+            color: var(--branco);
+            box-shadow: 0 4px 15px rgba(30, 58, 95, 0.3);
+        }
+
+        .btn-export:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(30, 58, 95, 0.4);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--branco);
+            border-radius: 16px;
+            max-width: 700px;
+            width: 90%;
+            max-height: 80vh;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--azul-principal), var(--azul-claro));
+            color: var(--branco);
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--branco);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+            line-height: 1;
+        }
+
+        .modal-body {
+            padding: 25px;
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+
+        .modal-body textarea {
+            width: 100%;
+            min-height: 300px;
+            padding: 15px;
+            border: 2px solid var(--cinza-borda);
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            resize: vertical;
+        }
+
+        .modal-footer {
+            padding: 20px 25px;
+            background: var(--cinza-fundo);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn-copiar {
+            background: var(--verde);
+            color: var(--branco);
+        }
+
+        .btn-download {
+            background: var(--azul-principal);
+            color: var(--branco);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: var(--branco);
+            padding: 25px;
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        /* Print Styles */
+        @media print {
+            @page {
+                size: A4;
+                margin: 12mm;
+            }
+
+            body {
+                background: white !important;
+                padding: 0;
+                font-size: 10pt;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .container {
+                max-width: 100%;
+            }
+
+            .header {
+                color: var(--azul-principal) !important;
+                padding: 10px;
+                margin-bottom: 15px;
+            }
+
+            .header h1 {
+                font-size: 18pt;
+                text-shadow: none;
+            }
+
+            .header-badge {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .card {
+                box-shadow: none;
+                border: 1px solid var(--cinza-borda);
+                page-break-inside: avoid;
+            }
+
+            .card-header {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .progress-container {
+                box-shadow: none;
+                border: 1px solid var(--cinza-borda);
+            }
+
+            .btn-group,
+            .footer,
+            .modal-overlay {
+                display: none !important;
+            }
+
+            .client-entry {
+                page-break-inside: avoid;
+            }
+
+            .client-entry.completed {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .style-btn.active {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .matrix-item {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .stat-icon {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .intro-box,
+            .strategy-section,
+            .reflection-box {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .print-info {
+                display: block !important;
+                text-align: center;
+                font-size: 9pt;
+                color: var(--texto-medio);
+                margin-top: 20px;
+                padding-top: 15px;
+                border-top: 1px solid var(--cinza-borda);
+            }
+        }
+
+        .print-info {
+            display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.6rem;
+            }
+
+            .matrix-reference,
+            .style-selector {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .observations-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .identificacao-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-badge">Atividade Prática 4.1</div>
+            <h1>🎭 Identificar Estilos de Clientes</h1>
+            <p>Analise 3 clientes reais e identifique o estilo de negociação de cada um</p>
+        </div>
+
+        <!-- Progress -->
+        <div class="progress-container">
+            <div class="progress-header">
+                <span class="progress-title">📊 Progresso da Atividade</span>
+                <div class="progress-stats">
+                    <div class="stat-item">
+                        <div class="stat-icon stat-analitico" id="analitico-count">0</div>
+                        <span>Analítico</span>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon stat-condutor" id="condutor-count">0</div>
+                        <span>Condutor</span>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon stat-amigavel" id="amigavel-count">0</div>
+                        <span>Amigável</span>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon stat-expressivo" id="expressivo-count">0</div>
+                        <span>Expressivo</span>
+                    </div>
+                </div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress"></div>
+            </div>
+        </div>
+
+        <!-- Card Principal -->
+        <div class="card">
+            <!-- Identificação -->
+            <div class="identificacao">
+                <div class="identificacao-header">
+                    <h3>📋 Identificação</h3>
+                    <span class="status-salvamento" id="statusSalvamento">
+                        <span>💾</span> Salvo automaticamente
+                    </span>
+                </div>
+                <div class="identificacao-grid">
+                    <div class="campo">
+                        <label for="negociador">Seu Nome</label>
+                        <input type="text" id="negociador" placeholder="Seu nome completo">
+                    </div>
+                    <div class="campo">
+                        <label for="empresa">Sua Empresa</label>
+                        <input type="text" id="empresa" placeholder="Nome da empresa">
+                    </div>
+                    <div class="campo">
+                        <label for="dataAtividade">Data</label>
+                        <input type="date" id="dataAtividade">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <!-- Intro Box -->
+                <div class="intro-box">
+                    <h3>🎯 Objetivo desta Atividade</h3>
+                    <p>Pense em <strong>3 clientes reais</strong> com quem você negocia ou já negociou. Analise o comportamento de cada um e identifique seu estilo predominante. Isso vai ajudá-lo a adaptar sua abordagem em negociações futuras.</p>
+                </div>
+
+                <!-- Matriz de Referência -->
+                <h3 style="color: var(--azul-principal); margin-bottom: 15px; font-family: 'Playfair Display', serif;">📚 Os 4 Estilos de Negociadores</h3>
+                <div class="matrix-reference">
+                    <div class="matrix-item matrix-analitico" title="Foco em dados, processos e análise detalhada">
+                        <h4>📊 Analítico</h4>
+                        <p>Foco em dados e detalhes</p>
+                    </div>
+                    <div class="matrix-item matrix-condutor" title="Foco em resultados, eficiência e controle">
+                        <h4>🎯 Condutor</h4>
+                        <p>Foco em resultados rápidos</p>
+                    </div>
+                    <div class="matrix-item matrix-amigavel" title="Foco em pessoas, harmonia e relacionamentos">
+                        <h4>🤝 Amigável</h4>
+                        <p>Foco em relacionamentos</p>
+                    </div>
+                    <div class="matrix-item matrix-expressivo" title="Foco em visão, entusiasmo e inovação">
+                        <h4>⭐ Expressivo</h4>
+                        <p>Foco em ideias e visão</p>
+                    </div>
+                </div>
+
+                <!-- Cliente 1 -->
+                <div class="client-entry" id="client-1">
+                    <div class="entry-header">
+                        <div class="entry-title">
+                            <div class="entry-number">1</div>
+                            <span class="entry-name">Cliente 1</span>
+                        </div>
+                        <span class="entry-status status-pending" id="status-1">⏳ Pendente</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>👤 Nome do Cliente / Empresa:</label>
+                        <input type="text" id="cliente1-nome" placeholder="Ex: João Silva - Empresa ABC" oninput="updateProgress()">
+                    </div>
+
+                    <div class="form-group">
+                        <label>🎭 Qual é o estilo predominante deste cliente?</label>
+                        <div class="style-selector" id="style-selector-1">
+                            <button type="button" class="style-btn analitico" onclick="selectStyle(1, 'analitico', this)">
+                                <div class="icon">📊</div>
+                                <div class="name">Analítico</div>
+                            </button>
+                            <button type="button" class="style-btn condutor" onclick="selectStyle(1, 'condutor', this)">
+                                <div class="icon">🎯</div>
+                                <div class="name">Condutor</div>
+                            </button>
+                            <button type="button" class="style-btn amigavel" onclick="selectStyle(1, 'amigavel', this)">
+                                <div class="icon">🤝</div>
+                                <div class="name">Amigável</div>
+                            </button>
+                            <button type="button" class="style-btn expressivo" onclick="selectStyle(1, 'expressivo', this)">
+                                <div class="icon">⭐</div>
+                                <div class="name">Expressivo</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>📝 Por que você classifica assim? Quais comportamentos observou?</label>
+                        <textarea id="cliente1-observacoes" placeholder="Ex: Sempre pede muitos detalhes técnicos, compara propostas em planilhas, demora para decidir..." oninput="updateProgress()"></textarea>
+                    </div>
+
+                    <div class="observations-grid">
+                        <div class="observation-section">
+                            <h4>✅ Comportamentos Observados</h4>
+                            <div class="checkbox-group" id="checkgroup-1">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" data-cliente="1" onchange="updateProgress()"> Pede muitos dados/números
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" data-cliente="1" onchange="updateProgress()"> É direto e objetivo
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" data-cliente="1" onchange="updateProgress()"> Valoriza relacionamento
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" data-cliente="1" onchange="updateProgress()"> Fala de visão/futuro
+                                </label>
+                            </div>
+                        </div>
+                        <div class="observation-section">
+                            <h4>⚡ Ritmo de Decisão</h4>
+                            <div class="checkbox-group">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" data-cliente="1" onchange="updateProgress()"> Decide rápido
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" data-cliente="1" onchange="updateProgress()"> Ouve mais do que fala
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" data-cliente="1" onchange="updateProgress()"> Pede opiniões/consulta outros
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" data-cliente="1" onchange="updateProgress()"> Demonstra emoção
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="strategy-section">
+                        <h4>💡 Estratégia de Abordagem</h4>
+                        <div class="form-group">
+                            <label>🎯 O que você vai fazer diferente na próxima negociação com esse cliente?</label>
+                            <textarea id="cliente1-estrategia" placeholder="Descreva sua estratégia adaptada ao estilo identificado..." oninput="updateProgress()"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cliente 2 -->
+                <div class="client-entry" id="client-2">
+                    <div class="entry-header">
+                        <div class="entry-title">
+                            <div class="entry-number">2</div>
+                            <span class="entry-name">Cliente 2</span>
+                        </div>
+                        <span class="entry-status status-pending" id="status-2">⏳ Pendente</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>👤 Nome do Cliente / Empresa:</label>
+                        <input type="text" id="cliente2-nome" placeholder="Ex: Maria Costa - Empresa XYZ" oninput="updateProgress()">
+                    </div>
+
+                    <div class="form-group">
+                        <label>🎭 Qual é o estilo predominante deste cliente?</label>
+                        <div class="style-selector" id="style-selector-2">
+                            <button type="button" class="style-btn analitico" onclick="selectStyle(2, 'analitico', this)">
+                                <div class="icon">📊</div>
+                                <div class="name">Analítico</div>
+                            </button>
+                            <button type="button" class="style-btn condutor" onclick="selectStyle(2, 'condutor', this)">
+                                <div class="icon">🎯</div>
+                                <div class="name">Condutor</div>
+                            </button>
+                            <button type="button" class="style-btn amigavel" onclick="selectStyle(2, 'amigavel', this)">
+                                <div class="icon">🤝</div>
+                                <div class="name">Amigável</div>
+                            </button>
+                            <button type="button" class="style-btn expressivo" onclick="selectStyle(2, 'expressivo', this)">
+                                <div class="icon">⭐</div>
+                                <div class="name">Expressivo</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>📝 Por que você classifica assim? Quais comportamentos observou?</label>
+                        <textarea id="cliente2-observacoes" placeholder="Ex: Muito simpático, sempre pergunta da família, evita conflitos..." oninput="updateProgress()"></textarea>
+                    </div>
+
+                    <div class="observations-grid">
+                        <div class="observation-section">
+                            <h4>✅ Comportamentos Observados</h4>
+                            <div class="checkbox-group" id="checkgroup-2">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" data-cliente="2" onchange="updateProgress()"> Pede muitos dados/números
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" data-cliente="2" onchange="updateProgress()"> É direto e objetivo
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" data-cliente="2" onchange="updateProgress()"> Valoriza relacionamento
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" data-cliente="2" onchange="updateProgress()"> Fala de visão/futuro
+                                </label>
+                            </div>
+                        </div>
+                        <div class="observation-section">
+                            <h4>⚡ Ritmo de Decisão</h4>
+                            <div class="checkbox-group">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" data-cliente="2" onchange="updateProgress()"> Decide rápido
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" data-cliente="2" onchange="updateProgress()"> Ouve mais do que fala
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" data-cliente="2" onchange="updateProgress()"> Pede opiniões/consulta outros
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" data-cliente="2" onchange="updateProgress()"> Demonstra emoção
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="strategy-section">
+                        <h4>💡 Estratégia de Abordagem</h4>
+                        <div class="form-group">
+                            <label>🎯 O que você vai fazer diferente na próxima negociação com esse cliente?</label>
+                            <textarea id="cliente2-estrategia" placeholder="Descreva sua estratégia adaptada ao estilo identificado..." oninput="updateProgress()"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cliente 3 -->
+                <div class="client-entry" id="client-3">
+                    <div class="entry-header">
+                        <div class="entry-title">
+                            <div class="entry-number">3</div>
+                            <span class="entry-name">Cliente 3</span>
+                        </div>
+                        <span class="entry-status status-pending" id="status-3">⏳ Pendente</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>👤 Nome do Cliente / Empresa:</label>
+                        <input type="text" id="cliente3-nome" placeholder="Ex: Carlos Souza - Empresa 123" oninput="updateProgress()">
+                    </div>
+
+                    <div class="form-group">
+                        <label>🎭 Qual é o estilo predominante deste cliente?</label>
+                        <div class="style-selector" id="style-selector-3">
+                            <button type="button" class="style-btn analitico" onclick="selectStyle(3, 'analitico', this)">
+                                <div class="icon">📊</div>
+                                <div class="name">Analítico</div>
+                            </button>
+                            <button type="button" class="style-btn condutor" onclick="selectStyle(3, 'condutor', this)">
+                                <div class="icon">🎯</div>
+                                <div class="name">Condutor</div>
+                            </button>
+                            <button type="button" class="style-btn amigavel" onclick="selectStyle(3, 'amigavel', this)">
+                                <div class="icon">🤝</div>
+                                <div class="name">Amigável</div>
+                            </button>
+                            <button type="button" class="style-btn expressivo" onclick="selectStyle(3, 'expressivo', this)">
+                                <div class="icon">⭐</div>
+                                <div class="name">Expressivo</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>📝 Por que você classifica assim? Quais comportamentos observou?</label>
+                        <textarea id="cliente3-observacoes" placeholder="Ex: Fala muito, tem sempre novas ideias, gosta de inovar..." oninput="updateProgress()"></textarea>
+                    </div>
+
+                    <div class="observations-grid">
+                        <div class="observation-section">
+                            <h4>✅ Comportamentos Observados</h4>
+                            <div class="checkbox-group" id="checkgroup-3">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" data-cliente="3" onchange="updateProgress()"> Pede muitos dados/números
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" data-cliente="3" onchange="updateProgress()"> É direto e objetivo
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" data-cliente="3" onchange="updateProgress()"> Valoriza relacionamento
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" data-cliente="3" onchange="updateProgress()"> Fala de visão/futuro
+                                </label>
+                            </div>
+                        </div>
+                        <div class="observation-section">
+                            <h4>⚡ Ritmo de Decisão</h4>
+                            <div class="checkbox-group">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" data-cliente="3" onchange="updateProgress()"> Decide rápido
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" data-cliente="3" onchange="updateProgress()"> Ouve mais do que fala
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" data-cliente="3" onchange="updateProgress()"> Pede opiniões/consulta outros
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" data-cliente="3" onchange="updateProgress()"> Demonstra emoção
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="strategy-section">
+                        <h4>💡 Estratégia de Abordagem</h4>
+                        <div class="form-group">
+                            <label>🎯 O que você vai fazer diferente na próxima negociação com esse cliente?</label>
+                            <textarea id="cliente3-estrategia" placeholder="Descreva sua estratégia adaptada ao estilo identificado..." oninput="updateProgress()"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reflexão Final -->
+        <div class="card">
+            <div class="card-header" style="background: linear-gradient(135deg, #e67e22, #f39c12);">
+                <h2>💭 Reflexão Final</h2>
+            </div>
+            <div class="card-body">
+                <div class="reflection-box">
+                    <h4>🤔 Perguntas para Reflexão</h4>
+                    <ul class="reflection-questions">
+                        <li>Você identificou algum padrão nos estilos dos seus clientes?</li>
+                        <li>Existe algum estilo com o qual você tem mais dificuldade de negociar?</li>
+                        <li>Como o seu próprio estilo influencia suas negociações?</li>
+                        <li>O que você pode começar a fazer amanhã para se adaptar melhor?</li>
+                    </ul>
+                </div>
+
+                <div class="form-group">
+                    <label>📝 Suas principais conclusões:</label>
+                    <textarea id="conclusoesFinais" style="min-height: 120px;" placeholder="Escreva aqui seus insights e aprendizados após analisar o estilo dos seus clientes..." oninput="updateProgress()"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>🎯 Uma ação concreta que você vai implementar esta semana:</label>
+                    <textarea id="acaoSemana" placeholder="Ex: Antes da próxima reunião com o cliente X, vou preparar dados específicos porque ele é Analítico..." oninput="updateProgress()"></textarea>
+                </div>
+
+                <!-- Info de impressão -->
+                <div class="print-info">
+                    <strong>Negociação para Vendas: Método do Professor</strong><br>
+                    Prof. Paulo H. Donassolo | Atividade 4.1 - Os 4 Estilos de Negociadores<br>
+                    Gerado em: <span id="print-data"></span>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-secondary" onclick="limparFormulario()">🗑️ Limpar</button>
+                    <button class="btn btn-export" onclick="imprimirPDF()">📄 Imprimir PDF</button>
+                    <button class="btn btn-export" onclick="abrirModalExportacao()">📤 Exportar JSON</button>
+                    <button class="btn btn-primary" onclick="salvarLocal()">💾 Salvar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>Negociação para Vendas: Método do Professor</strong></p>
+            <p>Prof. Paulo H. Donassolo</p>
+            <p style="font-size: 0.9em; margin-top: 10px;">📚 Seção 4.1 - Os 4 Estilos de Negociadores</p>
+        </div>
+    </div>
+
+    <!-- Modal Exportação -->
+    <div class="modal-overlay" id="modalExportacao">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>📤 Exportar Atividade (JSON)</h3>
+                <button class="modal-close" onclick="fecharModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 15px; color: var(--texto-medio);">
+                    Copie o conteúdo abaixo ou clique em "Baixar Arquivo" para salvar o JSON.
+                </p>
+                <textarea id="jsonOutput" readonly></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-copiar" onclick="copiarJSON()">📋 Copiar</button>
+                <button class="btn btn-download" onclick="baixarJSON()">💾 Baixar Arquivo</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Estado
+        const STORAGE_KEY = 'anc_atividade_4_1_estilos';
+        let selectedStyles = { 1: null, 2: null, 3: null };
+        let dadosExportacao = null;
+
+        // Selecionar estilo
+        function selectStyle(clientNum, style, btn) {
+            const buttons = document.querySelectorAll(`#style-selector-${clientNum} .style-btn`);
+            buttons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            selectedStyles[clientNum] = style;
+            updateProgress();
+            autoSave();
+        }
+
+        // Atualizar progresso
+        function updateProgress() {
+            // Contar estilos
+            let counts = { analitico: 0, condutor: 0, amigavel: 0, expressivo: 0 };
+            Object.values(selectedStyles).forEach(style => {
+                if (style) counts[style]++;
+            });
+
+            document.getElementById('analitico-count').textContent = counts.analitico;
+            document.getElementById('condutor-count').textContent = counts.condutor;
+            document.getElementById('amigavel-count').textContent = counts.amigavel;
+            document.getElementById('expressivo-count').textContent = counts.expressivo;
+
+            // Calcular progresso
+            let totalFields = 0;
+            let filledFields = 0;
+
+            // Campos de texto
+            const textFields = [
+                'negociador', 'empresa',
+                'cliente1-nome', 'cliente1-observacoes', 'cliente1-estrategia',
+                'cliente2-nome', 'cliente2-observacoes', 'cliente2-estrategia',
+                'cliente3-nome', 'cliente3-observacoes', 'cliente3-estrategia',
+                'conclusoesFinais', 'acaoSemana'
+            ];
+
+            textFields.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    totalFields++;
+                    if (el.value.trim().length > 3) filledFields++;
+                }
+            });
+
+            // Estilos selecionados
+            totalFields += 3;
+            filledFields += Object.values(selectedStyles).filter(s => s !== null).length;
+
+            const progress = Math.min((filledFields / totalFields) * 100, 100);
+            document.getElementById('progress').style.width = progress + '%';
+
+            // Atualizar status dos cards
+            for (let i = 1; i <= 3; i++) {
+                const entry = document.getElementById(`client-${i}`);
+                const status = document.getElementById(`status-${i}`);
+                const nome = document.getElementById(`cliente${i}-nome`).value.trim();
+                const obs = document.getElementById(`cliente${i}-observacoes`).value.trim();
+
+                if (selectedStyles[i] && nome.length > 2 && obs.length > 10) {
+                    entry.classList.add('completed');
+                    status.textContent = '✅ Completo';
+                    status.className = 'entry-status status-complete';
+                } else {
+                    entry.classList.remove('completed');
+                    status.textContent = '⏳ Pendente';
+                    status.className = 'entry-status status-pending';
+                }
+            }
+        }
+
+        // Mostrar status salvamento
+        function mostrarStatusSalvamento() {
+            const status = document.getElementById('statusSalvamento');
+            status.classList.add('visivel');
+            setTimeout(() => status.classList.remove('visivel'), 2000);
+        }
+
+        // Coletar dados
+        function coletarDados() {
+            const checkboxes = {};
+            document.querySelectorAll('input[type="checkbox"]').forEach((cb, idx) => {
+                checkboxes[`check_${idx}`] = cb.checked;
+            });
+
+            return {
+                _meta: {
+                    tipo: "atividade_4_1_estilos_clientes",
+                    versao: "1.0",
+                    exportadoEm: new Date().toISOString()
+                },
+                identificacao: {
+                    negociador: document.getElementById('negociador').value,
+                    empresa: document.getElementById('empresa').value,
+                    dataAtividade: document.getElementById('dataAtividade').value
+                },
+                clientes: [
+                    {
+                        numero: 1,
+                        nome: document.getElementById('cliente1-nome').value,
+                        estilo: selectedStyles[1],
+                        observacoes: document.getElementById('cliente1-observacoes').value,
+                        estrategia: document.getElementById('cliente1-estrategia').value
+                    },
+                    {
+                        numero: 2,
+                        nome: document.getElementById('cliente2-nome').value,
+                        estilo: selectedStyles[2],
+                        observacoes: document.getElementById('cliente2-observacoes').value,
+                        estrategia: document.getElementById('cliente2-estrategia').value
+                    },
+                    {
+                        numero: 3,
+                        nome: document.getElementById('cliente3-nome').value,
+                        estilo: selectedStyles[3],
+                        observacoes: document.getElementById('cliente3-observacoes').value,
+                        estrategia: document.getElementById('cliente3-estrategia').value
+                    }
+                ],
+                reflexao: {
+                    conclusoes: document.getElementById('conclusoesFinais').value,
+                    acaoSemana: document.getElementById('acaoSemana').value
+                },
+                checkboxes: checkboxes
+            };
+        }
+
+        // Auto-save
+        function autoSave() {
+            const dados = coletarDados();
+            dados.selectedStyles = selectedStyles;
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(dados));
+            mostrarStatusSalvamento();
+        }
+
+        // Salvar local
+        function salvarLocal() {
+            autoSave();
+            alert('✅ Atividade salva localmente com sucesso!\n\nSeus dados serão recuperados automaticamente ao reabrir esta página.');
+        }
+
+        // Carregar dados salvos
+        function carregarDados() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                try {
+                    const dados = JSON.parse(saved);
+
+                    // Identificação
+                    if (dados.identificacao) {
+                        if (dados.identificacao.negociador) document.getElementById('negociador').value = dados.identificacao.negociador;
+                        if (dados.identificacao.empresa) document.getElementById('empresa').value = dados.identificacao.empresa;
+                        if (dados.identificacao.dataAtividade) document.getElementById('dataAtividade').value = dados.identificacao.dataAtividade;
+                    }
+
+                    // Clientes
+                    if (dados.clientes) {
+                        dados.clientes.forEach((cliente, idx) => {
+                            const num = idx + 1;
+                            if (cliente.nome) document.getElementById(`cliente${num}-nome`).value = cliente.nome;
+                            if (cliente.observacoes) document.getElementById(`cliente${num}-observacoes`).value = cliente.observacoes;
+                            if (cliente.estrategia) document.getElementById(`cliente${num}-estrategia`).value = cliente.estrategia;
+                        });
+                    }
+
+                    // Estilos
+                    if (dados.selectedStyles) {
+                        selectedStyles = dados.selectedStyles;
+                        Object.keys(selectedStyles).forEach(num => {
+                            if (selectedStyles[num]) {
+                                const btn = document.querySelector(`#style-selector-${num} .style-btn.${selectedStyles[num]}`);
+                                if (btn) btn.classList.add('active');
+                            }
+                        });
+                    }
+
+                    // Reflexão
+                    if (dados.reflexao) {
+                        if (dados.reflexao.conclusoes) document.getElementById('conclusoesFinais').value = dados.reflexao.conclusoes;
+                        if (dados.reflexao.acaoSemana) document.getElementById('acaoSemana').value = dados.reflexao.acaoSemana;
+                    }
+
+                    // Checkboxes
+                    if (dados.checkboxes) {
+                        document.querySelectorAll('input[type="checkbox"]').forEach((cb, idx) => {
+                            if (dados.checkboxes[`check_${idx}`]) cb.checked = true;
+                        });
+                    }
+
+                    updateProgress();
+                } catch (e) {
+                    console.error('Erro ao carregar dados:', e);
+                }
+            }
+        }
+
+        // Limpar formulário
+        function limparFormulario() {
+            if (confirm('Tem certeza que deseja limpar todo o formulário?')) {
+                document.querySelectorAll('input[type="text"], textarea').forEach(el => el.value = '');
+                document.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
+                document.querySelectorAll('.style-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.client-entry').forEach(entry => entry.classList.remove('completed'));
+
+                selectedStyles = { 1: null, 2: null, 3: null };
+                localStorage.removeItem(STORAGE_KEY);
+                updateProgress();
+            }
+        }
+
+        // Imprimir PDF
+        function imprimirPDF() {
+            document.getElementById('print-data').textContent = new Date().toLocaleDateString('pt-BR');
+            window.print();
+        }
+
+        // Modal exportação
+        function abrirModalExportacao() {
+            dadosExportacao = coletarDados();
+            document.getElementById('jsonOutput').value = JSON.stringify(dadosExportacao, null, 2);
+            document.getElementById('modalExportacao').classList.add('active');
+        }
+
+        function fecharModal() {
+            document.getElementById('modalExportacao').classList.remove('active');
+        }
+
+        function copiarJSON() {
+            const textarea = document.getElementById('jsonOutput');
+            textarea.select();
+            textarea.setSelectionRange(0, 99999);
+            try {
+                navigator.clipboard.writeText(textarea.value).then(() => {
+                    alert('JSON copiado para a área de transferência!');
+                }).catch(() => {
+                    document.execCommand('copy');
+                    alert('JSON copiado para a área de transferência!');
+                });
+            } catch (err) {
+                document.execCommand('copy');
+                alert('JSON copiado para a área de transferência!');
+            }
+        }
+
+        function baixarJSON() {
+            try {
+                const jsonStr = JSON.stringify(dadosExportacao, null, 2);
+                const blob = new Blob([jsonStr], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                const negociador = document.getElementById('negociador').value.replace(/\s+/g, '_') || 'atividade';
+                a.download = `estilos_clientes_${negociador}_${new Date().toISOString().slice(0,10)}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                fecharModal();
+            } catch (err) {
+                console.error('Erro ao baixar:', err);
+                alert('Para baixar, copie o conteúdo e cole em um arquivo .json');
+            }
+        }
+
+        // Eventos
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') fecharModal();
+        });
+
+        document.getElementById('modalExportacao').addEventListener('click', function(e) {
+            if (e.target === this) fecharModal();
+        });
+
+        // Auto-save em todos os campos
+        document.querySelectorAll('input, textarea').forEach(el => {
+            el.addEventListener('input', autoSave);
+        });
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            carregarDados();
+            if (!document.getElementById('dataAtividade').value) {
+                document.getElementById('dataAtividade').value = new Date().toISOString().split('T')[0];
+            }
+            updateProgress();
+        });
+    </script>
+</body>
+</html>
