@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Framework PIA - Planejamento Inteligente Assistido</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .subtitle {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .header .description {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .framework-overview {
+            padding: 50px 40px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            text-align: center;
+        }
+
+        .overview-title {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        .phases-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .phase-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border-left: 8px solid;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .phase-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+
+        .phase-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            opacity: 0.1;
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        .phase1 { 
+            border-left-color: #3498db; 
+        }
+        .phase1::before { 
+            content: '📥';
+            font-size: 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .phase2 { 
+            border-left-color: #2ecc71; 
+        }
+        .phase2::before { 
+            content: '🔮';
+            font-size: 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .phase3 { 
+            border-left-color: #e74c3c; 
+        }
+        .phase3::before { 
+            content: '⚡';
+            font-size: 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .phase-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .phase-icon {
+            font-size: 3rem;
+            margin-right: 20px;
+        }
+
+        .phase-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2c3e50;
+            line-height: 1.2;
+        }
+
+        .phase-percentage {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 10px;
+            display: inline-block;
+        }
+
+        .phase-description {
+            color: #5a6c7d;
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            line-height: 1.7;
+        }
+
+        .activities-list {
+            list-style: none;
+        }
+
+        .activities-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid #ecf0f1;
+            position: relative;
+            padding-left: 35px;
+            color: #34495e;
+            font-size: 1rem;
+        }
+
+        .activities-list li:last-child {
+            border-bottom: none;
+        }
+
+        .activities-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: bold;
+            font-size: 1.3rem;
+            top: 10px;
+        }
+
+        .phase-metrics {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 25px;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+        }
+
+        .metric-item {
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .metric-label {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+
+        .implementation-section {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 50px 40px;
+        }
+
+        .implementation-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 40px;
+            font-weight: 700;
+        }
+
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .step-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .step-number {
+            background: #3498db;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+        .step-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .step-description {
+            font-size: 1rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .benefits-section {
+            padding: 50px 40px;
+            background: white;
+        }
+
+        .benefits-title {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 40px;
+            font-weight: 700;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .benefit-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .benefit-card:hover {
+            transform: scale(1.05);
+        }
+
+        .benefit-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .benefit-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .benefit-description {
+            font-size: 1rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2.5rem; }
+            .header .subtitle { font-size: 1.2rem; }
+            .overview-title { font-size: 2rem; }
+            .phase-title { font-size: 1.5rem; }
+            .implementation-title { font-size: 2rem; }
+            .benefits-title { font-size: 2rem; }
+            .container { margin: 10px; }
+            .header, .framework-overview, .implementation-section, .benefits-section {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Framework PIA</h1>
+            <div class="subtitle">Planejamento Inteligente Assistido</div>
+            <div class="description">
+                Metodologia revolucionária que combina Inteligência Artificial com estratégias de negociação para maximizar resultados em reuniões presenciais B2B
+            </div>
+        </div>
+
+        <div class="framework-overview">
+            <h2 class="overview-title">📊 Visão Geral do Framework</h2>
+            <p style="font-size: 1.2rem; color: #5a6c7d; max-width: 800px; margin: 0 auto;">
+                O Framework PIA transforma dados em estratégias vencedoras através de três fases integradas, 
+                otimizando tempo e recursos para negociações presenciais de alto impacto.
+            </p>
+
+            <div class="phases-container">
+                <!-- FASE 1 -->
+                <div class="phase-card phase1">
+                    <div class="phase-header">
+                        <div class="phase-icon">📥</div>
+                        <div>
+                            <div class="phase-title">COLETA INTELIGENTE</div>
+                            <div class="phase-percentage">30% do Tempo</div>
+                        </div>
+                    </div>
+                    <div class="phase-description">
+                        Reunião automatizada de dados estratégicos sobre cliente, mercado e contexto competitivo 
+                        usando ferramentas de IA para construir uma base sólida de informações.
+                    </div>
+                    <ul class="activities-list">
+                        <li>Upload e análise de dados históricos de vendas similares</li>
+                        <li>Identificação de padrões em clientes do mesmo perfil</li>
+                        <li>Mapeamento digital completo do prospect (LinkedIn, site, redes)</li>
+                        <li>Pesquisa automatizada da concorrência e posicionamento</li>
+                        <li>Análise de informações financeiras e tendências setoriais</li>
+                        <li>Avaliação do timing de mercado e sazonalidade</li>
+                    </ul>
+                    <div class="phase-metrics">
+                        <div class="metrics-grid">
+                            <div class="metric-item">
+                                <div class="metric-value">30-45</div>
+                                <div class="metric-label">Minutos</div>
+                            </div>
+                            <div class="metric-item">
+                                <div class="metric-value">Alto</div>
+                                <div class="metric-label">Uso de IA</div>
+                            </div>
+                            <div class="metric-item">
+                                <div class="metric-value">95%</div>
+                                <div class="metric-label">Automação</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FASE 2 -->
+                <div class="phase-card phase2">
+                    <div class="phase-header">
+                        <div class="phase-icon">🔮</div>
+                        <div>
+                            <div class="phase-title">ANÁLISE PREDITIVA</div>
+                            <div class="phase-percentage">40% do Tempo</div>
+                        </div>
+                    </div>
+                    <div class="phase-description">
+                        Transformação de dados coletados em insights estratégicos através de simulações, 
+                        cálculos de probabilidade e definição de abordagens personalizadas.
+                    </div>
+                    <ul class="activities-list">
+                        <li>Simulação de múltiplos cenários de negociação</li>
+                        <li>Identificação de gatilhos específicos de decisão</li>
+                        <li>Cálculo de probabilidades de fechamento por estratégia</li>
+                        <li>Definição de abordagens personalizadas por perfil</li>
+                        <li>Antecipação das objeções mais prováveis</li>
+                        <li>Determinação do timing ideal para cada etapa</li>
+                    </ul>
+                    <div class="phase-metrics">
+                        <div class="metrics-grid">
+                            <div class="metric-item">
+                                <div class="metric-value">60-90</div>
+                                <div class="metric-label">Minutos</div>
+                            </div>
+                            <div class="metric-item">
+                                <div class="metric-value">Intensivo</div>
+                                <div class="metric-label">Uso de IA</div>
+                            </div>
+                            <div class="metric-item">
+                                <div class="metric-value">85%</div>
+                                <div class="metric-label">Precisão</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FASE 3 -->
+                <div class="phase-card phase3">
+                    <div class="phase-header">
+                        <div class="phase-icon">⚡</div>
+                        <div>
+                            <div class="phase-title">EXECUÇÃO ASSISTIDA</div>
+                            <div class="phase-percentage">30% do Tempo</div>
+                        </div>
+                    </div>
+                    <div class="phase-description">
+                        Implementação da estratégia na reunião presencial com suporte contínuo da IA, 
+                        permitindo ajustes dinâmicos baseados no feedback em tempo real.
+                    </div>
+                    <ul class="activities-list">
+                        <li>Scripts personalizados para abertura e condução</li>
+                        <li>Roteiro de apresentação adaptado ao perfil identificado</li>
+                        <li>Sistema de acompanhamento e alertas em tempo real</li>
+                        <li>Banco de respostas preparadas para objeções</li>
+                        <li>Ajustes dinâmicos baseados no feedback do cliente</li>
+                        <li>Análise pós-negociação e lições aprendidas</li>
+                    </ul>
+                    <div class="phase-metrics">
+                        <div class="metrics-grid">
+                            <div class="metric-item">
+                                <div class="metric-value">45-60</div>
+                                <div class="metric-label">Minutos</div>
+                            </div>
+                            <div class="metric-item">
+                                <div class="metric-value">Suporte</div>
+                                <div class="metric-label">Uso de IA</div>
+                            </div>
+                            <div class="metric-item">
+                                <div class="metric-value">+35%</div>
+                                <div class="metric-label">Conversão</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="implementation-section">
+            <h2 class="implementation-title">🛠️ Como Implementar o Framework PIA</h2>
+            <div class="steps-container">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Escolha suas Ferramentas IA</div>
+                    <div class="step-description">
+                        Selecione as ferramentas de IA adequadas ao seu perfil: ChatGPT/Claude para análises, 
+                        CRM inteligente, LinkedIn Sales Navigator
+                    </div>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Configure sua Base de Dados</div>
+                    <div class="step-description">
+                        Organize seu histórico de vendas, crie templates de coleta de dados e configure 
+                        integrações com suas ferramentas atuais
+                    </div>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Teste com um Cliente</div>
+                    <div class="step-description">
+                        Aplique o framework completo em uma negociação real, documente os resultados 
+                        e ajuste o processo conforme necessário
+                    </div>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <div class="step-title">Expanda para a Equipe</div>
+                    <div class="step-description">
+                        Treine sua equipe no framework, padronize processos e crie métricas de 
+                        acompanhamento para melhoria contínua
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="benefits-section">
+            <h2 class="benefits-title">🎯 Benefícios Comprovados</h2>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">📈</div>
+                    <div class="benefit-title">+35% Taxa de Conversão</div>
+                    <div class="benefit-description">
+                        Aumento significativo na taxa de fechamento através de estratégias 
+                        personalizadas e baseadas em dados
+                    </div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">⏰</div>
+                    <div class="benefit-title">-40% Tempo de Preparação</div>
+                    <div class="benefit-description">
+                        Redução drástica no tempo de preparação de negociações através 
+                        da automação inteligente de processos
+                    </div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🎯</div>
+                    <div class="benefit-title">+50% Precisão nas Previsões</div>
+                    <div class="benefit-description">
+                        Maior acuracidade na previsão de resultados através de análises 
+                        preditivas baseadas em padrões históricos
+                    </div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">💰</div>
+                    <div class="benefit-title">+28% Ticket Médio</div>
+                    <div class="benefit-description">
+                        Aumento no valor médio das vendas através de propostas mais 
+                        assertivas e estratégias de up-selling inteligentes
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
