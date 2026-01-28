@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template - Plano de Negociação IA-Assistido</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .header .description {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        .template-body {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 35px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 5px solid;
+        }
+
+        .section.dados { border-left-color: #3498db; }
+        .section.analise { border-left-color: #2ecc71; }
+        .section.estrategia { border-left-color: #e74c3c; }
+        .section.roteiro { border-left-color: #f39c12; }
+        .section.metricas { border-left-color: #9b59b6; }
+        .section.observacoes { border-left-color: #95a5a6; }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #34495e;
+            margin-bottom: 8px;
+            display: block;
+            font-size: 1.1rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ecf0f1;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            background: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ecf0f1;
+            border-radius: 8px;
+            font-size: 1rem;
+            min-height: 100px;
+            resize: vertical;
+            font-family: inherit;
+            background: white;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .three-column {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .roteiro-section {
+            background: white;
+            border: 2px solid #ecf0f1;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .roteiro-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+
+        .time-indicator {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+        .checklist-area {
+            background: white;
+            border: 2px dashed #bdc3c7;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 10px;
+        }
+
+        .helper-text {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            font-style: italic;
+            margin-top: 5px;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 5px solid #fdcb6e;
+        }
+
+        .highlight-title {
+            font-weight: 700;
+            color: #2d3436;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            .container { margin: 10px; }
+            .header { padding: 30px 20px; }
+            .template-body { padding: 25px 20px; }
+            .header h1 { font-size: 2.2rem; }
+            .two-column, .three-column { grid-template-columns: 1fr; }
+            .section-title { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 Modelo de Plano</h1>
+            <div class="subtitle">Negociação IA-Assistida</div>
+            <div class="description">Estrutura completa para reuniões presenciais de alto impacto</div>
+        </div>
+
+        <div class="template-body">
+            <!-- DADOS DO CLIENTE -->
+            <div class="section dados">
+                <h2 class="section-title">
+                    <span class="section-icon">📊</span>
+                    Dados do Cliente (gerados por IA)
+                </h2>
+                
+                <div class="two-column">
+                    <div class="form-group">
+                        <label class="form-label">Nome da Empresa:</label>
+                        <input type="text" class="form-input" placeholder="Ex: Construtec Materiais Ltda">
+                        <div class="helper-text">Razão social completa da empresa</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Segmento/Setor:</label>
+                        <input type="text" class="form-input" placeholder="Ex: Construção Civil">
+                        <div class="helper-text">Área de atuação principal</div>
+                    </div>
+                </div>
+
+                <div class="three-column">
+                    <div class="form-group">
+                        <label class="form-label">Decisor Principal:</label>
+                        <input type="text" class="form-input" placeholder="Ex: João Silva - Diretor">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Influenciadores:</label>
+                        <input type="text" class="form-input" placeholder="Ex: Maria (Financeiro)">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Porte da Empresa:</label>
+                        <input type="text" class="form-input" placeholder="Ex: Média (50-200 funcionários)">
+                    </div>
+                </div>
+
+                <div class="two-column">
+                    <div class="form-group">
+                        <label class="form-label">Local da Reunião:</label>
+                        <input type="text" class="form-input" placeholder="Ex: Escritório cliente - São Paulo/SP">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Data e Horário:</label>
+                        <input type="text" class="form-input" placeholder="Ex: 15/03/2025 - 14h30">
+                    </div>
+                </div>
+            </div>
+
+            <!-- ANÁLISE PREDITIVA -->
+            <div class="section analise">
+                <h2 class="section-title">
+                    <span class="section-icon">🔮</span>
+                    Análise Preditiva (resultado da IA)
+                </h2>
+
+                <div class="three-column">
+                    <div class="form-group">
+                        <label class="form-label">Probabilidade de Fechamento:</label>
+                        <input type="text" class="form-input" placeholder="Ex: 73%">
+                        <div class="helper-text">Baseado em dados históricos similares</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Valor Ideal da Negociação:</label>
+                        <input type="text" class="form-input" placeholder="Ex: R$ 125.000">
+                        <div class="helper-text">Faixa de valor mais provável</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Desconto Máximo Viável:</label>
+                        <input type="text" class="form-input" placeholder="Ex: 8%">
+                        <div class="helper-text">Margem de negociação recomendada</div>
+                    </div>
+                </div>
+
+                <div class="two-column">
+                    <div class="form-group">
+                        <label class="form-label">Prazo Esperado para Decisão:</label>
+                        <input type="text" class="form-input" placeholder="Ex: 15 a 30 dias">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Nível de Autoridade do Decisor:</label>
+                        <input type="text" class="form-input" placeholder="Ex: Alto - Decisão final">
+                    </div>
+                </div>
+            </div>
+
+            <!-- ESTRATÉGIA PRESENCIAL -->
+            <div class="section estrategia">
+                <h2 class="section-title">
+                    <span class="section-icon">💡</span>
+                    Estratégia Presencial (definida pela IA)
+                </h2>
+
+                <div class="form-group">
+                    <label class="form-label">Abordagem de Abertura:</label>
+                    <textarea class="form-textarea" placeholder="Ex: Iniciar agradecendo o tempo, fazer pergunta sobre projeto atual da empresa, conectar com nossa solução"></textarea>
+                </div>
+
+                <div class="two-column">
+                    <div class="form-group">
+                        <label class="form-label">Foco Principal da Reunião:</label>
+                        <input type="text" class="form-input" placeholder="Ex: ROI e redução de custos">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Gatilho de Decisão Identificado:</label>
+                        <input type="text" class="form-input" placeholder="Ex: Pressão por prazos de entrega">
+                    </div>
+                </div>
+
+                <div class="two-column">
+                    <div class="form-group">
+                        <label class="form-label">Momento Ideal para Proposta:</label>
+                        <input type="text" class="form-input" placeholder="Ex: Após demonstrar cases similares">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Estilo de Comunicação Recomendado:</label>
+                        <input type="text" class="form-input" placeholder="Ex: Técnico, direto, com dados">
+                    </div>
+                </div>
+            </div>
+
+            <!-- ROTEIRO DA REUNIÃO -->
+            <div class="section roteiro">
+                <h2 class="section-title">
+                    <span class="section-icon">📝</span>
+                    Roteiro da Reunião Presencial
+                </h2>
+
+                <div class="roteiro-section">
+                    <div class="roteiro-title">
+                        1. ABERTURA <span class="time-indicator">10 minutos</span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Roteiro personalizado:</label>
+                        <textarea class="form-textarea" placeholder="Ex: Agradecer, apresentar agenda, fazer pergunta de aquecimento sobre situação atual da empresa..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Quebra-gelo sugerido:</label>
+                        <input type="text" class="form-input" placeholder="Ex: Como está o andamento do projeto X que vi no LinkedIn?">
+                    </div>
+                </div>
+
+                <div class="roteiro-section">
+                    <div class="roteiro-title">
+                        2. DIAGNÓSTICO <span class="time-indicator">20 minutos</span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Perguntas estratégicas:</label>
+                        <textarea class="form-textarea" placeholder="Liste 5-7 perguntas essenciais para entender a situação atual e necessidades..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Pontos de dor a explorar:</label>
+                        <textarea class="form-textarea" placeholder="Ex: Atrasos na entrega, falta de controle de estoque, custos elevados..."></textarea>
+                    </div>
+                </div>
+
+                <div class="roteiro-section">
+                    <div class="roteiro-title">
+                        3. APRESENTAÇÃO <span class="time-indicator">25 minutos</span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Proposta de valor única:</label>
+                        <textarea class="form-textarea" placeholder="Ex: Única solução que combina X + Y + Z, resultando em economia de R$ 50.000/ano..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Demonstração/Prova:</label>
+                        <textarea class="form-textarea" placeholder="Ex: Mostrar case da empresa ABC com 30% redução de custos, demonstrar funcionalidade ao vivo..."></textarea>
+                    </div>
+                </div>
+
+                <div class="roteiro-section">
+                    <div class="roteiro-title">
+                        4. TRATAMENTO DE OBJEÇÕES <span class="time-indicator">15 minutos</span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Top 3 objeções esperadas:</label>
+                        <textarea class="form-textarea" placeholder="1. Preço muito alto 2. Não temos orçamento agora 3. Precisamos avaliar outras opções..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Respostas preparadas:</label>
+                        <textarea class="form-textarea" placeholder="Para cada objeção, descreva a estratégia de resposta e argumentos a utilizar..."></textarea>
+                    </div>
+                </div>
+
+                <div class="roteiro-section">
+                    <div class="roteiro-title">
+                        5. FECHAMENTO <span class="time-indicator">10 minutos</span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Chamada para ação:</label>
+                        <input type="text" class="form-input" placeholder="Ex: Podemos agendar uma reunião técnica para próxima semana?">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Próximos passos:</label>
+                        <textarea class="form-textarea" placeholder="Ex: 1. Enviar proposta técnica em 48h 2. Agendar visita técnica 3. Retorno em 5 dias úteis..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MÉTRICAS PÓS-REUNIÃO -->
+            <div class="section metricas">
+                <h2 class="section-title">
+                    <span class="section-icon">📈</span>
+                    Métricas Pós-Reunião
+                </h2>
+
+                <div class="two-column">
+                    <div class="form-group">
+                        <label class="form-label">Objetivo Alcançado:</label>
+                        <input type="text" class="form-input" placeholder="Ex: Sim - interesse confirmado">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Retorno do Cliente:</label>
+                        <input type="text" class="form-input" placeholder="Ex: Muito interessado, vai avaliar internamente">
+                    </div>
+                </div>
+
+                <div class="two-column">
+                    <div class="form-group">
+                        <label class="form-label">Próxima Ação:</label>
+                        <input type="text" class="form-input" placeholder="Ex: Enviar proposta técnica detalhada">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Data do Acompanhamento:</label>
+                        <input type="text" class="form-input" placeholder="Ex: 20/03/2025">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Probabilidade Atualizada:</label>
+                    <input type="text" class="form-input" placeholder="Ex: 85% (aumentou após reunião)">
+                    <div class="helper-text">Revisão da probabilidade após a reunião presencial</div>
+                </div>
+            </div>
+
+            <!-- OBSERVAÇÕES IMPORTANTES -->
+            <div class="section observacoes">
+                <h2 class="section-title">
+                    <span class="section-icon">🎯</span>
+                    Observações Importantes
+                </h2>
+
+                <div class="two-column">
+                    <div class="form-group">
+                        <label class="form-label">Material para Levar:</label>
+                        <textarea class="form-textarea" placeholder="Ex: Catálogo, amostras, tablet para demonstração, calculadora ROI..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Propostas de Reserva:</label>
+                        <textarea class="form-textarea" placeholder="Ex: Proposta básica, intermediária e premium preparadas..."></textarea>
+                    </div>
+                </div>
+
+                <div class="two-column">
+                    <div class="form-group">
+                        <label class="form-label">Contingências:</label>
+                        <textarea class="form-textarea" placeholder="Ex: Se decisor não estiver presente, como proceder? Se surgir nova objeção não prevista..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Responsável pelo Acompanhamento:</label>
+                        <input type="text" class="form-input" placeholder="Ex: João Silva - Vendedor principal">
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <div class="highlight-title">💡 Lembre-se:</div>
+                <p>Este plano é um documento vivo. Ajuste durante e após a reunião com base no retorno real do cliente. A IA fornece a base estratégica, mas sua experiência e adaptação em tempo real fazem a diferença na execução.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
