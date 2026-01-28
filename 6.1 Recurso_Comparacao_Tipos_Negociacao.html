@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparação dos Tipos de Negociação | Seção 6.1</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            padding: 30px 20px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-bottom: 15px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            padding: 12px 24px;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 30px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-tab:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+
+        .nav-tab.active {
+            background: white;
+            color: #1a365d;
+            border-color: white;
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+
+        .card-header {
+            padding: 20px 25px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .card-header.distributiva { background: linear-gradient(135deg, #E53E3E, #C53030); }
+        .card-header.integrativa { background: linear-gradient(135deg, #38A169, #2F855A); }
+        .card-header.colaborativa { background: linear-gradient(135deg, #3182CE, #2B6CB0); }
+        .card-header.competitiva { background: linear-gradient(135deg, #DD6B20, #C05621); }
+        .card-header.harvard { background: linear-gradient(135deg, #805AD5, #6B46C1); }
+
+        .card-icon {
+            font-size: 2em;
+        }
+
+        .card-title {
+            font-size: 1.4em;
+            font-weight: 600;
+        }
+
+        .card-body {
+            padding: 25px;
+        }
+
+        /* Comparison Grid */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+
+        @media (max-width: 900px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Info Boxes */
+        .info-box {
+            background: #F7FAFC;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .info-box h4 {
+            color: #2D3748;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-box ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-box li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            color: #4A5568;
+            border-bottom: 1px solid #E2E8F0;
+        }
+
+        .info-box li:last-child {
+            border-bottom: none;
+        }
+
+        .info-box li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #718096;
+        }
+
+        /* Highlights */
+        .highlight-box {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .highlight-box.green {
+            background: #F0FFF4;
+            border-left: 4px solid #38A169;
+        }
+
+        .highlight-box.red {
+            background: #FFF5F5;
+            border-left: 4px solid #E53E3E;
+        }
+
+        .highlight-box.blue {
+            background: #EBF8FF;
+            border-left: 4px solid #3182CE;
+        }
+
+        .highlight-box.orange {
+            background: #FFFAF0;
+            border-left: 4px solid #DD6B20;
+        }
+
+        .highlight-box.purple {
+            background: #FAF5FF;
+            border-left: 4px solid #805AD5;
+        }
+
+        .highlight-box strong {
+            color: #2D3748;
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .comparison-table th {
+            background: #2D3748;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .comparison-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #E2E8F0;
+            vertical-align: top;
+        }
+
+        .comparison-table tr:hover {
+            background: #F7FAFC;
+        }
+
+        .comparison-table .aspect {
+            font-weight: 600;
+            color: #2D3748;
+            background: #EDF2F7;
+            width: 20%;
+        }
+
+        /* Matrix 2x2 */
+        .matrix-container {
+            display: grid;
+            grid-template-columns: auto 1fr 1fr;
+            grid-template-rows: auto 1fr 1fr;
+            gap: 3px;
+            background: #E2E8F0;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .matrix-header {
+            background: #2D3748;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .matrix-label {
+            background: #4A5568;
+            color: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            transform: rotate(180deg);
+        }
+
+        .matrix-cell {
+            background: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .matrix-cell h5 {
+            color: #2D3748;
+            margin-bottom: 8px;
+            font-size: 1em;
+        }
+
+        .matrix-cell p {
+            color: #718096;
+            font-size: 0.9em;
+        }
+
+        .matrix-cell.q1 { border-left: 4px solid #38A169; }
+        .matrix-cell.q2 { border-left: 4px solid #3182CE; }
+        .matrix-cell.q3 { border-left: 4px solid #DD6B20; }
+        .matrix-cell.q4 { border-left: 4px solid #E53E3E; }
+
+        /* Harvard Pillars */
+        .pillars-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        @media (max-width: 1000px) {
+            .pillars-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .pillars-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .pillar-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-top: 4px solid #805AD5;
+            transition: transform 0.3s ease;
+        }
+
+        .pillar-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .pillar-number {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #805AD5, #6B46C1);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin: 0 auto 15px;
+        }
+
+        .pillar-card h5 {
+            color: #2D3748;
+            font-size: 0.95em;
+            margin-bottom: 10px;
+        }
+
+        .pillar-card p {
+            color: #718096;
+            font-size: 0.85em;
+            line-height: 1.4;
+        }
+
+        /* Decision Tree */
+        .decision-tree {
+            background: #F7FAFC;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .decision-tree h4 {
+            color: #2D3748;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .decision-question {
+            background: white;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #3182CE;
+        }
+
+        .decision-question strong {
+            color: #2D3748;
+        }
+
+        .decision-answers {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .decision-answer {
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.9em;
+        }
+
+        .decision-answer.yes {
+            background: #C6F6D5;
+            color: #22543D;
+        }
+
+        .decision-answer.no {
+            background: #FED7D7;
+            color: #742A2A;
+        }
+
+        /* Bilateral vs Multilateral */
+        .vs-container {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 20px;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .vs-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .vs-box {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .vs-box h4 {
+            color: #2D3748;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .vs-box .icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .vs-divider {
+            font-size: 2em;
+            color: white;
+            font-weight: 700;
+        }
+
+        .tactics-list {
+            text-align: left;
+            margin-top: 15px;
+        }
+
+        .tactics-list li {
+            padding: 8px 0;
+            color: #4A5568;
+            font-size: 0.95em;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: white;
+            opacity: 0.8;
+            margin-top: 40px;
+            padding: 20px;
+        }
+
+        /* Print */
+        @media print {
+            body { background: white; }
+            .nav-tabs { display: none; }
+            .content-section { display: block !important; page-break-inside: avoid; margin-bottom: 30px; }
+            .card { box-shadow: none; border: 1px solid #ddd; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="badge">📊 RECURSO - SEÇÃO 6.1</div>
+            <h1>Tipos de Negociação</h1>
+            <p>Guia completo para escolher a abordagem certa para cada situação</p>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-tabs">
+            <div class="nav-tab active" onclick="showSection('tipos')">📈 Tipos</div>
+            <div class="nav-tab" onclick="showSection('abordagens')">🤝 Abordagens</div>
+            <div class="nav-tab" onclick="showSection('harvard')">🎓 Harvard</div>
+            <div class="nav-tab" onclick="showSection('quando')">❓ Quando Usar</div>
+            <div class="nav-tab" onclick="showSection('estrutura')">👥 Estrutura</div>
+        </div>
+
+        <!-- Section 1: Tipos (Distributiva vs Integrativa) -->
+        <div id="tipos" class="content-section active">
+            <div class="comparison-grid">
+                <!-- Distributiva -->
+                <div class="card">
+                    <div class="card-header distributiva">
+                        <span class="card-icon">🥊</span>
+                        <span class="card-title">Negociação Distributiva</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="highlight-box red">
+                            <strong>Definição:</strong> Divisão de um "bolo fixo". O que um ganha, o outro perde. Soma zero.
+                        </div>
+
+                        <div class="info-box">
+                            <h4>📋 Características</h4>
+                            <ul>
+                                <li>Recursos são limitados e fixos</li>
+                                <li>Interesses são diretamente opostos</li>
+                                <li>Foco em maximizar sua parte</li>
+                                <li>Informação é poder (proteja a sua)</li>
+                                <li>Ancoragem é fundamental</li>
+                            </ul>
+                        </div>
+
+                        <div class="info-box">
+                            <h4>✅ Resultados Possíveis</h4>
+                            <ul>
+                                <li><strong>Ganha-Perde:</strong> Você maximiza, outro minimiza</li>
+                                <li><strong>Perde-Ganha:</strong> Você cede, outro maximiza</li>
+                                <li><strong>Perde-Perde:</strong> Nenhum acordo ou acordo ruim</li>
+                            </ul>
+                        </div>
+
+                        <div class="highlight-box red">
+                            <strong>⚠️ Atenção:</strong> Na distributiva, ganha-ganha NÃO existe. É matematicamente impossível.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Integrativa -->
+                <div class="card">
+                    <div class="card-header integrativa">
+                        <span class="card-icon">🤝</span>
+                        <span class="card-title">Negociação Integrativa</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="highlight-box green">
+                            <strong>Definição:</strong> Criação de valor. O "bolo" pode crescer. Busca-se expandir ganhos para todos.
+                        </div>
+
+                        <div class="info-box">
+                            <h4>📋 Características</h4>
+                            <ul>
+                                <li>Interesses podem ser complementares</li>
+                                <li>Foco em criar valor antes de dividir</li>
+                                <li>Troca-se "moedas" de valor diferente</li>
+                                <li>Compartilhar informação gera oportunidades</li>
+                                <li>Criatividade é fundamental</li>
+                            </ul>
+                        </div>
+
+                        <div class="info-box">
+                            <h4>✅ Resultado Possível</h4>
+                            <ul>
+                                <li><strong>Ganha-Ganha:</strong> Ambos obtêm mais valor que o esperado</li>
+                                <li>Valor criado é maior que a soma das partes</li>
+                                <li>Relacionamento fortalecido</li>
+                            </ul>
+                        </div>
+
+                        <div class="highlight-box green">
+                            <strong>💡 Chave:</strong> "O que custa pouco para mim mas vale muito para ele? E vice-versa?"
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comparison Table -->
+            <div class="card">
+                <div class="card-body">
+                    <h3 style="color: #2D3748; margin-bottom: 20px; text-align: center;">📊 Comparação Lado a Lado</h3>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Aspecto</th>
+                                <th style="background: #C53030;">🥊 Distributiva</th>
+                                <th style="background: #2F855A;">🤝 Integrativa</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="aspect">Metáfora</td>
+                                <td>Dividir uma pizza</td>
+                                <td>Fazer uma pizza maior</td>
+                            </tr>
+                            <tr>
+                                <td class="aspect">Foco</td>
+                                <td>Posições (o que quer)</td>
+                                <td>Interesses (por que quer)</td>
+                            </tr>
+                            <tr>
+                                <td class="aspect">Informação</td>
+                                <td>Proteger, esconder fraquezas</td>
+                                <td>Compartilhar para criar opções</td>
+                            </tr>
+                            <tr>
+                                <td class="aspect">Comunicação</td>
+                                <td>Táticas, blefes, pressão</td>
+                                <td>Perguntas abertas, escuta ativa</td>
+                            </tr>
+                            <tr>
+                                <td class="aspect">Relacionamento</td>
+                                <td>Secundário ao resultado</td>
+                                <td>Parte do resultado</td>
+                            </tr>
+                            <tr>
+                                <td class="aspect">Tempo</td>
+                                <td>Curto prazo</td>
+                                <td>Longo prazo</td>
+                            </tr>
+                            <tr>
+                                <td class="aspect">Resultado típico</td>
+                                <td>Um satisfeito, um frustrado</td>
+                                <td>Ambos satisfeitos</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Abordagens (Colaborativa vs Competitiva) -->
+        <div id="abordagens" class="content-section">
+            <div class="comparison-grid">
+                <!-- Colaborativa -->
+                <div class="card">
+                    <div class="card-header colaborativa">
+                        <span class="card-icon">🤗</span>
+                        <span class="card-title">Abordagem Colaborativa</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="highlight-box blue">
+                            <strong>Definição:</strong> Trabalhar junto com o outro lado para construir a solução. Transparência e confiança mútua.
+                        </div>
+
+                        <div class="info-box">
+                            <h4>✅ Benefícios</h4>
+                            <ul>
+                                <li>Parcerias duradouras</li>
+                                <li>Relacionamentos mais sólidos</li>
+                                <li>Inovação conjunta</li>
+                                <li>Diferenciação da concorrência</li>
+                                <li>Redução de custos do relacionamento</li>
+                            </ul>
+                        </div>
+
+                        <div class="info-box">
+                            <h4>⚠️ Limitações</h4>
+                            <ul>
+                                <li>Exige confiança mútua</li>
+                                <li>Mais complexa de implementar</li>
+                                <li>Vulnerável às mudanças nas empresas</li>
+                                <li>Riscos se o outro não jogar limpo</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Competitiva -->
+                <div class="card">
+                    <div class="card-header competitiva">
+                        <span class="card-icon">⚔️</span>
+                        <span class="card-title">Abordagem Competitiva</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="highlight-box orange">
+                            <strong>Definição:</strong> Jogar para ganhar. Proteger informações, usar táticas de pressão, maximizar resultados.
+                        </div>
+
+                        <div class="info-box">
+                            <h4>✅ Benefícios</h4>
+                            <ul>
+                                <li>Resultados mais rápidos</li>
+                                <li>Menor complexidade de gestão</li>
+                                <li>Eficaz contra táticas agressivas</li>
+                                <li>Clareza das expectativas</li>
+                                <li>Rapidez na solução</li>
+                            </ul>
+                        </div>
+
+                        <div class="info-box">
+                            <h4>⚠️ Limitações</h4>
+                            <ul>
+                                <li>Relacionamentos fragilizados</li>
+                                <li>Dano potencial aos relacionamentos</li>
+                                <li>Sustentabilidade questionável</li>
+                                <li>Risco de escalada no conflito</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Matrix 2x2 -->
+            <div class="card">
+                <div class="card-body">
+                    <h3 style="color: #2D3748; margin-bottom: 20px; text-align: center;">🎯 Matriz dos 4 Quadrantes</h3>
+                    <p style="text-align: center; color: #718096; margin-bottom: 20px;">Cruzando TIPO (Distributiva/Integrativa) com ABORDAGEM (Colaborativa/Competitiva)</p>
+                    
+                    <div class="matrix-container">
+                        <div class="matrix-header" style="grid-column: 1;"></div>
+                        <div class="matrix-header">🤗 COLABORATIVA</div>
+                        <div class="matrix-header">⚔️ COMPETITIVA</div>
+                        
+                        <div class="matrix-label">🤝 INTEGRATIVA</div>
+                        <div class="matrix-cell q1">
+                            <h5>🌟 Parceria Estratégica</h5>
+                            <p>Criam valor juntos de forma transparente. Ideal para relacionamentos de longo prazo.</p>
+                        </div>
+                        <div class="matrix-cell q2">
+                            <h5>🎯 Joint Venture</h5>
+                            <p>Interesses compartilhados mas também competição. Cada um maximiza seu ganho na criação de valor.</p>
+                        </div>
+                        
+                        <div class="matrix-label">🥊 DISTRIBUTIVA</div>
+                        <div class="matrix-cell q3">
+                            <h5>🤝 Divisão Respeitosa</h5>
+                            <p>Dividem recurso fixo de forma justa, preservando relacionamento para o futuro.</p>
+                        </div>
+                        <div class="matrix-cell q4">
+                            <h5>⚡ Disputa Direta</h5>
+                            <p>Competição por recursos limitados. Cada um jogando para maximizar sua parte.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Harvard -->
+        <div id="harvard" class="content-section">
+            <div class="card">
+                <div class="card-header harvard">
+                    <span class="card-icon">🎓</span>
+                    <span class="card-title">Método Harvard de Negociação</span>
+                </div>
+                <div class="card-body">
+                    <div class="highlight-box purple">
+                        <strong>Definição:</strong> Negociação Baseada em Princípios. Desenvolvido por Roger Fisher e William Ury no Harvard Negotiation Project. A terceira via: <em>"Seja duro com o problema e suave com as pessoas."</em>
+                    </div>
+
+                    <h4 style="color: #2D3748; margin: 25px 0 15px; text-align: center;">Os 5 Pilares do Método Harvard</h4>
+                    
+                    <div class="pillars-container">
+                        <div class="pillar-card">
+                            <div class="pillar-number">1</div>
+                            <h5>Separe as Pessoas do Problema</h5>
+                            <p>Ataque o problema, não a pessoa. Exerça empatia. Lide com emoções.</p>
+                        </div>
+                        <div class="pillar-card">
+                            <div class="pillar-number">2</div>
+                            <h5>Concentre-se nos Interesses</h5>
+                            <p>Foque no "por quê", não no "o quê". Posições são rígidas; interesses são flexíveis.</p>
+                        </div>
+                        <div class="pillar-card">
+                            <div class="pillar-number">3</div>
+                            <h5>Crie Opções de Ganhos Mútuos</h5>
+                            <p>Use criatividade. Evite julgamentos prematuros. Aumente o bolo antes de dividir.</p>
+                        </div>
+                        <div class="pillar-card">
+                            <div class="pillar-number">4</div>
+                            <h5>Utilize Critérios Objetivos</h5>
+                            <p>Use dados, fatos, padrões de mercado. Fuja da barganha de posições.</p>
+                        </div>
+                        <div class="pillar-card">
+                            <div class="pillar-number">5</div>
+                            <h5>Defina sua MAANA</h5>
+                            <p>Melhor Alternativa À Negociação de um Acordo. Seu Plano B. Seu piso mínimo.</p>
+                        </div>
+                    </div>
+
+                    <div class="comparison-grid" style="margin-top: 25px;">
+                        <div class="info-box">
+                            <h4>💡 Quando Usar Harvard</h4>
+                            <ul>
+                                <li>Sempre como base de qualquer negociação</li>
+                                <li>Quando quer resultados sustentáveis</li>
+                                <li>Para preservar relacionamentos</li>
+                                <li>Em negociações complexas</li>
+                                <li>Quando precisa de critérios justos</li>
+                            </ul>
+                        </div>
+                        <div class="info-box">
+                            <h4>🎯 Perguntas-Chave Harvard</h4>
+                            <ul>
+                                <li>"Por que isso é importante para você?"</li>
+                                <li>"Quais são seus interesses reais?"</li>
+                                <li>"E se fizéssemos de outra forma?"</li>
+                                <li>"Qual critério seria justo para ambos?"</li>
+                                <li>"Qual é a sua alternativa se não fecharmos?"</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Quando Usar -->
+        <div id="quando" class="content-section">
+            <div class="card">
+                <div class="card-body">
+                    <h3 style="color: #2D3748; margin-bottom: 20px; text-align: center;">🤔 Árvore de Decisão: Qual Abordagem Usar?</h3>
+                    
+                    <div class="decision-tree">
+                        <div class="decision-question">
+                            <strong>1. O bolo pode crescer?</strong>
+                            <p style="color: #718096; margin-top: 5px;">Existem interesses complementares? Há espaço para criar valor além do óbvio?</p>
+                            <div class="decision-answers">
+                                <div class="decision-answer yes">✅ SIM → Considere INTEGRATIVA</div>
+                                <div class="decision-answer no">❌ NÃO → Use DISTRIBUTIVA</div>
+                            </div>
+                        </div>
+                        
+                        <div class="decision-question">
+                            <strong>2. Há potencial de relacionamento futuro?</strong>
+                            <p style="color: #718096; margin-top: 5px;">Vocês podem fazer negócios novamente? O mercado é pequeno?</p>
+                            <div class="decision-answers">
+                                <div class="decision-answer yes">✅ SIM → Incline para COLABORATIVA</div>
+                                <div class="decision-answer no">❌ NÃO → COMPETITIVA pode ser eficiente</div>
+                            </div>
+                        </div>
+                        
+                        <div class="decision-question">
+                            <strong>3. Como o outro lado está se comportando?</strong>
+                            <p style="color: #718096; margin-top: 5px;">Ele é transparente? Usa táticas agressivas?</p>
+                            <div class="decision-answers">
+                                <div class="decision-answer yes">✅ COOPERATIVO → Responda com colaboração</div>
+                                <div class="decision-answer no">❌ AGRESSIVO → Proteja-se, use competitiva</div>
+                            </div>
+                        </div>
+                        
+                        <div class="decision-question">
+                            <strong>4. Qual seu nível de poder relativo?</strong>
+                            <p style="color: #718096; margin-top: 5px;">Você tem alternativas? Ele depende de você?</p>
+                            <div class="decision-answers">
+                                <div class="decision-answer yes">✅ PODER ALTO → Pode usar competitiva se fizer sentido</div>
+                                <div class="decision-answer no">❌ PODER BAIXO → Busque criar valor (integrativa)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="highlight-box purple" style="margin-top: 20px;">
+                        <strong>💡 Dica de Ouro:</strong> Na dúvida, comece mais colaborativo do que competitivo. É mais fácil endurecer depois do que reconstruir confiança perdida. E sempre use Harvard como framework base.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Reference Table -->
+            <div class="card">
+                <div class="card-body">
+                    <h3 style="color: #2D3748; margin-bottom: 20px; text-align: center;">📋 Referência Rápida: Quando Usar Cada Uma</h3>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Tipo/Abordagem</th>
+                                <th>Use Quando...</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="aspect" style="background: #FED7D7;">Distributiva</td>
+                                <td>Commodity, transação única, foco em preço, licitação, poder muito forte</td>
+                            </tr>
+                            <tr>
+                                <td class="aspect" style="background: #C6F6D5;">Integrativa</td>
+                                <td>Relacionamento longo, produto complexo, interesses complementares, diferenciação possível</td>
+                            </tr>
+                            <tr>
+                                <td class="aspect" style="background: #BEE3F8;">Colaborativa</td>
+                                <td>Parceria estratégica, problema complexo, interdependência, resolução de conflitos, inovação</td>
+                            </tr>
+                            <tr>
+                                <td class="aspect" style="background: #FEEBC8;">Competitiva</td>
+                                <td>Táticas agressivas do outro, sem futuro, poder superior, práticas abusivas, margens apertadas</td>
+                            </tr>
+                            <tr>
+                                <td class="aspect" style="background: #E9D8FD;">Harvard</td>
+                                <td>Sempre como base! Independente da abordagem escolhida</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 5: Estrutura (Bilateral vs Multilateral) -->
+        <div id="estrutura" class="content-section">
+            <div class="card">
+                <div class="card-body">
+                    <h3 style="color: #2D3748; margin-bottom: 25px; text-align: center;">👥 Estrutura da Negociação: Quantos Lados?</h3>
+                    
+                    <div class="vs-container">
+                        <div class="vs-box">
+                            <div class="icon">👥</div>
+                            <h4>Bilateral</h4>
+                            <p style="color: #718096;">2 grupos de interesse</p>
+                            <div class="highlight-box blue" style="margin-top: 15px;">
+                                <strong>Dinâmica:</strong> Um propõe, outro responde. Vocês dois constroem o acordo.
+                            </div>
+                            <ul class="tactics-list">
+                                <li>✓ Mais simples de gerenciar</li>
+                                <li>✓ Comunicação direta</li>
+                                <li>✓ Decisões mais rápidas</li>
+                                <li>✓ Menos variáveis</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="vs-divider">VS</div>
+                        
+                        <div class="vs-box">
+                            <div class="icon">👥👥👥</div>
+                            <h4>Multilateral</h4>
+                            <p style="color: #718096;">3+ grupos de interesse</p>
+                            <div class="highlight-box orange" style="margin-top: 15px;">
+                                <strong>Dinâmica:</strong> Múltiplos interesses a alinhar. Coalizões possíveis.
+                            </div>
+                            <ul class="tactics-list">
+                                <li>⚠️ Complexidade exponencial</li>
+                                <li>⚠️ Informação se perde facilmente</li>
+                                <li>⚠️ Requer mais preparação</li>
+                                <li>⚠️ Coalizões mudam o jogo</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h4 style="color: #2D3748; margin-bottom: 20px;">🎯 Táticas para Negociações Multilaterais</h4>
+                    
+                    <div class="comparison-grid">
+                        <div class="info-box">
+                            <h4>📋 Antes da Negociação</h4>
+                            <ul>
+                                <li>Mapeie todos os grupos de interesse</li>
+                                <li>Identifique os interesses de cada um</li>
+                                <li>Descubra possíveis coalizões</li>
+                                <li>Defina quem decide o quê</li>
+                                <li>Prepare-se para cenários múltiplos</li>
+                            </ul>
+                        </div>
+                        <div class="info-box">
+                            <h4>🤝 Durante a Negociação</h4>
+                            <ul>
+                                <li>Busque pontos de concordância iniciais</li>
+                                <li>Gerencie informações sistematicamente</li>
+                                <li>Evite barganha sequencial</li>
+                                <li>Permaneça na mesa (quem sai perde)</li>
+                                <li>Seja o mediador quando possível</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="highlight-box purple" style="margin-top: 20px;">
+                        <strong>💡 Insight:</strong> Em multilaterais, sua posição pode mudar de competidor para mediador. Alinhar interesses divergentes pode ser seu maior valor.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>Negociação para Vendas: Método do Professor</strong></p>
+            <p>Prof. Paulo H. Donassolo</p>
+        </div>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active from all tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Activate clicked tab
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

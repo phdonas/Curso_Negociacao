@@ -1,0 +1,1540 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Folha de Duas Colunas - Método Harvard de Negociação</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --azul-principal: #1e3a5f;
+            --azul-claro: #2d5a87;
+            --vermelho-principal: #c41e3a;
+            --vermelho-claro: #e63946;
+            --verde: #28a745;
+            --amarelo: #ffc107;
+            --cinza-fundo: #f8f9fa;
+            --cinza-borda: #dee2e6;
+            --branco: #ffffff;
+            --texto-escuro: #212529;
+            --texto-medio: #495057;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 50%, #1e3a5f 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Cabeçalho */
+        .header {
+            text-align: center;
+            color: var(--branco);
+            margin-bottom: 30px;
+            padding: 30px 20px;
+        }
+
+        .header-badge {
+            display: inline-block;
+            background: var(--vermelho-principal);
+            color: var(--branco);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Área de identificação */
+        .identificacao {
+            background: var(--branco);
+            border-radius: 16px;
+            padding: 25px 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        }
+
+        .identificacao-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--vermelho-principal);
+        }
+
+        .identificacao h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--azul-principal);
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-salvamento {
+            font-size: 0.85rem;
+            color: var(--verde);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .status-salvamento.visivel {
+            opacity: 1;
+        }
+
+        .identificacao-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .campo-identificacao {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .campo-identificacao label {
+            font-weight: 600;
+            color: var(--azul-principal);
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        .campo-identificacao input,
+        .campo-identificacao select,
+        .campo-identificacao textarea {
+            padding: 12px 15px;
+            border: 2px solid var(--cinza-borda);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: 'Source Sans Pro', sans-serif;
+        }
+
+        .campo-identificacao input:focus,
+        .campo-identificacao select:focus,
+        .campo-identificacao textarea:focus {
+            outline: none;
+            border-color: var(--azul-claro);
+            box-shadow: 0 0 0 3px rgba(45, 90, 135, 0.1);
+        }
+
+        .campo-largo {
+            grid-column: 1 / -1;
+        }
+
+        /* Instruções colapsáveis */
+        .instrucoes-container {
+            background: var(--branco);
+            border-radius: 16px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+
+        .instrucoes-header {
+            background: linear-gradient(135deg, var(--vermelho-principal) 0%, var(--vermelho-claro) 100%);
+            color: var(--branco);
+            padding: 15px 25px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .instrucoes-header h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .instrucoes-toggle {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .instrucoes-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .instrucoes-content.show {
+            max-height: 500px;
+        }
+
+        .instrucoes-inner {
+            padding: 25px;
+        }
+
+        .instrucoes-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .instrucao-item {
+            display: flex;
+            gap: 12px;
+        }
+
+        .instrucao-numero {
+            width: 28px;
+            height: 28px;
+            background: var(--azul-principal);
+            color: var(--branco);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .instrucao-texto {
+            font-size: 0.9rem;
+            color: var(--texto-escuro);
+            line-height: 1.5;
+        }
+
+        /* Blocos Harvard */
+        .bloco-harvard {
+            background: var(--branco);
+            border-radius: 16px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+
+        .bloco-header {
+            background: linear-gradient(135deg, var(--azul-principal) 0%, var(--azul-claro) 100%);
+            color: var(--branco);
+            padding: 20px 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .bloco-numero {
+            background: var(--vermelho-principal);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .bloco-titulo-area h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            margin-bottom: 3px;
+        }
+
+        .bloco-titulo-area p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .bloco-content {
+            padding: 25px 30px;
+        }
+
+        /* Duas colunas */
+        .duas-colunas {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .coluna {
+            background: var(--cinza-fundo);
+            border-radius: 12px;
+            padding: 20px;
+            border-top: 4px solid;
+        }
+
+        .coluna-eu {
+            border-top-color: var(--azul-principal);
+        }
+
+        .coluna-outro {
+            border-top-color: var(--vermelho-principal);
+        }
+
+        .coluna-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--cinza-borda);
+        }
+
+        .coluna-icon {
+            font-size: 1.5rem;
+        }
+
+        .coluna-titulo {
+            font-weight: 700;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .coluna-eu .coluna-titulo {
+            color: var(--azul-principal);
+        }
+
+        .coluna-outro .coluna-titulo {
+            color: var(--vermelho-principal);
+        }
+
+        .campo-texto {
+            width: 100%;
+            min-height: 100px;
+            padding: 15px;
+            border: 2px solid var(--cinza-borda);
+            border-radius: 8px;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            resize: vertical;
+            transition: all 0.3s ease;
+            background: var(--branco);
+        }
+
+        .campo-texto:focus {
+            outline: none;
+            border-color: var(--azul-claro);
+            box-shadow: 0 0 0 3px rgba(45, 90, 135, 0.1);
+        }
+
+        .campo-texto::placeholder {
+            color: #adb5bd;
+            font-style: italic;
+        }
+
+        /* Interesses especiais */
+        .interesses-grupo {
+            margin-bottom: 15px;
+        }
+
+        .interesse-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .interesse-badge {
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-comum {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-parcial {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-oposto {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .interesse-campo {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid var(--cinza-borda);
+            border-radius: 8px;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            background: var(--branco);
+        }
+
+        .interesse-campo:focus {
+            outline: none;
+            border-color: var(--azul-claro);
+            box-shadow: 0 0 0 3px rgba(45, 90, 135, 0.1);
+        }
+
+        /* Dica box */
+        .dica-box {
+            background: linear-gradient(135deg, #fff8e6 0%, #fffbf0 100%);
+            border-left: 4px solid var(--amarelo);
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 20px;
+        }
+
+        .dica-box strong {
+            color: var(--azul-principal);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .dica-box p {
+            font-size: 0.9rem;
+            color: var(--texto-medio);
+            line-height: 1.5;
+        }
+
+        /* Botões de ação */
+        .acoes {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 14px 30px;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--vermelho-principal) 0%, var(--vermelho-claro) 100%);
+            color: var(--branco);
+            box-shadow: 0 4px 15px rgba(196, 30, 58, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(196, 30, 58, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--branco);
+            color: var(--vermelho-principal);
+            border: 2px solid var(--vermelho-principal);
+        }
+
+        .btn-secondary:hover {
+            background: var(--vermelho-principal);
+            color: var(--branco);
+        }
+
+        .btn-outline {
+            background: var(--branco);
+            color: var(--azul-principal);
+            border: 2px solid var(--azul-principal);
+        }
+
+        .btn-outline:hover {
+            background: var(--azul-principal);
+            color: var(--branco);
+        }
+
+        .btn-export {
+            background: linear-gradient(135deg, var(--azul-principal) 0%, var(--azul-claro) 100%);
+            color: var(--branco);
+            box-shadow: 0 4px 15px rgba(30, 58, 95, 0.3);
+        }
+
+        .btn-export:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(30, 58, 95, 0.4);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: var(--branco);
+            padding: 25px;
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        /* ================ ESTILOS DE IMPRESSÃO A4 ================ */
+        @media print {
+            @page {
+                size: A4;
+                margin: 12mm;
+            }
+
+            body {
+                background: white !important;
+                padding: 0;
+                font-size: 10pt;
+            }
+
+            .container {
+                max-width: 100%;
+            }
+
+            .header {
+                color: var(--azul-principal) !important;
+                padding: 10px;
+                margin-bottom: 10px;
+            }
+
+            .header h1 {
+                font-size: 18pt;
+                text-shadow: none;
+            }
+
+            .header p {
+                display: none;
+            }
+
+            .header-badge {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .identificacao {
+                box-shadow: none;
+                border: 1px solid var(--cinza-borda);
+                padding: 15px;
+                margin-bottom: 15px;
+                page-break-inside: avoid;
+            }
+
+            .identificacao-header {
+                margin-bottom: 10px;
+            }
+
+            .identificacao h2 {
+                font-size: 11pt;
+            }
+
+            .status-salvamento {
+                display: none !important;
+            }
+
+            .identificacao-grid {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px 20px;
+            }
+
+            .campo-identificacao {
+                flex: 0 0 auto;
+            }
+
+            .campo-identificacao label {
+                font-size: 8pt;
+                margin-bottom: 2px;
+            }
+
+            .campo-identificacao input,
+            .campo-identificacao select,
+            .campo-identificacao textarea {
+                border: none;
+                padding: 0;
+                font-weight: 600;
+                font-size: 10pt;
+                min-height: auto;
+            }
+
+            .instrucoes-container {
+                display: none !important;
+            }
+
+            .bloco-harvard {
+                box-shadow: none;
+                border: 1px solid var(--cinza-borda);
+                margin-bottom: 12px;
+                page-break-inside: avoid;
+            }
+
+            .bloco-header {
+                padding: 10px 15px;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .bloco-numero {
+                width: 30px;
+                height: 30px;
+                font-size: 1rem;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .bloco-titulo-area h3 {
+                font-size: 11pt;
+            }
+
+            .bloco-titulo-area p {
+                font-size: 8pt;
+            }
+
+            .bloco-content {
+                padding: 12px 15px;
+            }
+
+            .duas-colunas {
+                gap: 15px;
+            }
+
+            .coluna {
+                padding: 10px;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .coluna-header {
+                margin-bottom: 8px;
+                padding-bottom: 5px;
+            }
+
+            .coluna-icon {
+                font-size: 1.2rem;
+            }
+
+            .coluna-titulo {
+                font-size: 9pt;
+            }
+
+            .campo-texto {
+                border: 1px solid var(--cinza-borda);
+                min-height: 60px;
+                font-size: 9pt;
+                padding: 8px;
+            }
+
+            .interesse-campo {
+                font-size: 9pt;
+                padding: 5px 8px;
+            }
+
+            .interesse-label {
+                font-size: 8pt;
+            }
+
+            .interesse-badge {
+                font-size: 7pt;
+                padding: 2px 6px;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .dica-box {
+                display: none;
+            }
+
+            .acoes {
+                display: none !important;
+            }
+
+            .footer {
+                color: var(--texto-medio) !important;
+                padding: 10px;
+                font-size: 8pt;
+                border-top: 1px solid var(--cinza-borda);
+                margin-top: 15px;
+            }
+
+            /* Info de impressão */
+            .print-info {
+                display: block !important;
+                text-align: center;
+                font-size: 8pt;
+                color: var(--texto-medio);
+                margin-top: 10px;
+            }
+        }
+
+        .print-info {
+            display: none;
+        }
+
+        /* Modal de Exportação */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--branco);
+            border-radius: 16px;
+            max-width: 700px;
+            width: 90%;
+            max-height: 80vh;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--azul-principal) 0%, var(--azul-claro) 100%);
+            color: var(--branco);
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--branco);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+            line-height: 1;
+        }
+
+        .modal-body {
+            padding: 25px;
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+
+        .modal-body textarea {
+            width: 100%;
+            min-height: 300px;
+            padding: 15px;
+            border: 2px solid var(--cinza-borda);
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            resize: vertical;
+        }
+
+        .modal-footer {
+            padding: 20px 25px;
+            background: var(--cinza-fundo);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn-copiar {
+            background: var(--verde);
+            color: var(--branco);
+        }
+
+        .btn-download {
+            background: var(--azul-principal);
+            color: var(--branco);
+        }
+
+        /* Responsivo */
+        @media (max-width: 900px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .duas-colunas {
+                grid-template-columns: 1fr;
+            }
+
+            .instrucoes-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .acoes {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Cabeçalho -->
+        <div class="header">
+            <div class="header-badge">Ferramenta de Planejamento</div>
+            <h1>📋 Folha de Duas Colunas</h1>
+            <p>Estruture sua negociação usando os 6 elementos do Método Harvard: Objetivos, Interesses, Posições, Opções, Critérios e MAANA</p>
+        </div>
+
+        <!-- Identificação -->
+        <div class="identificacao">
+            <div class="identificacao-header">
+                <h2>📋 Identificação da Negociação</h2>
+                <span class="status-salvamento" id="statusSalvamento">
+                    <span>💾</span> Salvo automaticamente
+                </span>
+            </div>
+            <div class="identificacao-grid">
+                <div class="campo-identificacao">
+                    <label for="cliente">Cliente / Empresa</label>
+                    <input type="text" id="cliente" placeholder="Nome do cliente ou empresa">
+                </div>
+                <div class="campo-identificacao">
+                    <label for="negociador">Negociador</label>
+                    <input type="text" id="negociador" placeholder="Seu nome">
+                </div>
+                <div class="campo-identificacao">
+                    <label for="dataNegociacao">Data Prevista</label>
+                    <input type="date" id="dataNegociacao">
+                </div>
+                <div class="campo-identificacao">
+                    <label for="tipoNegociacao">Tipo de Negociação</label>
+                    <select id="tipoNegociacao">
+                        <option value="">Selecione...</option>
+                        <option value="nova_venda">Nova Venda</option>
+                        <option value="renovacao">Renovação</option>
+                        <option value="expansao">Expansão / Upsell</option>
+                        <option value="recuperacao">Recuperação</option>
+                        <option value="parceria">Parceria</option>
+                        <option value="outro">Outro</option>
+                    </select>
+                </div>
+                <div class="campo-identificacao campo-largo">
+                    <label for="contexto">Contexto da Negociação</label>
+                    <textarea id="contexto" rows="2" placeholder="Descreva brevemente a situação e o que está sendo negociado..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Instruções Colapsáveis -->
+        <div class="instrucoes-container">
+            <div class="instrucoes-header" onclick="toggleInstrucoes()">
+                <h3>📖 Como usar esta ferramenta</h3>
+                <span class="instrucoes-toggle" id="arrow">▼</span>
+            </div>
+            <div class="instrucoes-content" id="instrucoes">
+                <div class="instrucoes-inner">
+                    <div class="instrucoes-grid">
+                        <div class="instrucao-item">
+                            <div class="instrucao-numero">1</div>
+                            <div class="instrucao-texto">
+                                <strong>Preencha os dois lados:</strong> Use a coluna da esquerda para suas informações e a da direita para o que você sabe (ou supõe) sobre o outro lado.
+                            </div>
+                        </div>
+                        <div class="instrucao-item">
+                            <div class="instrucao-numero">2</div>
+                            <div class="instrucao-texto">
+                                <strong>Separe posições de interesses:</strong> Posição é O QUE você quer. Interesse é POR QUE você quer. Foque nos interesses.
+                            </div>
+                        </div>
+                        <div class="instrucao-item">
+                            <div class="instrucao-numero">3</div>
+                            <div class="instrucao-texto">
+                                <strong>Classifique os interesses:</strong> Identifique quais são comuns (verdes), parcialmente alinhados (amarelos) e opostos (vermelhos).
+                            </div>
+                        </div>
+                        <div class="instrucao-item">
+                            <div class="instrucao-numero">4</div>
+                            <div class="instrucao-texto">
+                                <strong>Crie opções criativas:</strong> Pense em alternativas que atendam aos interesses de ambos. Quanto mais opções, melhor.
+                            </div>
+                        </div>
+                        <div class="instrucao-item">
+                            <div class="instrucao-numero">5</div>
+                            <div class="instrucao-texto">
+                                <strong>Use critérios objetivos:</strong> Benchmarks, precedentes, valores de mercado. Isso dá legitimidade às suas propostas.
+                            </div>
+                        </div>
+                        <div class="instrucao-item">
+                            <div class="instrucao-numero">6</div>
+                            <div class="instrucao-texto">
+                                <strong>Conheça seu MAANA:</strong> Sua Melhor Alternativa define seu poder. Quanto melhor seu Plano B, mais tranquilo você negocia.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BLOCO 1: OBJETIVOS -->
+        <div class="bloco-harvard">
+            <div class="bloco-header">
+                <div class="bloco-numero">1</div>
+                <div class="bloco-titulo-area">
+                    <h3>OBJETIVOS</h3>
+                    <p>O que cada parte quer alcançar com esta negociação?</p>
+                </div>
+            </div>
+            <div class="bloco-content">
+                <div class="duas-colunas">
+                    <div class="coluna coluna-eu">
+                        <div class="coluna-header">
+                            <span class="coluna-icon">👤</span>
+                            <span class="coluna-titulo">Meus Objetivos</span>
+                        </div>
+                        <textarea id="objetivos_eu" class="campo-texto" placeholder="Qual é meu objetivo principal nesta negociação?&#10;&#10;O que quero alcançar?&#10;Qual seria o resultado ideal para mim?"></textarea>
+                    </div>
+                    <div class="coluna coluna-outro">
+                        <div class="coluna-header">
+                            <span class="coluna-icon">🏢</span>
+                            <span class="coluna-titulo">Objetivos do Outro Lado</span>
+                        </div>
+                        <textarea id="objetivos_outro" class="campo-texto" placeholder="O que o outro lado quer alcançar?&#10;&#10;Qual seria o resultado ideal para ele?&#10;O que ele está buscando nesta negociação?"></textarea>
+                    </div>
+                </div>
+                <div class="dica-box">
+                    <strong>💡 Dica:</strong>
+                    <p>Objetivos são resultados desejados. Tente ir além do óbvio. Um cliente não quer apenas "preço baixo" — ele pode querer "justificar a compra para o chefe" ou "reduzir risco". Descubra o objetivo real.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- BLOCO 2: INTERESSES -->
+        <div class="bloco-harvard">
+            <div class="bloco-header">
+                <div class="bloco-numero">2</div>
+                <div class="bloco-titulo-area">
+                    <h3>INTERESSES</h3>
+                    <p>Por que cada parte quer o que quer? Quais são as motivações reais?</p>
+                </div>
+            </div>
+            <div class="bloco-content">
+                <div class="duas-colunas">
+                    <div class="coluna coluna-eu">
+                        <div class="coluna-header">
+                            <span class="coluna-icon">👤</span>
+                            <span class="coluna-titulo">Meus Interesses</span>
+                        </div>
+                        <div class="interesses-grupo">
+                            <div class="interesse-label">
+                                <span class="interesse-badge badge-comum">🟢 Comuns</span>
+                                Interesses que compartilhamos
+                            </div>
+                            <input type="text" id="interesses_eu_comuns" class="interesse-campo" placeholder="Ex: Fechar negócio, manter relacionamento...">
+                        </div>
+                        <div class="interesses-grupo">
+                            <div class="interesse-label">
+                                <span class="interesse-badge badge-parcial">🟡 Parciais</span>
+                                Interesses parcialmente alinhados
+                            </div>
+                            <input type="text" id="interesses_eu_parciais" class="interesse-campo" placeholder="Ex: Prazo de entrega, condições de pagamento...">
+                        </div>
+                        <div class="interesses-grupo">
+                            <div class="interesse-label">
+                                <span class="interesse-badge badge-oposto">🔴 Opostos</span>
+                                Interesses conflitantes
+                            </div>
+                            <input type="text" id="interesses_eu_opostos" class="interesse-campo" placeholder="Ex: Preço, exclusividade...">
+                        </div>
+                    </div>
+                    <div class="coluna coluna-outro">
+                        <div class="coluna-header">
+                            <span class="coluna-icon">🏢</span>
+                            <span class="coluna-titulo">Interesses do Outro Lado</span>
+                        </div>
+                        <div class="interesses-grupo">
+                            <div class="interesse-label">
+                                <span class="interesse-badge badge-comum">🟢 Comuns</span>
+                                Interesses que compartilhamos
+                            </div>
+                            <input type="text" id="interesses_outro_comuns" class="interesse-campo" placeholder="Ex: Resolver o problema, parceria duradoura...">
+                        </div>
+                        <div class="interesses-grupo">
+                            <div class="interesse-label">
+                                <span class="interesse-badge badge-parcial">🟡 Parciais</span>
+                                Interesses parcialmente alinhados
+                            </div>
+                            <input type="text" id="interesses_outro_parciais" class="interesse-campo" placeholder="Ex: Suporte, implementação...">
+                        </div>
+                        <div class="interesses-grupo">
+                            <div class="interesse-label">
+                                <span class="interesse-badge badge-oposto">🔴 Opostos</span>
+                                Interesses conflitantes
+                            </div>
+                            <input type="text" id="interesses_outro_opostos" class="interesse-campo" placeholder="Ex: Desconto máximo, prazos curtos...">
+                        </div>
+                    </div>
+                </div>
+                <div class="dica-box">
+                    <strong>💡 A mágica está nos interesses comuns:</strong>
+                    <p>Focar nos interesses comuns (verdes) cria conexão. Trabalhar os parciais (amarelos) gera trocas. Os opostos (vermelhos) são inevitáveis, mas devem ser a menor parte da negociação.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- BLOCO 3: POSIÇÕES -->
+        <div class="bloco-harvard">
+            <div class="bloco-header">
+                <div class="bloco-numero">3</div>
+                <div class="bloco-titulo-area">
+                    <h3>POSIÇÕES</h3>
+                    <p>Quais são as demandas declaradas de cada parte?</p>
+                </div>
+            </div>
+            <div class="bloco-content">
+                <div class="duas-colunas">
+                    <div class="coluna coluna-eu">
+                        <div class="coluna-header">
+                            <span class="coluna-icon">👤</span>
+                            <span class="coluna-titulo">Minhas Posições</span>
+                        </div>
+                        <textarea id="posicoes_eu" class="campo-texto" placeholder="O que estou pedindo/oferecendo?&#10;&#10;Minha oferta inicial (âncora):&#10;Meu limite mínimo aceitável:&#10;&#10;Outras demandas:"></textarea>
+                    </div>
+                    <div class="coluna coluna-outro">
+                        <div class="coluna-header">
+                            <span class="coluna-icon">🏢</span>
+                            <span class="coluna-titulo">Posições do Outro Lado</span>
+                        </div>
+                        <textarea id="posicoes_outro" class="campo-texto" placeholder="O que ele está pedindo/oferecendo?&#10;&#10;Oferta inicial dele (estimada):&#10;Limite máximo dele (estimado):&#10;&#10;Outras demandas dele:"></textarea>
+                    </div>
+                </div>
+                <div class="dica-box">
+                    <strong>💡 Posição ≠ Interesse:</strong>
+                    <p>Posição é O QUE você pede. Interesse é POR QUE você pede. Exemplo: Posição = "Quero 20% de desconto". Interesse = "Preciso justificar para meu chefe". Negocie interesses, não posições.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- BLOCO 4: OPÇÕES -->
+        <div class="bloco-harvard">
+            <div class="bloco-header">
+                <div class="bloco-numero">4</div>
+                <div class="bloco-titulo-area">
+                    <h3>OPÇÕES</h3>
+                    <p>Quais alternativas criativas podem atender aos interesses de ambos?</p>
+                </div>
+            </div>
+            <div class="bloco-content">
+                <div class="duas-colunas">
+                    <div class="coluna coluna-eu">
+                        <div class="coluna-header">
+                            <span class="coluna-icon">👤</span>
+                            <span class="coluna-titulo">Opções que Posso Propor</span>
+                        </div>
+                        <textarea id="opcoes_eu" class="campo-texto" style="min-height: 130px;" placeholder="Liste alternativas criativas:&#10;&#10;Opção A:&#10;Opção B:&#10;Opção C:&#10;&#10;O que posso oferecer que custa pouco para mim mas tem valor para ele?"></textarea>
+                    </div>
+                    <div class="coluna coluna-outro">
+                        <div class="coluna-header">
+                            <span class="coluna-icon">🏢</span>
+                            <span class="coluna-titulo">Opções que Ele Pode Propor</span>
+                        </div>
+                        <textarea id="opcoes_outro" class="campo-texto" style="min-height: 130px;" placeholder="O que ele pode oferecer?&#10;&#10;Opção A:&#10;Opção B:&#10;Opção C:&#10;&#10;O que custa pouco para ele mas tem valor para mim?"></textarea>
+                    </div>
+                </div>
+                <div class="dica-box">
+                    <strong>💡 Expanda o bolo antes de dividir:</strong>
+                    <p>Quanto mais opções criativas você tiver, mais chances de encontrar uma solução que satisfaça ambos. Pense em variáveis além do preço: prazo, escopo, suporte, exclusividade, volume, parceria.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- BLOCO 5: CRITÉRIOS OBJETIVOS -->
+        <div class="bloco-harvard">
+            <div class="bloco-header">
+                <div class="bloco-numero">5</div>
+                <div class="bloco-titulo-area">
+                    <h3>CRITÉRIOS OBJETIVOS</h3>
+                    <p>Quais padrões externos podem legitimar as propostas?</p>
+                </div>
+            </div>
+            <div class="bloco-content">
+                <div class="duas-colunas">
+                    <div class="coluna coluna-eu">
+                        <div class="coluna-header">
+                            <span class="coluna-icon">👤</span>
+                            <span class="coluna-titulo">Critérios que Me Favorecem</span>
+                        </div>
+                        <textarea id="criterios_eu" class="campo-texto" style="min-height: 130px;" placeholder="Dados e referências que sustentam minha posição:&#10;&#10;• Preços de mercado:&#10;• Precedentes/contratos anteriores:&#10;• Benchmarks do setor:&#10;• Políticas publicadas:&#10;• Estudos/pesquisas:"></textarea>
+                    </div>
+                    <div class="coluna coluna-outro">
+                        <div class="coluna-header">
+                            <span class="coluna-icon">🏢</span>
+                            <span class="coluna-titulo">Critérios que Ele Pode Usar</span>
+                        </div>
+                        <textarea id="criterios_outro" class="campo-texto" style="min-height: 130px;" placeholder="Argumentos que ele pode apresentar:&#10;&#10;• Preços de concorrentes:&#10;• Orçamento/budget aprovado:&#10;• Políticas de compra:&#10;• Resultados esperados:&#10;• Contratos anteriores:"></textarea>
+                    </div>
+                </div>
+                <div class="dica-box">
+                    <strong>💡 Poder dos critérios:</strong>
+                    <p>Critérios objetivos tiram a negociação do campo emocional e das posições. Use números, benchmarks de mercado, contratos anteriores, políticas publicadas. Isso aumenta sua autoridade e reduz a pressão sobre você.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- BLOCO 6: MAANA / PLANO B -->
+        <div class="bloco-harvard">
+            <div class="bloco-header">
+                <div class="bloco-numero">6</div>
+                <div class="bloco-titulo-area">
+                    <h3>MAANA / PLANO B</h3>
+                    <p>Melhor Alternativa À Negociação de um Acordo</p>
+                </div>
+            </div>
+            <div class="bloco-content">
+                <div class="duas-colunas">
+                    <div class="coluna coluna-eu">
+                        <div class="coluna-header">
+                            <span class="coluna-icon">👤</span>
+                            <span class="coluna-titulo">Meu Plano B</span>
+                        </div>
+                        <textarea id="maana_eu" class="campo-texto" style="min-height: 130px;" placeholder="O que farei se não fechar este acordo?&#10;&#10;Alternativa 1: &#10;Alternativa 2: &#10;Alternativa 3: &#10;&#10;Quão fortes são estas alternativas?&#10;(Forte = menos pressão sobre mim)"></textarea>
+                    </div>
+                    <div class="coluna coluna-outro">
+                        <div class="coluna-header">
+                            <span class="coluna-icon">🏢</span>
+                            <span class="coluna-titulo">Plano B do Outro Lado</span>
+                        </div>
+                        <textarea id="maana_outro" class="campo-texto" style="min-height: 130px;" placeholder="Quais são as alternativas dele?&#10;&#10;Ele pode comprar de quem?&#10;Ele pode adiar a decisão?&#10;Ele pode fazer internamente?&#10;&#10;Quão fortes são as alternativas dele?&#10;(Forte = mais pressão sobre mim)"></textarea>
+                    </div>
+                </div>
+                <div class="dica-box">
+                    <strong>💡 Reflexão fundamental:</strong>
+                    <p><strong>É melhor não fazer um acordo ou fazer um mau acordo?</strong> Se seu MAANA for fraco, trabalhe para fortalecê-lo ANTES da negociação. Quanto melhores suas alternativas, mais tranquilo você negocia.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botões de Ação -->
+        <div class="acoes">
+            <button class="btn btn-primary" onclick="imprimirFolha()">
+                <span>🖨️</span> Imprimir / Salvar PDF
+            </button>
+            <button class="btn btn-export" onclick="exportarJSON()">
+                <span>📤</span> Exportar JSON
+            </button>
+            <button class="btn btn-outline" onclick="salvarLocal()">
+                <span>💾</span> Salvar Rascunho
+            </button>
+            <button class="btn btn-secondary" onclick="limparFormulario()">
+                <span>🗑️</span> Limpar Tudo
+            </button>
+        </div>
+
+        <!-- Info de impressão -->
+        <div class="print-info">
+            <strong>Negociação para Vendas: Método do Professor</strong><br>
+            Prof. Paulo H. Donassolo | Baseado no Método Harvard de Negociação (Fisher & Ury)<br>
+            Documento gerado em: <span id="print-data"></span>
+        </div>
+
+        <!-- Rodapé -->
+        <div class="footer">
+            <p><strong>Negociação para Vendas: Método do Professor</strong></p>
+            <p>Prof. Paulo H. Donassolo | Baseado no Método Harvard de Negociação (Fisher & Ury)</p>
+        </div>
+    </div>
+
+    <!-- Modal de Exportação -->
+    <div class="modal-overlay" id="modalExportacao">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>📤 Exportar Folha Harvard (JSON)</h3>
+                <button class="modal-close" onclick="fecharModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 15px; color: var(--texto-medio);">
+                    Copie o conteúdo abaixo ou clique em "Baixar Arquivo" para salvar o JSON.
+                </p>
+                <textarea id="jsonOutput" readonly></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-copiar" onclick="copiarJSON()">
+                    📋 Copiar
+                </button>
+                <button class="btn btn-download" onclick="baixarJSON()">
+                    💾 Baixar Arquivo
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Gerar UUID
+        function gerarUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0;
+                const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        // Estado
+        let folhaId = localStorage.getItem('folhaHarvard_id') || gerarUUID();
+        const STORAGE_KEY = 'anc_folha_harvard';
+
+        // Lista de todos os campos
+        const camposIdentificacao = ['cliente', 'negociador', 'dataNegociacao', 'tipoNegociacao', 'contexto'];
+        const camposBlocos = [
+            'objetivos_eu', 'objetivos_outro',
+            'interesses_eu_comuns', 'interesses_eu_parciais', 'interesses_eu_opostos',
+            'interesses_outro_comuns', 'interesses_outro_parciais', 'interesses_outro_opostos',
+            'posicoes_eu', 'posicoes_outro',
+            'opcoes_eu', 'opcoes_outro',
+            'criterios_eu', 'criterios_outro',
+            'maana_eu', 'maana_outro'
+        ];
+        const todosCampos = [...camposIdentificacao, ...camposBlocos];
+
+        // Toggle Instruções
+        function toggleInstrucoes() {
+            const instrucoes = document.getElementById('instrucoes');
+            const arrow = document.getElementById('arrow');
+            instrucoes.classList.toggle('show');
+            arrow.textContent = instrucoes.classList.contains('show') ? '▲' : '▼';
+        }
+
+        // Mostrar status de salvamento
+        function mostrarStatusSalvamento() {
+            const status = document.getElementById('statusSalvamento');
+            status.classList.add('visivel');
+            setTimeout(() => {
+                status.classList.remove('visivel');
+            }, 2000);
+        }
+
+        // Imprimir
+        function imprimirFolha() {
+            document.getElementById('print-data').textContent = new Date().toLocaleDateString('pt-BR');
+            window.print();
+        }
+
+        // Limpar formulário
+        function limparFormulario() {
+            if (confirm('Tem certeza que deseja limpar todos os campos? Esta ação não pode ser desfeita.')) {
+                todosCampos.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        if (el.tagName === 'SELECT') {
+                            el.selectedIndex = 0;
+                        } else {
+                            el.value = '';
+                        }
+                    }
+                });
+                
+                localStorage.removeItem(STORAGE_KEY);
+                folhaId = gerarUUID();
+                localStorage.setItem('folhaHarvard_id', folhaId);
+                
+                alert('Formulário limpo com sucesso!');
+            }
+        }
+
+        // Coletar dados do formulário
+        function coletarDados() {
+            const dados = {
+                id: folhaId,
+                identificacao: {
+                    cliente: document.getElementById('cliente').value,
+                    negociador: document.getElementById('negociador').value,
+                    dataNegociacao: document.getElementById('dataNegociacao').value,
+                    tipoNegociacao: document.getElementById('tipoNegociacao').value,
+                    contexto: document.getElementById('contexto').value
+                },
+                blocos: {
+                    objetivos: {
+                        eu: document.getElementById('objetivos_eu').value,
+                        outro: document.getElementById('objetivos_outro').value
+                    },
+                    interesses: {
+                        eu: {
+                            comuns: document.getElementById('interesses_eu_comuns').value,
+                            parciais: document.getElementById('interesses_eu_parciais').value,
+                            opostos: document.getElementById('interesses_eu_opostos').value
+                        },
+                        outro: {
+                            comuns: document.getElementById('interesses_outro_comuns').value,
+                            parciais: document.getElementById('interesses_outro_parciais').value,
+                            opostos: document.getElementById('interesses_outro_opostos').value
+                        }
+                    },
+                    posicoes: {
+                        eu: document.getElementById('posicoes_eu').value,
+                        outro: document.getElementById('posicoes_outro').value
+                    },
+                    opcoes: {
+                        eu: document.getElementById('opcoes_eu').value,
+                        outro: document.getElementById('opcoes_outro').value
+                    },
+                    criterios: {
+                        eu: document.getElementById('criterios_eu').value,
+                        outro: document.getElementById('criterios_outro').value
+                    },
+                    maana: {
+                        eu: document.getElementById('maana_eu').value,
+                        outro: document.getElementById('maana_outro').value
+                    }
+                },
+                atualizadoEm: new Date().toISOString()
+            };
+            return dados;
+        }
+
+        // Salvar no localStorage
+        function salvarLocal() {
+            const dados = coletarDados();
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(dados));
+            localStorage.setItem('folhaHarvard_id', folhaId);
+            mostrarStatusSalvamento();
+            alert('Rascunho salvo com sucesso! Seus dados serão recuperados quando você voltar a esta página.');
+        }
+
+        // Auto-save silencioso
+        function autoSave() {
+            const dados = coletarDados();
+            
+            // Verificar se tem algum conteúdo
+            let temConteudo = false;
+            todosCampos.forEach(id => {
+                const el = document.getElementById(id);
+                if (el && el.value) temConteudo = true;
+            });
+
+            if (temConteudo) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(dados));
+                localStorage.setItem('folhaHarvard_id', folhaId);
+            }
+        }
+
+        // Carregar do localStorage
+        function carregarLocal() {
+            const dados = localStorage.getItem(STORAGE_KEY);
+            const savedId = localStorage.getItem('folhaHarvard_id');
+            
+            if (savedId) {
+                folhaId = savedId;
+            }
+
+            if (dados) {
+                try {
+                    const obj = JSON.parse(dados);
+                    
+                    // Restaurar identificação
+                    if (obj.identificacao) {
+                        camposIdentificacao.forEach(id => {
+                            const el = document.getElementById(id);
+                            if (el && obj.identificacao[id]) {
+                                el.value = obj.identificacao[id];
+                            }
+                        });
+                    }
+                    
+                    // Restaurar blocos
+                    if (obj.blocos) {
+                        // Objetivos
+                        if (obj.blocos.objetivos) {
+                            if (obj.blocos.objetivos.eu) document.getElementById('objetivos_eu').value = obj.blocos.objetivos.eu;
+                            if (obj.blocos.objetivos.outro) document.getElementById('objetivos_outro').value = obj.blocos.objetivos.outro;
+                        }
+                        
+                        // Interesses
+                        if (obj.blocos.interesses) {
+                            if (obj.blocos.interesses.eu) {
+                                if (obj.blocos.interesses.eu.comuns) document.getElementById('interesses_eu_comuns').value = obj.blocos.interesses.eu.comuns;
+                                if (obj.blocos.interesses.eu.parciais) document.getElementById('interesses_eu_parciais').value = obj.blocos.interesses.eu.parciais;
+                                if (obj.blocos.interesses.eu.opostos) document.getElementById('interesses_eu_opostos').value = obj.blocos.interesses.eu.opostos;
+                            }
+                            if (obj.blocos.interesses.outro) {
+                                if (obj.blocos.interesses.outro.comuns) document.getElementById('interesses_outro_comuns').value = obj.blocos.interesses.outro.comuns;
+                                if (obj.blocos.interesses.outro.parciais) document.getElementById('interesses_outro_parciais').value = obj.blocos.interesses.outro.parciais;
+                                if (obj.blocos.interesses.outro.opostos) document.getElementById('interesses_outro_opostos').value = obj.blocos.interesses.outro.opostos;
+                            }
+                        }
+                        
+                        // Posições
+                        if (obj.blocos.posicoes) {
+                            if (obj.blocos.posicoes.eu) document.getElementById('posicoes_eu').value = obj.blocos.posicoes.eu;
+                            if (obj.blocos.posicoes.outro) document.getElementById('posicoes_outro').value = obj.blocos.posicoes.outro;
+                        }
+                        
+                        // Opções
+                        if (obj.blocos.opcoes) {
+                            if (obj.blocos.opcoes.eu) document.getElementById('opcoes_eu').value = obj.blocos.opcoes.eu;
+                            if (obj.blocos.opcoes.outro) document.getElementById('opcoes_outro').value = obj.blocos.opcoes.outro;
+                        }
+                        
+                        // Critérios
+                        if (obj.blocos.criterios) {
+                            if (obj.blocos.criterios.eu) document.getElementById('criterios_eu').value = obj.blocos.criterios.eu;
+                            if (obj.blocos.criterios.outro) document.getElementById('criterios_outro').value = obj.blocos.criterios.outro;
+                        }
+                        
+                        // MAANA
+                        if (obj.blocos.maana) {
+                            if (obj.blocos.maana.eu) document.getElementById('maana_eu').value = obj.blocos.maana.eu;
+                            if (obj.blocos.maana.outro) document.getElementById('maana_outro').value = obj.blocos.maana.outro;
+                        }
+                    }
+                    
+                    // Restaurar ID
+                    if (obj.id) {
+                        folhaId = obj.id;
+                    }
+                } catch (e) {
+                    console.error('Erro ao carregar dados:', e);
+                }
+            }
+        }
+
+        // Exportar JSON - com modal
+        let dadosExportacao = null;
+
+        function exportarJSON() {
+            dadosExportacao = {
+                _meta: {
+                    tipo: "folha_duas_colunas_harvard",
+                    versao: "1.0",
+                    exportadoEm: new Date().toISOString()
+                },
+                ...coletarDados()
+            };
+            
+            document.getElementById('jsonOutput').value = JSON.stringify(dadosExportacao, null, 2);
+            document.getElementById('modalExportacao').classList.add('active');
+        }
+
+        function fecharModal() {
+            document.getElementById('modalExportacao').classList.remove('active');
+        }
+
+        function copiarJSON() {
+            const textarea = document.getElementById('jsonOutput');
+            textarea.select();
+            textarea.setSelectionRange(0, 99999);
+            
+            try {
+                navigator.clipboard.writeText(textarea.value).then(() => {
+                    alert('JSON copiado para a área de transferência!');
+                }).catch(() => {
+                    document.execCommand('copy');
+                    alert('JSON copiado para a área de transferência!');
+                });
+            } catch (err) {
+                document.execCommand('copy');
+                alert('JSON copiado para a área de transferência!');
+            }
+        }
+
+        function baixarJSON() {
+            try {
+                const jsonStr = JSON.stringify(dadosExportacao, null, 2);
+                const blob = new Blob([jsonStr], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                const cliente = document.getElementById('cliente').value.replace(/\s+/g, '_') || 'negociacao';
+                a.download = `folha_harvard_${cliente}_${new Date().toISOString().slice(0,10)}.json`;
+                
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                
+                URL.revokeObjectURL(url);
+                fecharModal();
+            } catch (err) {
+                console.error('Erro ao baixar:', err);
+                alert('Para baixar, copie o conteúdo e cole em um arquivo .json');
+            }
+        }
+
+        // Fechar modal com ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') fecharModal();
+        });
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            // Carregar dados salvos
+            carregarLocal();
+
+            // Definir data de hoje como padrão se vazio
+            if (!document.getElementById('dataNegociacao').value) {
+                document.getElementById('dataNegociacao').value = new Date().toISOString().split('T')[0];
+            }
+
+            // Adicionar listeners para auto-save
+            todosCampos.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('input', function() {
+                        autoSave();
+                        mostrarStatusSalvamento();
+                    });
+                    el.addEventListener('change', function() {
+                        autoSave();
+                        mostrarStatusSalvamento();
+                    });
+                }
+            });
+
+            // Fechar modal ao clicar fora
+            var modalExport = document.getElementById('modalExportacao');
+            if (modalExport) {
+                modalExport.addEventListener('click', function(e) {
+                    if (e.target === this) fecharModal();
+                });
+            }
+        });
+
+        // Auto-save a cada 30 segundos
+        setInterval(autoSave, 30000);
+    </script>
+</body>
+</html>
