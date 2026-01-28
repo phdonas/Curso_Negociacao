@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt para Análise de Perfil do Cliente</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .header .description {
+            font-size: 1rem;
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .intro-section {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #2196f3;
+        }
+
+        .intro-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1976d2;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .intro-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+
+        .intro-text {
+            color: #424242;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .instructions-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #28a745;
+        }
+
+        .instructions-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #155724;
+            margin-bottom: 20px;
+        }
+
+        .instruction-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border-left: 3px solid #28a745;
+        }
+
+        .instruction-step {
+            font-weight: 600;
+            color: #155724;
+            margin-bottom: 8px;
+        }
+
+        .instruction-detail {
+            color: #495057;
+            font-size: 0.95rem;
+        }
+
+        .prompt-container {
+            background: #2c3e50;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .prompt-header {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            padding: 20px;
+            margin: -30px -30px 30px -30px;
+            text-align: center;
+        }
+
+        .prompt-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .prompt-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .prompt-text {
+            background: #34495e;
+            color: #ecf0f1;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            line-height: 1.8;
+            padding: 25px;
+            border-radius: 10px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-x: auto;
+            border: 2px solid #3498db;
+        }
+
+        .variable-highlight {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .section-divider {
+            color: #3498db;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin: 20px 0 15px 0;
+        }
+
+        .copy-button {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 20px auto;
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+        }
+
+        .copy-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(46, 204, 113, 0.4);
+        }
+
+        .usage-tips {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #ff9800;
+        }
+
+        .tips-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #e65100;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .tips-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+
+        .tip-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border-left: 3px solid #ff9800;
+        }
+
+        .tip-title {
+            font-weight: 600;
+            color: #e65100;
+            margin-bottom: 5px;
+        }
+
+        .tip-text {
+            color: #424242;
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 768px) {
+            .container { margin: 10px; }
+            .header { padding: 30px 20px; }
+            .content { padding: 25px 20px; }
+            .header h1 { font-size: 2.2rem; }
+            .prompt-text { font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧠 Análise de Perfil</h1>
+            <div class="subtitle">Prompt para Inteligência Artificial</div>
+            <div class="description">Ferramenta completa para análise estratégica de clientes antes de reuniões presenciais</div>
+        </div>
+
+        <div class="content">
+            <div class="intro-section">
+                <h2 class="intro-title">
+                    <span class="intro-icon">🎯</span>
+                    Objetivo do Prompt
+                </h2>
+                <div class="intro-text">
+                    Este prompt foi desenvolvido para extrair insights estratégicos profundos sobre o perfil do seu cliente antes de reuniões presenciais. Ele orienta a IA a analisar dados comportamentais, identificar motivadores de decisão e definir estratégias personalizadas para maximizar suas chances de sucesso na negociação.
+                </div>
+            </div>
+
+            <div class="instructions-section">
+                <h2 class="instructions-title">📋 Como Usar Este Prompt</h2>
+                
+                <div class="instruction-item">
+                    <div class="instruction-step">1. Colete as Informações Necessárias</div>
+                    <div class="instruction-detail">Reúna dados sobre a empresa, decisor, histórico de relacionamento e contexto da negociação antes de usar o prompt.</div>
+                </div>
+                
+                <div class="instruction-item">
+                    <div class="instruction-step">2. Substitua as Variáveis</div>
+                    <div class="instruction-detail">Substitua todos os campos entre [colchetes] pelas informações específicas do seu cliente.</div>
+                </div>
+                
+                <div class="instruction-item">
+                    <div class="instruction-step">3. Cole na sua IA Preferida</div>
+                    <div class="instruction-detail">Use em ChatGPT, Claude, Gemini ou qualquer IA conversacional de sua preferência.</div>
+                </div>
+                
+                <div class="instruction-item">
+                    <div class="instruction-step">4. Analise os Resultados</div>
+                    <div class="instruction-detail">Use os insights gerados para preencher seu Plano de Negociação IA-Assistido.</div>
+                </div>
+            </div>
+
+            <div class="prompt-container">
+                <div class="prompt-header">
+                    <div class="prompt-title">🤖 Prompt Completo</div>
+                    <div class="prompt-subtitle">Copie, personalize e use na sua IA</div>
+                </div>
+                
+                <div class="prompt-text">Atue como consultor especialista em negociação B2B presencial no Brasil, com mais de 20 anos de experiência em análise comportamental e estratégias de vendas para pequenas e médias empresas.
+
+Analise o seguinte perfil de cliente e forneça insights estratégicos detalhados para uma reunião presencial de negociação:
+
+<span class="section-divider">═══ DADOS DO CLIENTE ═══</span>
+
+<strong>INFORMAÇÕES DA EMPRESA:</strong>
+- Nome da empresa: <span class="variable-highlight">[nome completo da empresa]</span>
+- Setor de atuação: <span class="variable-highlight">[setor específico - ex: indústria metalúrgica, comércio de materiais, prestação de serviços]</span>
+- Porte da empresa: <span class="variable-highlight">[micro, pequena, média - incluir número de funcionários se souber]</span>
+- Faturamento anual: <span class="variable-highlight">[faixa de faturamento se disponível]</span>
+- Localização: <span class="variable-highlight">[cidade e estado]</span>
+- Tempo de mercado: <span class="variable-highlight">[anos de atuação da empresa]</span>
+
+<strong>PERFIL DO DECISOR:</strong>
+- Nome: <span class="variable-highlight">[nome completo]</span>
+- Cargo: <span class="variable-highlight">[posição na empresa]</span>
+- Idade aproximada: <span class="variable-highlight">[faixa etária]</span>
+- Formação: <span class="variable-highlight">[área de formação se souber]</span>
+- Tempo na empresa: <span class="variable-highlight">[anos na empresa atual]</span>
+- Experiência prévia: <span class="variable-highlight">[background profissional]</span>
+
+<strong>CONTEXTO DA NEGOCIAÇÃO:</strong>
+- Produto/serviço oferecido: <span class="variable-highlight">[descrição detalhada do que você está vendendo]</span>
+- Valor aproximado: <span class="variable-highlight">[faixa de investimento]</span>
+- Urgência percebida: <span class="variable-highlight">[alta, média, baixa - e por quê]</span>
+- Histórico de relacionamento: <span class="variable-highlight">[primeiro contato, cliente antigo, indicação, etc.]</span>
+- Como chegou até você: <span class="variable-highlight">[prospecção, indicação, inbound, etc.]</span>
+
+<strong>INFORMAÇÕES ADICIONAIS:</strong>
+- Concorrência conhecida: <span class="variable-highlight">[principais concorrentes que ele avalia]</span>
+- Momento da empresa: <span class="variable-highlight">[crescimento, estabilidade, dificuldades, expansão]</span>
+- Projetos em andamento: <span class="variable-highlight">[projetos que você souber que estão tocando]</span>
+- Desafios identificados: <span class="variable-highlight">[problemas que você identificou na empresa]</span>
+- Orçamento disponível: <span class="variable-highlight">[informações sobre orçamento se souber]</span>
+
+<span class="section-divider">═══ ANÁLISE SOLICITADA ═══</span>
+
+Com base nestas informações, forneça uma análise estratégica completa estruturada nos seguintes pontos:
+
+<strong>1. PERFIL COMPORTAMENTAL E ESTILO DE COMUNICAÇÃO</strong>
+- Estilo de comunicação preferido (direto, consultivo, técnico, relacional)
+- Principais motivadores de decisão (preço, qualidade, relacionamento, inovação)
+- Possíveis resistências ou medos (mudança, investimento, risco)
+- Nível de conhecimento técnico sobre o produto/serviço
+- Preferências de relacionamento comercial
+
+<strong>2. ESTRATÉGIA ESPECÍFICA PARA REUNIÃO PRESENCIAL</strong>
+- Melhor abordagem de abertura para este perfil
+- Como estruturar a apresentação para engajar este cliente
+- Linguagem corporal e sinais a observar
+- Ritmo ideal da reunião (rápida, detalhada, pausada)
+- Ambiente ideal para a conversa
+
+<strong>3. PROPOSTA DE VALOR PERSONALIZADA</strong>
+- Benefícios que mais ressoam com este cliente específico
+- ROI e argumentos quantitativos relevantes para o setor
+- Casos de sucesso similares para mencionar
+- Principais diferenciais competitivos a enfatizar
+- Garantias ou reduções de risco a oferecer
+
+<strong>4. ANTECIPAÇÃO DE OBJEÇÕES</strong>
+- Top 5 objeções mais prováveis baseadas no perfil
+- Razões reais por trás de cada objeção
+- Estratégias de resposta mais eficazes
+- Momentos ideais para abordar cada ponto
+- Perguntas para validar se resolveu a objeção
+
+<strong>5. ESTRATÉGIAS DE RELACIONAMENTO</strong>
+- Como construir rapport com este perfil
+- Assuntos de interesse pessoal/profissional
+- Canais de comunicação preferidos
+- Frequência ideal de contato
+- Como manter relacionamento pós-venda
+
+<strong>6. TÁTICAS DE FECHAMENTO</strong>
+- Sinais de compra específicos a observar
+- Melhor momento para apresentar proposta
+- Alternativas de fechamento mais eficazes
+- Como lidar com "preciso pensar"
+- Próximos passos ideais
+
+<strong>7. ANÁLISE DE RISCO E CONTINGÊNCIAS</strong>
+- Principais riscos desta negociação
+- Cenários alternativos se decisor não comprar
+- Estratégias se aparecer concorrência forte
+- Como proceder se não tiver orçamento suficiente
+- Plano B caso reunião não saia como esperado
+
+<span class="section-divider">═══ FORMATO DA RESPOSTA ═══</span>
+
+Seja específico, prático e focado na realidade brasileira de PMEs. Use linguagem direta e profissional. Inclua exemplos concretos sempre que possível. Priorize estratégias testadas e comprovadas no mercado brasileiro.
+
+Estruture sua resposta de forma clara com tópicos e subtópicos para facilitar a consulta durante a preparação da reunião.</div>
+                
+                <button class="copy-button" onclick="copyPrompt()">📋 Copiar Prompt Completo</button>
+            </div>
+
+            <div class="usage-tips">
+                <h2 class="tips-title">
+                    <span class="tips-icon">💡</span>
+                    Dicas para Melhores Resultados
+                </h2>
+                
+                <div class="tip-item">
+                    <div class="tip-title">Seja Específico nos Dados</div>
+                    <div class="tip-text">Quanto mais detalhes você fornecer, mais precisa será a análise. Evite informações genéricas.</div>
+                </div>
+                
+                <div class="tip-item">
+                    <div class="tip-title">Use Informações Reais</div>
+                    <div class="tip-text">Baseie-se em dados concretos coletados via LinkedIn, site da empresa, conversas anteriores.</div>
+                </div>
+                
+                <div class="tip-item">
+                    <div class="tip-title">Atualize o Contexto</div>
+                    <div class="tip-text">Se houver mudanças na situação do cliente, rode o prompt novamente com informações atualizadas.</div>
+                </div>
+                
+                <div class="tip-item">
+                    <div class="tip-title">Adapte os Resultados</div>
+                    <div class="tip-text">Use os insights como base, mas adapte conforme sua experiência e conhecimento do cliente.</div>
+                </div>
+                
+                <div class="tip-item">
+                    <div class="tip-title">Combine com Outras Ferramentas</div>
+                    <div class="tip-text">Use este prompt em conjunto com os outros do Framework PIA para uma estratégia completa.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function copyPrompt() {
+            const promptText = document.querySelector('.prompt-text').textContent;
+            navigator.clipboard.writeText(promptText).then(function() {
+                const button = document.querySelector('.copy-button');
+                const originalText = button.textContent;
+                button.textContent = '✅ Prompt Copiado!';
+                button.style.background = 'linear-gradient(135deg, #27ae60 0%, #2ecc71 100%)';
+                
+                setTimeout(function() {
+                    button.textContent = originalText;
+                    button.style.background = 'linear-gradient(135deg, #2ecc71 0%, #27ae60 100%)';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
