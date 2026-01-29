@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autoavaliação de Escuta Ativa | Módulo 8</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1B4F72 0%, #2E86AB 50%, #E67E22 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container { max-width: 900px; margin: 0 auto; }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 { font-size: 2rem; margin-bottom: 10px; }
+        .header p { opacity: 0.9; font-size: 1.1rem; }
+        
+        .badge-row {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .badge {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        
+        .framework-visual {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .framework-step {
+            background: rgba(255,255,255,0.15);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .framework-step .num {
+            background: rgba(255,255,255,0.3);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+        
+        .card-title {
+            font-size: 1.4rem;
+            color: #1B4F72;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #E8E8E8;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .card-title .icon {
+            font-size: 1.6rem;
+        }
+        
+        .intro-text {
+            background: #EBF5FB;
+            border-left: 4px solid #3498DB;
+            padding: 15px 20px;
+            border-radius: 0 10px 10px 0;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            color: #2874A6;
+        }
+        
+        .question-item {
+            background: #F8F9FA;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .question-item:hover {
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+        }
+        
+        .question-item.answered {
+            background: #E8F8F0;
+            border-left: 4px solid #27AE60;
+        }
+        
+        .question-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .question-number {
+            background: linear-gradient(135deg, #1B4F72, #E67E22);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+        
+        .question-text {
+            color: #2C3E50;
+            font-size: 1rem;
+            line-height: 1.5;
+            flex: 1;
+        }
+        
+        .question-tag {
+            background: #E8E8E8;
+            color: #666;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+        }
+        
+        .options-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        
+        @media (max-width: 600px) {
+            .options-row { grid-template-columns: repeat(2, 1fr); }
+        }
+        
+        .option-btn {
+            padding: 12px;
+            border: 2px solid #E8E8E8;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #555;
+        }
+        
+        .option-btn:hover {
+            border-color: #E67E22;
+            background: #FEF5E7;
+        }
+        
+        .option-btn.selected {
+            border-color: #27AE60;
+            background: #E8F8F0;
+            color: #1E8449;
+            font-weight: 600;
+        }
+        
+        .option-btn .points {
+            display: block;
+            font-size: 0.7rem;
+            color: #999;
+            margin-top: 3px;
+        }
+        
+        .option-btn.selected .points {
+            color: #27AE60;
+        }
+        
+        .progress-section {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px solid #E8E8E8;
+        }
+        
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .progress-label {
+            font-weight: 600;
+            color: #1B4F72;
+        }
+        
+        .progress-count {
+            color: #E67E22;
+            font-weight: 600;
+        }
+        
+        .progress-bar-container {
+            background: #E8E8E8;
+            border-radius: 10px;
+            height: 12px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #27AE60, #2ECC71);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+        
+        .btn {
+            padding: 14px 35px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #E67E22, #F39C12);
+            color: white;
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(230, 126, 34, 0.4);
+        }
+        
+        .btn-primary:disabled {
+            background: #CCC;
+            cursor: not-allowed;
+        }
+        
+        .btn-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        /* RESULTADOS */
+        .results-container {
+            display: none;
+        }
+        
+        .results-container.active {
+            display: block;
+        }
+        
+        .score-display {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #1B4F72, #2E86AB);
+            border-radius: 16px;
+            color: white;
+            margin-bottom: 25px;
+        }
+        
+        .score-label {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+        
+        .score-value {
+            font-size: 4rem;
+            font-weight: 700;
+        }
+        
+        .score-max {
+            font-size: 1.5rem;
+            opacity: 0.7;
+        }
+        
+        .score-bar-container {
+            max-width: 300px;
+            margin: 20px auto;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            height: 16px;
+            overflow: hidden;
+        }
+        
+        .score-bar {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 1s ease;
+        }
+        
+        .score-bar.excellent { background: #27AE60; }
+        .score-bar.good { background: #F39C12; }
+        .score-bar.developing { background: #E67E22; }
+        .score-bar.needs-work { background: #E74C3C; }
+        
+        .diagnosis-box {
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+        
+        .diagnosis-box.excellent {
+            background: linear-gradient(135deg, #E8F8F0, #D5F5E3);
+            border: 2px solid #27AE60;
+        }
+        
+        .diagnosis-box.good {
+            background: linear-gradient(135deg, #FEF9E7, #FCF3CF);
+            border: 2px solid #F39C12;
+        }
+        
+        .diagnosis-box.developing {
+            background: linear-gradient(135deg, #FDF2E9, #FDEBD0);
+            border: 2px solid #E67E22;
+        }
+        
+        .diagnosis-box.needs-work {
+            background: linear-gradient(135deg, #FDEDEC, #FADBD8);
+            border: 2px solid #E74C3C;
+        }
+        
+        .diagnosis-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .diagnosis-box.excellent .diagnosis-title { color: #1E8449; }
+        .diagnosis-box.good .diagnosis-title { color: #9A7D0A; }
+        .diagnosis-box.developing .diagnosis-title { color: #D35400; }
+        .diagnosis-box.needs-work .diagnosis-title { color: #C0392B; }
+        
+        .diagnosis-text {
+            color: #444;
+            line-height: 1.6;
+        }
+        
+        .framework-analysis {
+            margin-bottom: 25px;
+        }
+        
+        .framework-title {
+            font-size: 1.2rem;
+            color: #1B4F72;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .framework-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        @media (max-width: 600px) {
+            .framework-grid { grid-template-columns: 1fr; }
+        }
+        
+        .framework-card {
+            background: #F8F9FA;
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .framework-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+        }
+        
+        .framework-card.excellent::before { background: #27AE60; }
+        .framework-card.good::before { background: #F39C12; }
+        .framework-card.developing::before { background: #E67E22; }
+        .framework-card.needs-work::before { background: #E74C3C; }
+        
+        .framework-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .framework-card-name {
+            font-weight: 700;
+            color: #1B4F72;
+        }
+        
+        .framework-card-score {
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+        }
+        
+        .framework-card.excellent .framework-card-score { background: #E8F8F0; color: #27AE60; }
+        .framework-card.good .framework-card-score { background: #FEF9E7; color: #F39C12; }
+        .framework-card.developing .framework-card-score { background: #FDF2E9; color: #E67E22; }
+        .framework-card.needs-work .framework-card-score { background: #FDEDEC; color: #E74C3C; }
+        
+        .framework-card-desc {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        .weak-points {
+            background: #FEF9E7;
+            border-left: 4px solid #F39C12;
+            border-radius: 0 12px 12px 0;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .weak-points-title {
+            font-weight: 700;
+            color: #D35400;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .weak-point-item {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 12px;
+        }
+        
+        .weak-point-item:last-child { margin-bottom: 0; }
+        
+        .weak-point-question {
+            font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 8px;
+        }
+        
+        .weak-point-tip {
+            font-size: 0.85rem;
+            color: #E67E22;
+            font-weight: 500;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        
+        .action-plan {
+            background: linear-gradient(135deg, #EBF5FB, #D6EAF8);
+            border: 2px solid #3498DB;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .action-plan-title {
+            font-size: 1.2rem;
+            color: #1B4F72;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .action-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: flex-start;
+        }
+        
+        .action-item:last-child { margin-bottom: 0; }
+        
+        .action-number {
+            background: #1B4F72;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        
+        .action-content {
+            flex: 1;
+        }
+        
+        .action-title {
+            font-weight: 600;
+            color: #1B4F72;
+            margin-bottom: 5px;
+        }
+        
+        .action-desc {
+            font-size: 0.9rem;
+            color: #555;
+            line-height: 1.5;
+        }
+        
+        .results-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+        
+        .btn-secondary {
+            background: #E8E8E8;
+            color: #666;
+        }
+        
+        .btn-secondary:hover {
+            background: #D5D5D5;
+        }
+        
+        .hidden { display: none !important; }
+
+        @media print {
+            body { background: white; padding: 0; }
+            .btn, .results-actions, .header { display: none; }
+            .card { box-shadow: none; border: 1px solid #DDD; page-break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>👂 Autoavaliação de Escuta Ativa</h1>
+            <p>Descubra suas forças e pontos de melhoria como ouvinte</p>
+            <div class="badge-row">
+                <div class="badge">📊 10 perguntas</div>
+                <div class="badge">⏱️ 5 minutos</div>
+                <div class="badge">📋 Diagnóstico personalizado</div>
+            </div>
+            <div class="framework-visual">
+                <div class="framework-step"><span class="num">1</span> OUVIR</div>
+                <div class="framework-step"><span class="num">2</span> PLANEJAR</div>
+                <div class="framework-step"><span class="num">3</span> TRADUZIR</div>
+                <div class="framework-step"><span class="num">4</span> ENTENDER</div>
+            </div>
+        </div>
+
+        <!-- QUESTIONÁRIO -->
+        <div class="card" id="quizCard">
+            <h2 class="card-title"><span class="icon">📝</span> Você Sabe Ouvir?</h2>
+            
+            <div class="intro-text">
+                <strong>Instruções:</strong> Para cada pergunta, selecione a frequência com que você adota o comportamento descrito. Seja honesto — este teste é para seu autoconhecimento e desenvolvimento profissional.
+            </div>
+
+            <div id="questions">
+                <!-- Pergunta 1 -->
+                <div class="question-item" data-question="1" data-framework="ouvir">
+                    <div class="question-header">
+                        <div class="question-number">1</div>
+                        <div class="question-text">Você permite que o outro se expresse sem interrompê-lo?</div>
+                        <div class="question-tag">OUVIR</div>
+                    </div>
+                    <div class="options-row">
+                        <button class="option-btn" data-value="4" onclick="selectAnswer(1, 4, this)">Sempre<span class="points">4 pts</span></button>
+                        <button class="option-btn" data-value="3" onclick="selectAnswer(1, 3, this)">Quase Sempre<span class="points">3 pts</span></button>
+                        <button class="option-btn" data-value="2" onclick="selectAnswer(1, 2, this)">Raramente<span class="points">2 pts</span></button>
+                        <button class="option-btn" data-value="1" onclick="selectAnswer(1, 1, this)">Nunca<span class="points">1 pt</span></button>
+                    </div>
+                </div>
+
+                <!-- Pergunta 2 -->
+                <div class="question-item" data-question="2" data-framework="traduzir">
+                    <div class="question-header">
+                        <div class="question-number">2</div>
+                        <div class="question-text">Você escuta nas "entrelinhas", procurando o sentido oculto das palavras, especialmente quando a pessoa usa uma linguagem de significado não claro?</div>
+                        <div class="question-tag">TRADUZIR</div>
+                    </div>
+                    <div class="options-row">
+                        <button class="option-btn" data-value="4" onclick="selectAnswer(2, 4, this)">Sempre<span class="points">4 pts</span></button>
+                        <button class="option-btn" data-value="3" onclick="selectAnswer(2, 3, this)">Quase Sempre<span class="points">3 pts</span></button>
+                        <button class="option-btn" data-value="2" onclick="selectAnswer(2, 2, this)">Raramente<span class="points">2 pts</span></button>
+                        <button class="option-btn" data-value="1" onclick="selectAnswer(2, 1, this)">Nunca<span class="points">1 pt</span></button>
+                    </div>
+                </div>
+
+                <!-- Pergunta 3 -->
+                <div class="question-item" data-question="3" data-framework="traduzir">
+                    <div class="question-header">
+                        <div class="question-number">3</div>
+                        <div class="question-text">Você se esforça para reter as informações importantes?</div>
+                        <div class="question-tag">TRADUZIR</div>
+                    </div>
+                    <div class="options-row">
+                        <button class="option-btn" data-value="4" onclick="selectAnswer(3, 4, this)">Sempre<span class="points">4 pts</span></button>
+                        <button class="option-btn" data-value="3" onclick="selectAnswer(3, 3, this)">Quase Sempre<span class="points">3 pts</span></button>
+                        <button class="option-btn" data-value="2" onclick="selectAnswer(3, 2, this)">Raramente<span class="points">2 pts</span></button>
+                        <button class="option-btn" data-value="1" onclick="selectAnswer(3, 1, this)">Nunca<span class="points">1 pt</span></button>
+                    </div>
+                </div>
+
+                <!-- Pergunta 4 -->
+                <div class="question-item" data-question="4" data-framework="ouvir">
+                    <div class="question-header">
+                        <div class="question-number">4</div>
+                        <div class="question-text">Você registra mentalmente ou por escrito os detalhes mais importantes de uma conversa?</div>
+                        <div class="question-tag">OUVIR</div>
+                    </div>
+                    <div class="options-row">
+                        <button class="option-btn" data-value="4" onclick="selectAnswer(4, 4, this)">Sempre<span class="points">4 pts</span></button>
+                        <button class="option-btn" data-value="3" onclick="selectAnswer(4, 3, this)">Quase Sempre<span class="points">3 pts</span></button>
+                        <button class="option-btn" data-value="2" onclick="selectAnswer(4, 2, this)">Raramente<span class="points">2 pts</span></button>
+                        <button class="option-btn" data-value="1" onclick="selectAnswer(4, 1, this)">Nunca<span class="points">1 pt</span></button>
+                    </div>
+                </div>
+
+                <!-- Pergunta 5 -->
+                <div class="question-item" data-question="5" data-framework="planejar">
+                    <div class="question-header">
+                        <div class="question-number">5</div>
+                        <div class="question-text">Ao rememorar um acontecimento qualquer, você se preocupa em localizar e registrar fatos mais importantes e palavras-chave?</div>
+                        <div class="question-tag">PLANEJAR</div>
+                    </div>
+                    <div class="options-row">
+                        <button class="option-btn" data-value="4" onclick="selectAnswer(5, 4, this)">Sempre<span class="points">4 pts</span></button>
+                        <button class="option-btn" data-value="3" onclick="selectAnswer(5, 3, this)">Quase Sempre<span class="points">3 pts</span></button>
+                        <button class="option-btn" data-value="2" onclick="selectAnswer(5, 2, this)">Raramente<span class="points">2 pts</span></button>
+                        <button class="option-btn" data-value="1" onclick="selectAnswer(5, 1, this)">Nunca<span class="points">1 pt</span></button>
+                    </div>
+                </div>
+
+                <!-- Pergunta 6 -->
+                <div class="question-item" data-question="6" data-framework="entender">
+                    <div class="question-header">
+                        <div class="question-number">6</div>
+                        <div class="question-text">Você repete para seu interlocutor os detalhes essenciais de uma conversa, antes que ela chegue ao fim, visando confirmar o que foi dito ou pedido?</div>
+                        <div class="question-tag">ENTENDER</div>
+                    </div>
+                    <div class="options-row">
+                        <button class="option-btn" data-value="4" onclick="selectAnswer(6, 4, this)">Sempre<span class="points">4 pts</span></button>
+                        <button class="option-btn" data-value="3" onclick="selectAnswer(6, 3, this)">Quase Sempre<span class="points">3 pts</span></button>
+                        <button class="option-btn" data-value="2" onclick="selectAnswer(6, 2, this)">Raramente<span class="points">2 pts</span></button>
+                        <button class="option-btn" data-value="1" onclick="selectAnswer(6, 1, this)">Nunca<span class="points">1 pt</span></button>
+                    </div>
+                </div>
+
+                <!-- Pergunta 7 -->
+                <div class="question-item" data-question="7" data-framework="planejar">
+                    <div class="question-header">
+                        <div class="question-number">7</div>
+                        <div class="question-text">Quando em uma conversa você começa a imaginar a resposta apenas quando o outro já terminou de expressar suas ideias?</div>
+                        <div class="question-tag">PLANEJAR</div>
+                    </div>
+                    <div class="options-row">
+                        <button class="option-btn" data-value="4" onclick="selectAnswer(7, 4, this)">Sempre<span class="points">4 pts</span></button>
+                        <button class="option-btn" data-value="3" onclick="selectAnswer(7, 3, this)">Quase Sempre<span class="points">3 pts</span></button>
+                        <button class="option-btn" data-value="2" onclick="selectAnswer(7, 2, this)">Raramente<span class="points">2 pts</span></button>
+                        <button class="option-btn" data-value="1" onclick="selectAnswer(7, 1, this)">Nunca<span class="points">1 pt</span></button>
+                    </div>
+                </div>
+
+                <!-- Pergunta 8 -->
+                <div class="question-item" data-question="8" data-framework="entender">
+                    <div class="question-header">
+                        <div class="question-number">8</div>
+                        <div class="question-text">Você evita tornar-se hostil ou entrar na defensiva quando o ponto de vista do seu interlocutor difere do seu?</div>
+                        <div class="question-tag">ENTENDER</div>
+                    </div>
+                    <div class="options-row">
+                        <button class="option-btn" data-value="4" onclick="selectAnswer(8, 4, this)">Sempre<span class="points">4 pts</span></button>
+                        <button class="option-btn" data-value="3" onclick="selectAnswer(8, 3, this)">Quase Sempre<span class="points">3 pts</span></button>
+                        <button class="option-btn" data-value="2" onclick="selectAnswer(8, 2, this)">Raramente<span class="points">2 pts</span></button>
+                        <button class="option-btn" data-value="1" onclick="selectAnswer(8, 1, this)">Nunca<span class="points">1 pt</span></button>
+                    </div>
+                </div>
+
+                <!-- Pergunta 9 -->
+                <div class="question-item" data-question="9" data-framework="ouvir">
+                    <div class="question-header">
+                        <div class="question-number">9</div>
+                        <div class="question-text">Você ignora outros fatos paralelos à conversa enquanto está ouvindo?</div>
+                        <div class="question-tag">OUVIR</div>
+                    </div>
+                    <div class="options-row">
+                        <button class="option-btn" data-value="4" onclick="selectAnswer(9, 4, this)">Sempre<span class="points">4 pts</span></button>
+                        <button class="option-btn" data-value="3" onclick="selectAnswer(9, 3, this)">Quase Sempre<span class="points">3 pts</span></button>
+                        <button class="option-btn" data-value="2" onclick="selectAnswer(9, 2, this)">Raramente<span class="points">2 pts</span></button>
+                        <button class="option-btn" data-value="1" onclick="selectAnswer(9, 1, this)">Nunca<span class="points">1 pt</span></button>
+                    </div>
+                </div>
+
+                <!-- Pergunta 10 -->
+                <div class="question-item" data-question="10" data-framework="entender">
+                    <div class="question-header">
+                        <div class="question-number">10</div>
+                        <div class="question-text">Você sente e transmite um interesse genuíno naquilo que o outro está dizendo?</div>
+                        <div class="question-tag">ENTENDER</div>
+                    </div>
+                    <div class="options-row">
+                        <button class="option-btn" data-value="4" onclick="selectAnswer(10, 4, this)">Sempre<span class="points">4 pts</span></button>
+                        <button class="option-btn" data-value="3" onclick="selectAnswer(10, 3, this)">Quase Sempre<span class="points">3 pts</span></button>
+                        <button class="option-btn" data-value="2" onclick="selectAnswer(10, 2, this)">Raramente<span class="points">2 pts</span></button>
+                        <button class="option-btn" data-value="1" onclick="selectAnswer(10, 1, this)">Nunca<span class="points">1 pt</span></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="progress-section">
+                <div class="progress-header">
+                    <span class="progress-label">Progresso</span>
+                    <span class="progress-count"><span id="answeredCount">0</span> de 10 respondidas</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+            </div>
+
+            <div class="btn-container">
+                <button class="btn btn-primary" id="submitBtn" disabled onclick="showResults()">
+                    📊 Ver Meu Diagnóstico
+                </button>
+            </div>
+        </div>
+
+        <!-- RESULTADOS -->
+        <div class="results-container" id="resultsContainer">
+            <div class="card">
+                <div class="score-display">
+                    <div class="score-label">Sua Pontuação em Escuta Ativa</div>
+                    <div class="score-value"><span id="totalScore">0</span><span class="score-max">/40</span></div>
+                    <div class="score-bar-container">
+                        <div class="score-bar" id="scoreBar"></div>
+                    </div>
+                </div>
+
+                <div class="diagnosis-box" id="diagnosisBox">
+                    <div class="diagnosis-title" id="diagnosisTitle"></div>
+                    <div class="diagnosis-text" id="diagnosisText"></div>
+                </div>
+
+                <div class="framework-analysis">
+                    <h3 class="framework-title">📊 Análise por Etapa do Framework</h3>
+                    <div class="framework-grid">
+                        <div class="framework-card" id="card-ouvir">
+                            <div class="framework-card-header">
+                                <span class="framework-card-name">1. OUVIR</span>
+                                <span class="framework-card-score" id="score-ouvir">0/12</span>
+                            </div>
+                            <div class="framework-card-desc">Pare de falar, escute com atenção total, faça anotações</div>
+                        </div>
+                        <div class="framework-card" id="card-planejar">
+                            <div class="framework-card-header">
+                                <span class="framework-card-name">2. PLANEJAR</span>
+                                <span class="framework-card-score" id="score-planejar">0/8</span>
+                            </div>
+                            <div class="framework-card-desc">Use o poder do silêncio, planeje antes de responder</div>
+                        </div>
+                        <div class="framework-card" id="card-traduzir">
+                            <div class="framework-card-header">
+                                <span class="framework-card-name">3. TRADUZIR</span>
+                                <span class="framework-card-score" id="score-traduzir">0/8</span>
+                            </div>
+                            <div class="framework-card-desc">Analise texto, contexto e pretexto (intenção real)</div>
+                        </div>
+                        <div class="framework-card" id="card-entender">
+                            <div class="framework-card-header">
+                                <span class="framework-card-name">4. ENTENDER</span>
+                                <span class="framework-card-score" id="score-entender">0/12</span>
+                            </div>
+                            <div class="framework-card-desc">Confirme através de perguntas, resumos e empatia</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="weak-points" id="weakPointsSection">
+                    <h3 class="weak-points-title">⚠️ Pontos que Precisam de Atenção</h3>
+                    <div id="weakPointsList"></div>
+                </div>
+
+                <div class="action-plan">
+                    <h3 class="action-plan-title">🎯 Seu Plano de Ação Personalizado</h3>
+                    <div id="actionPlanList"></div>
+                </div>
+
+                <div class="results-actions">
+                    <button class="btn btn-primary" onclick="window.print()">🖨️ Imprimir Diagnóstico</button>
+                    <button class="btn btn-secondary" onclick="resetQuiz()">🔄 Refazer Avaliação</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const answers = {};
+        const totalQuestions = 10;
+        
+        // Mapeamento de perguntas para frameworks
+        const frameworkMap = {
+            ouvir: [1, 4, 9],      // 3 perguntas = máx 12 pts
+            planejar: [5, 7],      // 2 perguntas = máx 8 pts
+            traduzir: [2, 3],      // 2 perguntas = máx 8 pts
+            entender: [6, 8, 10]   // 3 perguntas = máx 12 pts
+        };
+        
+        // Dicas para cada pergunta
+        const questionTips = {
+            1: "Pratique a técnica de 'silêncio ativo': quando sentir vontade de interromper, conte mentalmente até 3 antes de falar.",
+            2: "Desenvolva o hábito de perguntar: 'O que ele quis dizer com isso?' após cada afirmação importante do cliente.",
+            3: "Use anotações com palavras-chave durante conversas importantes. O ato de escrever ajuda a fixar a informação.",
+            4: "Crie um sistema simples de anotação: use símbolos (!, ?, $) para marcar pontos importantes durante a conversa.",
+            5: "Após reuniões importantes, reserve 5 minutos para revisar mentalmente os pontos-chave antes de seguir para outra atividade.",
+            6: "Antes de encerrar qualquer conversa importante, faça um resumo: 'Então, ficamos assim: [X], [Y] e [Z]. Correto?'",
+            7: "Quando o outro falar, concentre-se apenas em OUVIR. Deixe para pensar na resposta depois que ele terminar.",
+            8: "Quando discordar, respire fundo e use a técnica: 'Entendo seu ponto. Me ajuda a entender melhor por que você pensa assim?'",
+            9: "Antes de reuniões importantes, elimine distrações: celular no silencioso, notificações desligadas, porta fechada.",
+            10: "Pratique a curiosidade genuína: faça perguntas de aprofundamento mesmo quando achar que já entendeu."
+        };
+        
+        // Textos das perguntas (resumidos)
+        const questionTexts = {
+            1: "Permitir que o outro se expresse sem interromper",
+            2: "Escutar nas entrelinhas e sentido oculto",
+            3: "Esforçar-se para reter informações importantes",
+            4: "Registrar detalhes importantes por escrito ou mentalmente",
+            5: "Localizar e registrar fatos importantes e palavras-chave",
+            6: "Repetir detalhes essenciais para confirmar entendimento",
+            7: "Esperar o outro terminar antes de formular resposta",
+            8: "Evitar hostilidade quando pontos de vista diferem",
+            9: "Ignorar distrações paralelas enquanto ouve",
+            10: "Transmitir interesse genuíno no que o outro diz"
+        };
+
+        function selectAnswer(questionNum, value, element) {
+            // Remove seleção anterior
+            const questionItem = element.closest('.question-item');
+            questionItem.querySelectorAll('.option-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            // Adiciona nova seleção
+            element.classList.add('selected');
+            questionItem.classList.add('answered');
+            
+            // Salva resposta
+            answers[questionNum] = value;
+            
+            // Atualiza progresso
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const answered = Object.keys(answers).length;
+            document.getElementById('answeredCount').textContent = answered;
+            document.getElementById('progressBar').style.width = (answered / totalQuestions * 100) + '%';
+            
+            // Habilita botão se todas respondidas
+            document.getElementById('submitBtn').disabled = (answered < totalQuestions);
+        }
+
+        function showResults() {
+            // Esconde questionário
+            document.getElementById('quizCard').classList.add('hidden');
+            document.getElementById('resultsContainer').classList.add('active');
+            
+            // Calcula pontuação total
+            const totalScore = Object.values(answers).reduce((a, b) => a + b, 0);
+            document.getElementById('totalScore').textContent = totalScore;
+            
+            // Atualiza barra de score
+            const scoreBar = document.getElementById('scoreBar');
+            scoreBar.style.width = (totalScore / 40 * 100) + '%';
+            
+            // Define diagnóstico baseado na pontuação
+            const diagnosisBox = document.getElementById('diagnosisBox');
+            const diagnosisTitle = document.getElementById('diagnosisTitle');
+            const diagnosisText = document.getElementById('diagnosisText');
+            
+            let level;
+            if (totalScore >= 32) {
+                level = 'excellent';
+                scoreBar.className = 'score-bar excellent';
+                diagnosisBox.className = 'diagnosis-box excellent';
+                diagnosisTitle.innerHTML = '🏆 Excelente Ouvinte!';
+                diagnosisText.innerHTML = 'Você é um bom ouvinte e desperta confiança nas pessoas. Continue praticando a Escuta Ativa em todas as suas negociações. Sua capacidade de ouvir é uma <strong>vantagem competitiva</strong> significativa. Foque em manter este nível e ajude outros a desenvolverem estas habilidades.';
+            } else if (totalScore >= 27) {
+                level = 'good';
+                scoreBar.className = 'score-bar good';
+                diagnosisBox.className = 'diagnosis-box good';
+                diagnosisTitle.innerHTML = '👍 Bom Ouvinte';
+                diagnosisText.innerHTML = 'Você é um bom ouvinte, porém precisa desenvolver algumas qualidades específicas de Escuta Ativa. Você está no caminho certo! Com <strong>prática focada</strong> nos pontos identificados abaixo, você pode alcançar a excelência em escuta.';
+            } else if (totalScore >= 22) {
+                level = 'developing';
+                scoreBar.className = 'score-bar developing';
+                diagnosisBox.className = 'diagnosis-box developing';
+                diagnosisTitle.innerHTML = '📈 Em Desenvolvimento';
+                diagnosisText.innerHTML = 'Você precisa desenvolver mais suas habilidades de Escuta Ativa. A boa notícia é que escuta é uma habilidade que pode ser <strong>aprendida e praticada</strong>. Siga o plano de ação abaixo e você verá melhorias significativas em suas negociações.';
+            } else {
+                level = 'needs-work';
+                scoreBar.className = 'score-bar needs-work';
+                diagnosisBox.className = 'diagnosis-box needs-work';
+                diagnosisTitle.innerHTML = '⚠️ Precisa de Atenção';
+                diagnosisText.innerHTML = 'Você tem dificuldade para ouvir aquilo que as pessoas dizem. Isso pode estar <strong>prejudicando suas negociações</strong> e relacionamentos profissionais. É fundamental trabalhar e desenvolver a habilidade de Escuta Ativa. O plano de ação abaixo é essencial para você.';
+            }
+            
+            // Calcula scores por framework
+            const frameworkScores = {};
+            for (const [framework, questions] of Object.entries(frameworkMap)) {
+                const maxScore = questions.length * 4;
+                const score = questions.reduce((sum, q) => sum + (answers[q] || 0), 0);
+                frameworkScores[framework] = { score, max: maxScore };
+                
+                // Atualiza card visual
+                const card = document.getElementById(`card-${framework}`);
+                const scoreEl = document.getElementById(`score-${framework}`);
+                scoreEl.textContent = `${score}/${maxScore}`;
+                
+                const percentage = score / maxScore;
+                if (percentage >= 0.85) {
+                    card.className = 'framework-card excellent';
+                } else if (percentage >= 0.70) {
+                    card.className = 'framework-card good';
+                } else if (percentage >= 0.50) {
+                    card.className = 'framework-card developing';
+                } else {
+                    card.className = 'framework-card needs-work';
+                }
+            }
+            
+            // Identifica pontos fracos (respostas 1 ou 2)
+            const weakPoints = [];
+            for (const [q, score] of Object.entries(answers)) {
+                if (score <= 2) {
+                    weakPoints.push({
+                        question: parseInt(q),
+                        score: score,
+                        text: questionTexts[q],
+                        tip: questionTips[q]
+                    });
+                }
+            }
+            
+            // Mostra ou esconde seção de pontos fracos
+            const weakPointsSection = document.getElementById('weakPointsSection');
+            const weakPointsList = document.getElementById('weakPointsList');
+            
+            if (weakPoints.length > 0) {
+                weakPointsSection.classList.remove('hidden');
+                weakPointsList.innerHTML = weakPoints.map(wp => `
+                    <div class="weak-point-item">
+                        <div class="weak-point-question">
+                            <strong>Q${wp.question}:</strong> ${wp.text}
+                            <span style="color: #E74C3C; font-weight: 600;">(${wp.score === 1 ? 'Nunca' : 'Raramente'})</span>
+                        </div>
+                        <div class="weak-point-tip">
+                            <span>💡</span>
+                            <span>${wp.tip}</span>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                weakPointsSection.classList.add('hidden');
+            }
+            
+            // Gera plano de ação personalizado
+            generateActionPlan(totalScore, frameworkScores, weakPoints, level);
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function generateActionPlan(totalScore, frameworkScores, weakPoints, level) {
+            const actionPlanList = document.getElementById('actionPlanList');
+            let actions = [];
+            
+            // Encontra o framework mais fraco
+            let weakestFramework = null;
+            let lowestPercentage = 1;
+            for (const [framework, data] of Object.entries(frameworkScores)) {
+                const percentage = data.score / data.max;
+                if (percentage < lowestPercentage) {
+                    lowestPercentage = percentage;
+                    weakestFramework = framework;
+                }
+            }
+            
+            // Ações baseadas no nível geral
+            if (level === 'needs-work' || level === 'developing') {
+                actions.push({
+                    title: 'Comprometa-se com a Prática Diária',
+                    desc: 'Durante os próximos 21 dias, escolha pelo menos 1 conversa por dia para praticar escuta ativa deliberadamente. Comece com conversas de baixo risco antes de aplicar em negociações importantes.'
+                });
+            }
+            
+            // Ações baseadas no framework mais fraco
+            const frameworkActions = {
+                ouvir: {
+                    title: 'Foque em OUVIR sem interrupções',
+                    desc: 'Sua maior oportunidade está na etapa OUVIR. Pratique: (1) contar até 3 antes de falar, (2) fazer anotações durante conversas, (3) eliminar distrações antes de reuniões importantes.'
+                },
+                planejar: {
+                    title: 'Desenvolva o Poder do Silêncio',
+                    desc: 'Sua maior oportunidade está na etapa PLANEJAR. Pratique: (1) esperar 2-3 segundos após o outro terminar antes de responder, (2) processar mentalmente antes de falar, (3) não ter medo do silêncio.'
+                },
+                traduzir: {
+                    title: 'Aprenda a Ler nas Entrelinhas',
+                    desc: 'Sua maior oportunidade está na etapa TRADUZIR. Pratique: (1) sempre perguntar "O que ele realmente quis dizer?", (2) observar linguagem corporal e tom de voz, (3) identificar a intenção por trás das palavras.'
+                },
+                entender: {
+                    title: 'Confirme Antes de Agir',
+                    desc: 'Sua maior oportunidade está na etapa ENTENDER. Pratique: (1) fazer resumos ao final de conversas, (2) usar frases como "Se entendi bem...", (3) demonstrar empatia com "Imagino que isso seja..."'
+                }
+            };
+            
+            if (weakestFramework && lowestPercentage < 0.7) {
+                actions.push(frameworkActions[weakestFramework]);
+            }
+            
+            // Ação específica baseada em ponto fraco mais crítico
+            if (weakPoints.length > 0) {
+                const mostCritical = weakPoints.find(wp => wp.score === 1) || weakPoints[0];
+                actions.push({
+                    title: 'Priorize Esta Habilidade Específica',
+                    desc: `"${mostCritical.text}" é seu ponto mais crítico. ${mostCritical.tip}`
+                });
+            }
+            
+            // Ação de acompanhamento
+            if (level === 'excellent' || level === 'good') {
+                actions.push({
+                    title: 'Mantenha e Multiplique',
+                    desc: 'Você já tem boas habilidades de escuta. Desafio: nas próximas 2 semanas, observe conscientemente 3 situações onde sua escuta ativa fez diferença no resultado. Documente e compartilhe os aprendizados com sua equipe.'
+                });
+            } else {
+                actions.push({
+                    title: 'Refaça Este Teste em 30 Dias',
+                    desc: 'Agende uma data para refazer esta autoavaliação após 30 dias de prática deliberada. Compare os resultados e celebre seu progresso. A melhoria contínua é o caminho para a maestria.'
+                });
+            }
+            
+            // Renderiza plano de ação
+            actionPlanList.innerHTML = actions.map((action, index) => `
+                <div class="action-item">
+                    <div class="action-number">${index + 1}</div>
+                    <div class="action-content">
+                        <div class="action-title">${action.title}</div>
+                        <div class="action-desc">${action.desc}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function resetQuiz() {
+            // Limpa respostas
+            for (let key in answers) delete answers[key];
+            
+            // Reset visual
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            document.querySelectorAll('.question-item').forEach(item => {
+                item.classList.remove('answered');
+            });
+            
+            // Reset progresso
+            document.getElementById('answeredCount').textContent = '0';
+            document.getElementById('progressBar').style.width = '0%';
+            document.getElementById('submitBtn').disabled = true;
+            
+            // Mostra questionário, esconde resultados
+            document.getElementById('quizCard').classList.remove('hidden');
+            document.getElementById('resultsContainer').classList.remove('active');
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
