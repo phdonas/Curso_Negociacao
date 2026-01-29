@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Os 7 Componentes Obrigatórios do Plano de Negociação</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1B4F72 0%, #2874A6 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1B4F72 0%, #2874A6 100%);
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .intro {
+            padding: 30px 40px;
+            background: linear-gradient(135deg, rgba(27, 79, 114, 0.05) 0%, rgba(40, 116, 166, 0.05) 100%);
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .intro-text {
+            font-size: 1.1em;
+            color: #4a5568;
+            line-height: 1.7;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .intro-highlight {
+            background: #FFF9E6;
+            padding: 15px 25px;
+            border-radius: 10px;
+            border-left: 4px solid #F39C12;
+            margin-top: 20px;
+            font-weight: 500;
+            color: #8B6914;
+        }
+
+        .components-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            padding: 40px;
+        }
+
+        .component-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            border: 2px solid #f0f0f0;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .component-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--card-color);
+        }
+
+        .component-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+            border-color: var(--card-color);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-number {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--card-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: 700;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .card-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #2c3e50;
+            line-height: 1.3;
+        }
+
+        .card-content {
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        .card-content p {
+            margin-bottom: 15px;
+        }
+
+        .key-questions {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .key-questions h4 {
+            color: var(--card-color);
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .key-questions ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .key-questions li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            font-size: 0.95em;
+            border-bottom: 1px dashed #e0e0e0;
+        }
+
+        .key-questions li:last-child {
+            border-bottom: none;
+        }
+
+        .key-questions li::before {
+            content: '❓';
+            position: absolute;
+            left: 0;
+            font-size: 0.9em;
+        }
+
+        /* Component Colors */
+        .component-1 { --card-color: #E74C3C; }
+        .component-2 { --card-color: #F39C12; }
+        .component-3 { --card-color: #27AE60; }
+        .component-4 { --card-color: #3498DB; }
+        .component-5 { --card-color: #9B59B6; }
+        .component-6 { --card-color: #1ABC9C; }
+        .component-7 { --card-color: #E67E22; }
+
+        .pia-section {
+            background: #f7fafc;
+            padding: 40px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .pia-title {
+            text-align: center;
+            font-size: 1.8em;
+            color: #1B4F72;
+            margin-bottom: 30px;
+        }
+
+        .pia-diagram {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .pia-box {
+            background: white;
+            padding: 30px 40px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            min-width: 200px;
+            transition: transform 0.3s ease;
+        }
+
+        .pia-box:hover {
+            transform: scale(1.05);
+        }
+
+        .pia-box.planning {
+            border-top: 5px solid #1B4F72;
+        }
+
+        .pia-box.implementation {
+            border-top: 5px solid #27AE60;
+        }
+
+        .pia-box.evaluation {
+            border-top: 5px solid #F39C12;
+        }
+
+        .pia-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .pia-label {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .pia-desc {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .pia-arrow {
+            font-size: 2em;
+            color: #1B4F72;
+        }
+
+        .checklist-section {
+            padding: 40px;
+            background: linear-gradient(135deg, rgba(27, 79, 114, 0.03) 0%, rgba(40, 116, 166, 0.03) 100%);
+        }
+
+        .checklist-title {
+            text-align: center;
+            font-size: 1.5em;
+            color: #1B4F72;
+            margin-bottom: 25px;
+        }
+
+        .checklist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .checklist-item {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            border-left: 4px solid var(--item-color);
+        }
+
+        .checklist-checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--item-color);
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .checklist-checkbox.checked {
+            background: var(--item-color);
+            color: white;
+        }
+
+        .checklist-text {
+            flex: 1;
+            font-size: 0.95em;
+            color: #4a5568;
+        }
+
+        .footer {
+            background: #1B4F72;
+            color: white;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .footer p {
+            margin: 5px 0;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+            }
+            .component-card:hover {
+                transform: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+            .components-grid {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+            .pia-diagram {
+                flex-direction: column;
+            }
+            .pia-arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 Os 7 Componentes Obrigatórios</h1>
+            <p>do Plano de Negociação</p>
+        </div>
+
+        <div class="intro">
+            <p class="intro-text">
+                Pilotos usam checklists. Cirurgiões usam checklists. 
+                <strong>Negociadores de alto desempenho também.</strong>
+                <br><br>
+                Estes são os 7 elementos que todo plano de negociação precisa ter.
+                Se seu plano não inclui esses componentes, você está indo para a mesa incompleto.
+            </p>
+            <div class="intro-highlight">
+                💡 <strong>Lembre-se:</strong> A negociação é ganha ou perdida ANTES de você entrar na sala.
+                O planejamento é onde 80% do sucesso é definido.
+            </div>
+        </div>
+
+        <div class="components-grid">
+            <!-- Componente 1 -->
+            <div class="component-card component-1">
+                <div class="card-header">
+                    <div class="card-number">1</div>
+                    <div class="card-title">OBJETIVOS CLAROS</div>
+                </div>
+                <div class="card-content">
+                    <p>Defina exatamente o que você quer alcançar. Não basta "fechar o negócio". 
+                    Especifique valor, condições, prazo. Objetivos específicos, mensuráveis e realistas.</p>
+                    <div class="key-questions">
+                        <h4>Perguntas-Chave</h4>
+                        <ul>
+                            <li>Qual valor exato quero alcançar?</li>
+                            <li>Em que condições?</li>
+                            <li>Quais são os objetivos do cliente?</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Componente 2 -->
+            <div class="component-card component-2">
+                <div class="card-header">
+                    <div class="card-number">2</div>
+                    <div class="card-title">ESTRATÉGIA DE DESCOBERTA</div>
+                </div>
+                <div class="card-content">
+                    <p>Que informações você ainda precisa? Prepare um roteiro de perguntas estratégicas.
+                    Use SPIN Selling para estruturar sua descoberta.</p>
+                    <div class="key-questions">
+                        <h4>Perguntas-Chave</h4>
+                        <ul>
+                            <li>Que informações críticas me faltam?</li>
+                            <li>Que perguntas vou fazer para obtê-las?</li>
+                            <li>Em que ordem vou perguntar?</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Componente 3 -->
+            <div class="component-card component-3">
+                <div class="card-header">
+                    <div class="card-number">3</div>
+                    <div class="card-title">PROPOSTA ESTRUTURADA</div>
+                </div>
+                <div class="card-content">
+                    <p>Não improvise sua proposta. Configure antecipadamente: valor, condições, prazos, entregáveis.
+                    Prepare justificativas sólidas para cada elemento.</p>
+                    <div class="key-questions">
+                        <h4>Perguntas-Chave</h4>
+                        <ul>
+                            <li>Por que esse preço? (justificativa)</li>
+                            <li>Por que esse prazo?</li>
+                            <li>Que alternativas posso oferecer?</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Componente 4 -->
+            <div class="component-card component-4">
+                <div class="card-header">
+                    <div class="card-number">4</div>
+                    <div class="card-title">PLANO DE CONCESSÕES</div>
+                </div>
+                <div class="card-content">
+                    <p>O que você pode ceder? E o que vai pedir em troca? Nunca dê nada de graça.
+                    Toda concessão deve vir acompanhada de uma contrapartida.</p>
+                    <div class="key-questions">
+                        <h4>Perguntas-Chave</h4>
+                        <ul>
+                            <li>O que posso ceder sem comprometer margem?</li>
+                            <li>O que vou pedir em troca de cada concessão?</li>
+                            <li>Qual a sequência das concessões?</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Componente 5 -->
+            <div class="component-card component-5">
+                <div class="card-header">
+                    <div class="card-number">5</div>
+                    <div class="card-title">MAANA DEFINIDO</div>
+                </div>
+                <div class="card-content">
+                    <p>Sua <strong>Melhor Alternativa À Negociação de um Acordo</strong>. 
+                    Se essa negociação não funcionar, qual é seu Plano B? 
+                    Quanto mais forte seu MAANA, mais poder você tem.</p>
+                    <div class="key-questions">
+                        <h4>Perguntas-Chave</h4>
+                        <ul>
+                            <li>O que faço se não fechar esse negócio?</li>
+                            <li>Que outras oportunidades tenho?</li>
+                            <li>Posso sair da mesa sem desespero?</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Componente 6 -->
+            <div class="component-card component-6">
+                <div class="card-header">
+                    <div class="card-number">6</div>
+                    <div class="card-title">MAPEAMENTO DO CLIENTE</div>
+                </div>
+                <div class="card-content">
+                    <p>Quem é o decisor? Qual seu estilo de negociação? Quais são seus interesses reais 
+                    além do preço? Use o que aprendeu sobre os 4 estilos de negociadores.</p>
+                    <div class="key-questions">
+                        <h4>Perguntas-Chave</h4>
+                        <ul>
+                            <li>Quem realmente decide?</li>
+                            <li>Qual o estilo do decisor?</li>
+                            <li>Que problemas ele precisa resolver?</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Componente 7 -->
+            <div class="component-card component-7">
+                <div class="card-header">
+                    <div class="card-number">7</div>
+                    <div class="card-title">CENÁRIOS E ADAPTAÇÕES</div>
+                </div>
+                <div class="card-content">
+                    <p>E se o cliente pedir 30% de desconto? E se disser que tem proposta melhor?
+                    Prepare cenários e respostas. Antecipe as objeções mais prováveis.</p>
+                    <div class="key-questions">
+                        <h4>Perguntas-Chave</h4>
+                        <ul>
+                            <li>Quais objeções mais prováveis?</li>
+                            <li>Como vou reagir a cada uma?</li>
+                            <li>Que cenários alternativos devo preparar?</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="pia-section">
+            <h2 class="pia-title">🔄 O Processo P.I.A.</h2>
+            <div class="pia-diagram">
+                <div class="pia-box planning">
+                    <div class="pia-icon">📝</div>
+                    <div class="pia-label">Planejamento</div>
+                    <div class="pia-desc">ANTES da negociação</div>
+                </div>
+                <div class="pia-arrow">→</div>
+                <div class="pia-box implementation">
+                    <div class="pia-icon">⚡</div>
+                    <div class="pia-label">Implementação</div>
+                    <div class="pia-desc">DURANTE a interação</div>
+                </div>
+                <div class="pia-arrow">→</div>
+                <div class="pia-box evaluation">
+                    <div class="pia-icon">📊</div>
+                    <div class="pia-label">Avaliação</div>
+                    <div class="pia-desc">DEPOIS para evoluir</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="checklist-section">
+            <h2 class="checklist-title">✅ Checklist Rápido de Planejamento</h2>
+            <div class="checklist-grid">
+                <div class="checklist-item" style="--item-color: #E74C3C;">
+                    <div class="checklist-checkbox" onclick="this.classList.toggle('checked')">✓</div>
+                    <div class="checklist-text">Defini objetivos específicos e mensuráveis</div>
+                </div>
+                <div class="checklist-item" style="--item-color: #F39C12;">
+                    <div class="checklist-checkbox" onclick="this.classList.toggle('checked')">✓</div>
+                    <div class="checklist-text">Preparei roteiro de perguntas estratégicas</div>
+                </div>
+                <div class="checklist-item" style="--item-color: #27AE60;">
+                    <div class="checklist-checkbox" onclick="this.classList.toggle('checked')">✓</div>
+                    <div class="checklist-text">Estruturei proposta com justificativas</div>
+                </div>
+                <div class="checklist-item" style="--item-color: #3498DB;">
+                    <div class="checklist-checkbox" onclick="this.classList.toggle('checked')">✓</div>
+                    <div class="checklist-text">Planejei concessões e contrapartidas</div>
+                </div>
+                <div class="checklist-item" style="--item-color: #9B59B6;">
+                    <div class="checklist-checkbox" onclick="this.classList.toggle('checked')">✓</div>
+                    <div class="checklist-text">Identifiquei meu MAANA (Plano B)</div>
+                </div>
+                <div class="checklist-item" style="--item-color: #1ABC9C;">
+                    <div class="checklist-checkbox" onclick="this.classList.toggle('checked')">✓</div>
+                    <div class="checklist-text">Mapeei perfil e estilo do cliente</div>
+                </div>
+                <div class="checklist-item" style="--item-color: #E67E22;">
+                    <div class="checklist-checkbox" onclick="this.classList.toggle('checked')">✓</div>
+                    <div class="checklist-text">Antecipei objeções e preparei respostas</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>Prof. Paulo H. Donassolo</strong></p>
+            <p style="opacity: 0.8; font-size: 0.9em;">Módulo 7: O Processo P.I.A. - Planejamento</p>
+            <p style="opacity: 0.7; font-size: 0.85em; margin-top: 10px;">Negociação para Vendas: Método do Professor</p>
+        </div>
+    </div>
+</body>
+</html>
