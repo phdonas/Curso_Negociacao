@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt para Geração de Proposta</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .header .description {
+            font-size: 1rem;
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .intro-section {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #e74c3c;
+        }
+
+        .intro-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #b71c1c;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .intro-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+
+        .intro-text {
+            color: #424242;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .phase-indicator {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-left: 5px solid #6c757d;
+            text-align: center;
+        }
+
+        .phase-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #495057;
+            margin-bottom: 10px;
+        }
+
+        .phase-description {
+            color: #6c757d;
+            font-size: 1rem;
+        }
+
+        .proposal-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .proposal-card {
+            background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 5px solid #e74c3c;
+            transition: transform 0.3s ease;
+        }
+
+        .proposal-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .proposal-card h3 {
+            color: #b71c1c;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .proposal-card .icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+
+        .proposal-card p {
+            color: #495057;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .instructions-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #6f42c1;
+        }
+
+        .instructions-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #4a148c;
+            margin-bottom: 20px;
+        }
+
+        .instruction-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border-left: 3px solid #6f42c1;
+        }
+
+        .instruction-step {
+            font-weight: 600;
+            color: #4a148c;
+            margin-bottom: 8px;
+        }
+
+        .instruction-detail {
+            color: #495057;
+            font-size: 0.95rem;
+        }
+
+        .prompt-container {
+            background: #2c3e50;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .prompt-header {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 20px;
+            margin: -30px -30px 30px -30px;
+            text-align: center;
+        }
+
+        .prompt-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .prompt-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .prompt-text {
+            background: #34495e;
+            color: #ecf0f1;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            line-height: 1.8;
+            padding: 25px;
+            border-radius: 10px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-x: auto;
+            border: 2px solid #e74c3c;
+        }
+
+        .variable-highlight {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .section-divider {
+            color: #e74c3c;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin: 20px 0 15px 0;
+        }
+
+        .copy-button {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 20px auto;
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.3);
+        }
+
+        .copy-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(243, 156, 18, 0.4);
+        }
+
+        .usage-tips {
+            background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #28a745;
+        }
+
+        .tips-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #155724;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .tips-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+
+        .tip-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border-left: 3px solid #28a745;
+        }
+
+        .tip-title {
+            font-weight: 600;
+            color: #155724;
+            margin-bottom: 5px;
+        }
+
+        .tip-text {
+            color: #424242;
+            font-size: 0.95rem;
+        }
+
+        .best-practices {
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #9c27b0;
+        }
+
+        .practices-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #4a148c;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .practices-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+
+        .practice-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border-left: 3px solid #9c27b0;
+        }
+
+        .practice-title {
+            font-weight: 600;
+            color: #4a148c;
+            margin-bottom: 5px;
+        }
+
+        .practice-text {
+            color: #424242;
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 768px) {
+            .container { margin: 10px; }
+            .header { padding: 30px 20px; }
+            .content { padding: 25px 20px; }
+            .header h1 { font-size: 2.2rem; }
+            .prompt-text { font-size: 0.9rem; }
+            .proposal-types { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💼 Geração de Proposta</h1>
+            <div class="subtitle">Prompt para Inteligência Artificial</div>
+            <div class="description">Ferramenta especializada para criar propostas comerciais persuasivas e personalizadas</div>
+        </div>
+
+        <div class="content">
+            <div class="intro-section">
+                <h2 class="intro-title">
+                    <span class="intro-icon">🎯</span>
+                    Objetivo do Prompt
+                </h2>
+                <div class="intro-text">
+                    Este prompt foi desenvolvido para criar propostas comerciais de alta conversão utilizando os insights das fases anteriores do Framework PIA. Ele orienta a IA a estruturar propostas persuasivas, personalizadas e focadas no valor percebido pelo cliente, aumentando significativamente as chances de fechamento.
+                </div>
+            </div>
+
+            <div class="phase-indicator">
+                <div class="phase-title">⚡ FASE 3 - EXECUÇÃO ASSISTIDA</div>
+                <div class="phase-description">30% do tempo do Framework PIA | Aplica insights em propostas vencedoras</div>
+            </div>
+
+            <div class="proposal-types">
+                <div class="proposal-card">
+                    <h3><span class="icon">📊</span>Proposta Técnica</h3>
+                    <p>Focada em especificações, funcionalidades e aspectos técnicos para decisores orientados por dados.</p>
+                </div>
+                <div class="proposal-card">
+                    <h3><span class="icon">💰</span>Proposta Financeira</h3>
+                    <p>Estruturada em ROI, economia e benefícios financeiros para decisores focados em resultados.</p>
+                </div>
+                <div class="proposal-card">
+                    <h3><span class="icon">🤝</span>Proposta Relacional</h3>
+                    <p>Enfatiza parceria, suporte e relacionamento para decisores que valorizam confiança.</p>
+                </div>
+                <div class="proposal-card">
+                    <h3><span class="icon">🚀</span>Proposta Estratégica</h3>
+                    <p>Foca em visão de futuro, inovação e crescimento para decisores visionários.</p>
+                </div>
+            </div>
+
+            <div class="instructions-section">
+                <h2 class="instructions-title">📋 Como Usar Este Prompt</h2>
+                
+                <div class="instruction-item">
+                    <div class="instruction-step">1. Complete as Fases 1 e 2 do Framework PIA</div>
+                    <div class="instruction-detail">Use os resultados da Análise de Perfil e Análise Preditiva para embasar a proposta.</div>
+                </div>
+                
+                <div class="instruction-item">
+                    <div class="instruction-step">2. Defina o Tipo de Proposta</div>
+                    <div class="instruction-detail">Escolha entre técnica, financeira, relacional ou estratégica baseado no perfil do decisor.</div>
+                </div>
+                
+                <div class="instruction-item">
+                    <div class="instruction-step">3. Reúna Evidências e Provas</div>
+                    <div class="instruction-detail">Compile cases de sucesso, dados de ROI e referências relevantes para o cliente.</div>
+                </div>
+                
+                <div class="instruction-item">
+                    <div class="instruction-step">4. Personalize Todas as Variáveis</div>
+                    <div class="instruction-detail">Substitua todos os campos entre [colchetes] com informações específicas do cliente.</div>
+                </div>
+                
+                <div class="instruction-item">
+                    <div class="instruction-step">5. Revise e Adapte</div>
+                    <div class="instruction-detail">Use o resultado da IA como base, mas revise e adapte conforme sua experiência.</div>
+                </div>
+            </div>
+
+            <div class="prompt-container">
+                <div class="prompt-header">
+                    <div class="prompt-title">🤖 Prompt Completo</div>
+                    <div class="prompt-subtitle">Copie, personalize e use na sua IA</div>
+                </div>
+                
+                <div class="prompt-text">Atue como especialista em redação comercial persuasiva e criação de propostas B2B no Brasil, com mais de 15 anos de experiência em vendas consultivas, neuromarketing e psicologia da persuasão aplicada a negociações empresariais.
+
+Crie uma proposta comercial personalizada, persuasiva e de alta conversão baseada nas análises anteriores do Framework PIA:
+
+<span class="section-divider">═══ INFORMAÇÕES DO CLIENTE ═══</span>
+
+<strong>DADOS DA EMPRESA:</strong>
+- Nome da empresa: <span class="variable-highlight">[razão social completa]</span>
+- Setor: <span class="variable-highlight">[área de atuação específica]</span>
+- Porte: <span class="variable-highlight">[micro, pequena, média - número funcionários]</span>
+- Localização: <span class="variable-highlight">[cidade, estado]</span>
+- Faturamento anual: <span class="variable-highlight">[faixa de faturamento se disponível]</span>
+
+<strong>PERFIL DO DECISOR:</strong>
+- Nome: <span class="variable-highlight">[nome completo]</span>
+- Cargo: <span class="variable-highlight">[posição e nível hierárquico]</span>
+- Estilo de decisão: <span class="variable-highlight">[analítico, intuitivo, consultivo, autoritário]</span>
+- Motivadores principais: <span class="variable-highlight">[preço, qualidade, prazo, inovação, segurança]</span>
+- Formação: <span class="variable-highlight">[área de formação]</span>
+
+<strong>CONTEXTO DA NEGOCIAÇÃO:</strong>
+- Necessidade identificada: <span class="variable-highlight">[problema específico do cliente]</span>
+- Urgência: <span class="variable-highlight">[alta, média, baixa - justificativa]</span>
+- Orçamento disponível: <span class="variable-highlight">[faixa de investimento]</span>
+- Prazo para decisão: <span class="variable-highlight">[timeline do cliente]</span>
+- Processo decisório: <span class="variable-highlight">[individual, comitê, múltiplos níveis]</span>
+
+<span class="section-divider">═══ SOLUÇÃO OFERECIDA ═══</span>
+
+<strong>PRODUTO/SERVIÇO:</strong>
+- Descrição: <span class="variable-highlight">[detalhamento completo da solução]</span>
+- Valor do investimento: <span class="variable-highlight">[valor total em R$]</span>
+- Prazo de entrega: <span class="variable-highlight">[cronograma de implementação]</span>
+- Garantias oferecidas: <span class="variable-highlight">[garantias técnicas, satisfação, etc.]</span>
+
+<strong>DIFERENCIAIS COMPETITIVOS:</strong>
+- Principal vantagem: <span class="variable-highlight">[diferencial único mais relevante]</span>
+- Vantagens secundárias: <span class="variable-highlight">[outros diferenciais importantes]</span>
+- Concorrência: <span class="variable-highlight">[principais concorrentes avaliados]</span>
+- Por que escolher vocês: <span class="variable-highlight">[razões específicas]</span>
+
+<span class="section-divider">═══ EVIDÊNCIAS E CREDIBILIDADE ═══</span>
+
+<strong>CASES DE SUCESSO:</strong>
+- Case principal: <span class="variable-highlight">[empresa similar, resultado alcançado]</span>
+- ROI demonstrado: <span class="variable-highlight">[retorno financeiro específico]</span>
+- Tempo para resultado: <span class="variable-highlight">[prazo para ver benefícios]</span>
+- Referências: <span class="variable-highlight">[clientes que podem dar referência]</span>
+
+<strong>DADOS DE CREDIBILIDADE:</strong>
+- Tempo de mercado: <span class="variable-highlight">[anos de atuação]</span>
+- Número de clientes: <span class="variable-highlight">[base de clientes]</span>
+- Certificações: <span class="variable-highlight">[certificações relevantes]</span>
+- Prêmios/reconhecimentos: <span class="variable-highlight">[reconhecimentos do mercado]</span>
+
+<span class="section-divider">═══ PROPOSTA SOLICITADA ═══</span>
+
+Com base nestas informações, crie uma proposta comercial estruturada nos seguintes elementos:
+
+<strong>1. TÍTULO IMPACTANTE</strong>
+- Crie um título que desperte imediato interesse
+- Use o nome da empresa do cliente
+- Foque no principal benefício ou resultado
+- Máximo 12 palavras
+
+<strong>2. RESUMO EXECUTIVO (150-200 palavras)</strong>
+- Identifique o problema/oportunidade específica
+- Apresente a solução de forma clara
+- Quantifique o benefício principal
+- Inclua chamada para ação
+
+<strong>3. ANÁLISE DA SITUAÇÃO ATUAL</strong>
+- Diagnóstico dos principais desafios
+- Impacto quantificado na operação
+- Custo de não resolver o problema
+- Oportunidades perdidas
+
+<strong>4. SOLUÇÃO PROPOSTA</strong>
+- Descrição clara e objetiva
+- Como resolve cada dor identificada
+- Metodologia/processo de implementação
+- Diferencial único vs concorrência
+
+<strong>5. BENEFÍCIOS QUANTIFICADOS</strong>
+- ROI esperado em números específicos
+- Economia de tempo/recursos
+- Aumento de produtividade/vendas
+- Payback period
+- Benefícios intangíveis relevantes
+
+<strong>6. CRONOGRAMA E ETAPAS</strong>
+- Fases de implementação
+- Marcos principais
+- Prazo total
+- Responsabilidades de cada parte
+
+<strong>7. INVESTIMENTO E CONDIÇÕES</strong>
+- Valor total do investimento
+- Formas de pagamento (3 opções)
+- Condições especiais (se aplicável)
+- Validade da proposta
+
+<strong>8. GARANTIAS E REDUÇÃO DE RISCOS</strong>
+- Garantias técnicas oferecidas
+- Política de satisfação
+- Suporte pós-implementação
+- Seguros ou proteções
+
+<strong>9. PRÓXIMOS PASSOS</strong>
+- Ação específica solicitada
+- Cronograma de aprovação
+- Contatos para dúvidas
+- Senso de urgência apropriado
+
+<span class="section-divider">═══ DIRETRIZES ESPECÍFICAS ═══</span>
+
+<strong>LINGUAGEM E TOM:</strong>
+- Use linguagem específica do setor do cliente
+- Mantenha tom profissional mas acessível
+- Evite jargões técnicos excessivos
+- Foque em benefícios, não apenas características
+
+<strong>ESTRUTURA VISUAL:</strong>
+- Organize em seções claras
+- Use títulos descritivos
+- Inclua bullets para facilitar leitura
+- Destaque informações importantes
+
+<strong>PERSUASÃO:</strong>
+- Antecipe e neutralize objeções
+- Use prova social (casos, depoimentos)
+- Crie senso de urgência sem pressão
+- Facilite a tomada de decisão
+
+<strong>PERSONALIZAÇÃO:</strong>
+- Mencione situações específicas do cliente
+- Use dados e informações coletadas
+- Adapte linguagem ao perfil do decisor
+- Conecte com objetivos empresariais
+
+Crie uma proposta que seja impossível de ignorar, fácil de entender e difícil de recusar.</div>
+                
+                <button class="copy-button" onclick="copyPrompt()">📋 Copiar Prompt Completo</button>
+            </div>
+
+            <div class="usage-tips">
+                <h2 class="tips-title">
+                    <span class="tips-icon">💡</span>
+                    Dicas para Propostas Vencedoras
+                </h2>
+                
+                <div class="tip-item">
+                    <div class="tip-title">Personalize Sempre</div>
+                    <div class="tip-text">Use informações específicas do cliente, não templates genéricos. Mostre que conhece sua realidade.</div>
+                </div>
+                
+                <div class="tip-item">
+                    <div class="tip-title">Quantifique Benefícios</div>
+                    <div class="tip-text">Use números específicos: "economia de R$ 50.000/ano" é mais convincente que "redução significativa de custos".</div>
+                </div>
+                
+                <div class="tip-item">
+                    <div class="tip-title">Inclua Prova Social</div>
+                    <div class="tip-text">Cases de sucesso similares, depoimentos e referências aumentam credibilidade e reduzem resistência.</div>
+                </div>
+                
+                <div class="tip-item">
+                    <div class="tip-title">Antecipe Objeções</div>
+                    <div class="tip-text">Aborde possíveis preocupações antes que se tornem objeções durante a apresentação.</div>
+                </div>
+                
+                <div class="tip-item">
+                    <div class="tip-title">Facilite a Decisão</div>
+                    <div class="tip-text">Ofereça opções claras, próximos passos definidos e processo de aprovação simplificado.</div>
+                </div>
+            </div>
+
+            <div class="best-practices">
+                <h2 class="practices-title">
+                    <span class="practices-icon">🏆</span>
+                    Melhores Práticas
+                </h2>
+                
+                <div class="practice-item">
+                    <div class="practice-title">Estrutura Clara</div>
+                    <div class="practice-text">Organize a proposta de forma lógica: problema → solução → benefícios → investimento → próximos passos.</div>
+                </div>
+                
+                <div class="practice-item">
+                    <div class="practice-title">Foco no Cliente</div>
+                    <div class="practice-text">Concentre-se nos benefícios para o cliente, não nas características do seu produto/serviço.</div>
+                </div>
+                
+                <div class="practice-item">
+                    <div class="practice-title">Linguagem Assertiva</div>
+                    <div class="practice-text">Use verbos no presente e afirmações confiantes: "Esta solução reduz custos" em vez de "pode reduzir".</div>
+                </div>
+                
+                <div class="practice-item">
+                    <div class="practice-title">Revisão Crítica</div>
+                    <div class="practice-text">Sempre revise: ortografia, coerência, adequação ao perfil do cliente e clareza da mensagem.</div>
+                </div>
+                
+                <div class="practice-item">
+                    <div class="practice-title">Teste e Ajuste</div>
+                    <div class="practice-text">Monitore resultados e ajuste o prompt baseado no feedback dos clientes e taxa de conversão.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function copyPrompt() {
+            const promptText = document.querySelector('.prompt-text').textContent;
+            navigator.clipboard.writeText(promptText).then(function() {
+                const button = document.querySelector('.copy-button');
+                const originalText = button.textContent;
+                button.textContent = '✅ Prompt Copiado!';
+                button.style.background = 'linear-gradient(135deg, #27ae60 0%, #2ecc71 100%)';
+                
+                setTimeout(function() {
+                    button.textContent = originalText;
+                    button.style.background = 'linear-gradient(135deg, #f39c12 0%, #e67e22 100%)';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
