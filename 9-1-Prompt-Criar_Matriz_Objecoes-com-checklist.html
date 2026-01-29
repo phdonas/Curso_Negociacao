@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atividade 9.1 | Criar Matriz de Objeções Personalizada</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1B4F72 0%, #C0392B 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container { max-width: 950px; margin: 0 auto; }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 { font-size: 1.8rem; margin-bottom: 10px; }
+        .header p { opacity: 0.9; font-size: 1rem; }
+        
+        .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-top: 10px;
+        }
+        
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 10%;
+            right: 10%;
+            height: 3px;
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .step-indicator {
+            text-align: center;
+            z-index: 1;
+            flex: 1;
+        }
+        
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px;
+            color: white;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+        
+        .step-indicator.active .step-circle {
+            background: #27AE60;
+            transform: scale(1.1);
+        }
+        
+        .step-indicator.completed .step-circle {
+            background: #27AE60;
+        }
+        
+        .step-label {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.75rem;
+        }
+        
+        .step-indicator.active .step-label {
+            color: white;
+            font-weight: 600;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .card.active { display: block; }
+        
+        .card-title {
+            font-size: 1.4rem;
+            color: #1B4F72;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #E8E8E8;
+        }
+        
+        .card-title span {
+            background: linear-gradient(135deg, #C0392B, #E74C3C);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-right: 10px;
+        }
+        
+        .intro-box {
+            background: linear-gradient(135deg, #EBF5FB, #D4E6F1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-left: 4px solid #1B4F72;
+        }
+        
+        .intro-box h3 {
+            color: #1B4F72;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .intro-box p {
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #2C3E50;
+            margin-bottom: 8px;
+        }
+        
+        .form-group .helper {
+            font-size: 0.85rem;
+            color: #888;
+            margin-bottom: 8px;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #E8E8E8;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #C0392B;
+        }
+        
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 600px) {
+            .form-row { grid-template-columns: 1fr; }
+        }
+        
+        .category-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 600px) {
+            .category-cards { grid-template-columns: 1fr; }
+        }
+        
+        .category-card {
+            border: 2px solid #E8E8E8;
+            border-radius: 12px;
+            padding: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .category-card.selected {
+            border-color: #27AE60;
+            background: linear-gradient(135deg, #E8F8F0, #D5F5E3);
+        }
+        
+        .category-card.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #27AE60;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+        
+        .category-icon {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+        
+        .category-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .category-card[data-category="preco"] .category-name { color: #C0392B; }
+        .category-card[data-category="tempo"] .category-name { color: #E67E22; }
+        .category-card[data-category="autoridade"] .category-name { color: #8E44AD; }
+        .category-card[data-category="necessidade"] .category-name { color: #16A085; }
+        .category-card[data-category="confianca"] .category-name { color: #3498DB; }
+        .category-card[data-category="tecnico"] .category-name { color: #7F8C8D; }
+        
+        .category-desc {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .category-examples {
+            font-size: 0.75rem;
+            color: #999;
+            margin-top: 8px;
+            font-style: italic;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #C0392B, #E74C3C);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(192, 57, 43, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #E8E8E8;
+            color: #666;
+        }
+        
+        .btn-secondary:hover {
+            background: #D5D5D5;
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #27AE60, #2ECC71);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(39, 174, 96, 0.4);
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        .prompt-box {
+            background: #2C3E50;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .prompt-box pre {
+            color: #ECF0F1;
+            font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 450px;
+            overflow-y: auto;
+            line-height: 1.5;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #C0392B;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+        
+        .copy-btn:hover {
+            background: #A93226;
+        }
+        
+        .copy-btn.copied {
+            background: #27AE60;
+        }
+        
+        .tips-box {
+            background: #FEF9E7;
+            border: 1px solid #F7DC6F;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-top: 20px;
+        }
+        
+        .tips-box h4 {
+            color: #B7950B;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+        
+        .tips-box ul {
+            margin-left: 20px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .tips-box li {
+            margin-bottom: 5px;
+        }
+        
+        .result-section {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 2px dashed #E8E8E8;
+        }
+        
+        .result-section h3 {
+            color: #1B4F72;
+            margin-bottom: 15px;
+        }
+        
+        .matrix-preview {
+            background: #F8F9FA;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        
+        .matrix-preview h4 {
+            color: #2C3E50;
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+        
+        .matrix-row {
+            display: grid;
+            grid-template-columns: 120px 1fr 100px;
+            gap: 10px;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        
+        .matrix-row.header {
+            background: #1B4F72;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .matrix-category {
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        
+        .matrix-objecao {
+            font-size: 0.9rem;
+            color: #555;
+        }
+        
+        .matrix-status {
+            text-align: center;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .status-badge.prioritaria {
+            background: #FADBD8;
+            color: #C0392B;
+        }
+        
+        .status-badge.comum {
+            background: #FEF9E7;
+            color: #B7950B;
+        }
+        
+        .checklist {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: #F8F9FA;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .checklist-item:hover {
+            background: #E8E8E8;
+        }
+        
+        .checklist-item.checked {
+            background: #E8F8F0;
+            border: 1px solid #27AE60;
+        }
+        
+        .checklist-checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #CCC;
+            border-radius: 6px;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .checklist-item.checked .checklist-checkbox {
+            background: #27AE60;
+            border-color: #27AE60;
+            color: white;
+        }
+        
+        .checklist-text {
+            flex: 1;
+        }
+        
+        .checklist-text strong {
+            display: block;
+            color: #2C3E50;
+            margin-bottom: 3px;
+        }
+        
+        .checklist-text span {
+            font-size: 0.85rem;
+            color: #888;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        @media (max-width: 600px) {
+            .summary-grid { grid-template-columns: 1fr; }
+        }
+        
+        .summary-card {
+            background: linear-gradient(135deg, #EBF5FB, #D4E6F1);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .summary-card .number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1B4F72;
+        }
+        
+        .summary-card .label {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+        
+        .hidden { display: none !important; }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container { max-width: 100%; }
+            .header { color: #1B4F72; }
+            .badge { background: #E8E8E8; color: #333; }
+            .progress-steps { display: none; }
+            .card { 
+                display: block !important; 
+                box-shadow: none;
+                border: 1px solid #DDD;
+            }
+            .btn, .btn-group { display: none; }
+            .prompt-box { 
+                background: #F5F5F5; 
+                border: 1px solid #DDD;
+            }
+            .prompt-box pre { color: #333; }
+            .copy-btn { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Criar Matriz de Objeções Personalizada</h1>
+            <p>Atividade prática para antecipar e preparar respostas para objeções</p>
+            <div class="badge">Módulo 9 • Seção 9.1 • Gestão de Objeções</div>
+        </div>
+        
+        <div class="progress-steps">
+            <div class="step-indicator active" data-step="1">
+                <div class="step-circle">1</div>
+                <div class="step-label">Contexto</div>
+            </div>
+            <div class="step-indicator" data-step="2">
+                <div class="step-circle">2</div>
+                <div class="step-label">Categorias</div>
+            </div>
+            <div class="step-indicator" data-step="3">
+                <div class="step-circle">3</div>
+                <div class="step-label">Detalhes</div>
+            </div>
+            <div class="step-indicator" data-step="4">
+                <div class="step-circle">4</div>
+                <div class="step-label">Gerar Matriz</div>
+            </div>
+            <div class="step-indicator" data-step="5">
+                <div class="step-circle">5</div>
+                <div class="step-label">Finalizar</div>
+            </div>
+        </div>
+        
+        <!-- PASSO 1: CONTEXTO DA NEGOCIAÇÃO -->
+        <div class="card active" id="step1">
+            <h2 class="card-title"><span>Passo 1</span> Contexto da Negociação</h2>
+            
+            <div class="intro-box">
+                <h3>🎯 Objetivo desta Atividade</h3>
+                <p>Você vai criar uma Matriz de Objeções personalizada para uma negociação real ou simulada. Ao final, terá um documento completo com as objeções mais prováveis, estratégias de resposta e scripts prontos para usar.</p>
+            </div>
+            
+            <div class="form-group">
+                <label>Nome/Título da Negociação *</label>
+                <div class="helper">Dê um nome que identifique esta negociação</div>
+                <input type="text" id="negName" placeholder="Ex: Proposta Software ERP para Indústria ABC">
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Sua Empresa/Solução *</label>
+                    <div class="helper">O que você está vendendo</div>
+                    <input type="text" id="yourCompany" placeholder="Ex: Sistema de gestão integrado XYZ">
+                </div>
+                <div class="form-group">
+                    <label>Valor Aproximado</label>
+                    <div class="helper">Faixa de investimento da proposta</div>
+                    <input type="text" id="dealValue" placeholder="Ex: R$ 50.000 a R$ 80.000">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Empresa do Cliente *</label>
+                <div class="helper">Nome, segmento e porte da empresa</div>
+                <input type="text" id="clientCompany" placeholder="Ex: Indústria ABC - Metalurgia - Médio porte (150 funcionários)">
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Decisor Principal *</label>
+                    <div class="helper">Cargo e perfil do decisor</div>
+                    <input type="text" id="decisionMaker" placeholder="Ex: Diretor Industrial - Perfil analítico">
+                </div>
+                <div class="form-group">
+                    <label>Outros Envolvidos</label>
+                    <div class="helper">Quem mais participa da decisão</div>
+                    <input type="text" id="otherStakeholders" placeholder="Ex: Gerente de TI, Controller financeiro">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Situação Atual do Cliente *</label>
+                <div class="helper">Como o cliente resolve o problema hoje</div>
+                <textarea id="currentSituation" placeholder="Ex: Usam planilhas Excel e sistema legado de 10 anos. Muitos processos manuais, retrabalho frequente, dificuldade para ter informações em tempo real..."></textarea>
+            </div>
+            
+            <div class="btn-group">
+                <div></div>
+                <button class="btn btn-primary" onclick="nextStep(2)">Próximo Passo →</button>
+            </div>
+        </div>
+        
+        <!-- PASSO 2: CATEGORIAS DE OBJEÇÕES -->
+        <div class="card" id="step2">
+            <h2 class="card-title"><span>Passo 2</span> Categorias de Objeções Prováveis</h2>
+            
+            <div class="intro-box">
+                <h3>🔍 Selecione as Categorias</h3>
+                <p>Com base no perfil do cliente e na sua experiência, selecione as categorias de objeções mais prováveis nesta negociação. Você pode selecionar quantas quiser.</p>
+            </div>
+            
+            <div class="category-cards">
+                <div class="category-card selected" data-category="preco" onclick="toggleCategory(this)">
+                    <div class="category-icon">💰</div>
+                    <div class="category-name">PREÇO</div>
+                    <div class="category-desc">Objeções sobre custo, orçamento e valor percebido</div>
+                    <div class="category-examples">"Está muito caro", "Não temos orçamento", "Preciso comparar preços"</div>
+                </div>
+                
+                <div class="category-card" data-category="tempo" onclick="toggleCategory(this)">
+                    <div class="category-icon">⏰</div>
+                    <div class="category-name">TEMPO</div>
+                    <div class="category-desc">Questões de prazo, urgência e momento</div>
+                    <div class="category-examples">"Agora não é hora", "Preciso pensar", "Vamos avaliar no próximo ano"</div>
+                </div>
+                
+                <div class="category-card" data-category="autoridade" onclick="toggleCategory(this)">
+                    <div class="category-icon">👔</div>
+                    <div class="category-name">AUTORIDADE</div>
+                    <div class="category-desc">Quem decide e como decide</div>
+                    <div class="category-examples">"Preciso consultar meu sócio", "Não é minha decisão", "Vou discutir com a equipe"</div>
+                </div>
+                
+                <div class="category-card" data-category="necessidade" onclick="toggleCategory(this)">
+                    <div class="category-icon">❓</div>
+                    <div class="category-name">NECESSIDADE</div>
+                    <div class="category-desc">Se o cliente realmente precisa da solução</div>
+                    <div class="category-examples">"Não precisamos disso", "Já temos algo similar", "Não vejo necessidade"</div>
+                </div>
+                
+                <div class="category-card" data-category="confianca" onclick="toggleCategory(this)">
+                    <div class="category-icon">🤝</div>
+                    <div class="category-name">CONFIANÇA</div>
+                    <div class="category-desc">Credibilidade, risco e segurança</div>
+                    <div class="category-examples">"Não conhecemos vocês", "E se não der certo?", "Preciso de referências"</div>
+                </div>
+                
+                <div class="category-card" data-category="tecnico" onclick="toggleCategory(this)">
+                    <div class="category-icon">⚙️</div>
+                    <div class="category-name">TÉCNICO</div>
+                    <div class="category-desc">Especificações, funcionalidades, compatibilidade</div>
+                    <div class="category-examples">"Não atende nossas especificações", "É muito complexo", "Não integra com nossos sistemas"</div>
+                </div>
+            </div>
+            
+            <div class="tips-box">
+                <h4>💡 Dica do Professor</h4>
+                <ul>
+                    <li>Decisores <strong>analíticos</strong> geralmente fazem objeções de PREÇO e TÉCNICO</li>
+                    <li>Decisores <strong>relacionais</strong> focam em CONFIANÇA e NECESSIDADE</li>
+                    <li>Clientes em <strong>primeira compra</strong> costumam ter mais objeções de CONFIANÇA</li>
+                    <li>Negociações de <strong>alto valor</strong> envolvem mais AUTORIDADE e TEMPO</li>
+                </ul>
+            </div>
+            
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="prevStep(1)">← Voltar</button>
+                <button class="btn btn-primary" onclick="nextStep(3)">Próximo Passo →</button>
+            </div>
+        </div>
+        
+        <!-- PASSO 3: DETALHES ESPECÍFICOS -->
+        <div class="card" id="step3">
+            <h2 class="card-title"><span>Passo 3</span> Detalhes e Contexto Adicional</h2>
+            
+            <div class="intro-box">
+                <h3>📋 Informações Complementares</h3>
+                <p>Quanto mais contexto você fornecer, mais personalizada e eficaz será sua Matriz de Objeções.</p>
+            </div>
+            
+            <div class="form-group">
+                <label>Concorrentes no Processo</label>
+                <div class="helper">Quem mais está disputando esta venda</div>
+                <textarea id="competitors" placeholder="Ex: Sistema ABC (líder de mercado, mais caro), Sistema XYZ (startup, mais barato mas menos funcionalidades), Solução interna (fazer com equipe própria)"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Pontos Fortes da Sua Proposta</label>
+                <div class="helper">Diferenciais competitivos que você pode usar nas respostas</div>
+                <textarea id="strengths" placeholder="Ex: Suporte local 24/7, implementação em 30 dias, ROI comprovado de 6 meses, cases no mesmo segmento, integração nativa com sistemas populares"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Pontos de Atenção / Vulnerabilidades</label>
+                <div class="helper">Pontos fracos conhecidos que podem gerar objeções</div>
+                <textarea id="weaknesses" placeholder="Ex: Preço acima da média, empresa nova no mercado, prazo de implementação mais longo, não temos case específico neste segmento"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Histórico com o Cliente (se houver)</label>
+                <div class="helper">Interações anteriores, objeções já levantadas, etc.</div>
+                <textarea id="history" placeholder="Ex: Na primeira reunião, questionaram muito sobre segurança dos dados. O controller pareceu preocupado com o fluxo de caixa. Mencionaram que já tiveram problemas com fornecedor anterior..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Urgência/Prazo do Cliente</label>
+                <div class="helper">Timeline de decisão do cliente</div>
+                <input type="text" id="timeline" placeholder="Ex: Precisam decidir até final do trimestre para entrar no orçamento de 2025">
+            </div>
+            
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="prevStep(2)">← Voltar</button>
+                <button class="btn btn-primary" onclick="nextStep(4)">Gerar Matriz →</button>
+            </div>
+        </div>
+        
+        <!-- PASSO 4: GERAR MATRIZ -->
+        <div class="card" id="step4">
+            <h2 class="card-title"><span>Passo 4</span> Gerar Matriz de Objeções</h2>
+            
+            <div class="intro-box">
+                <h3>🤖 Use a IA para Criar sua Matriz</h3>
+                <p>Copie o prompt abaixo e cole no ChatGPT ou Claude para gerar uma Matriz de Objeções completa e personalizada para sua negociação.</p>
+            </div>
+            
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <div class="number" id="summaryCategories">0</div>
+                    <div class="label">Categorias Selecionadas</div>
+                </div>
+                <div class="summary-card">
+                    <div class="number" id="summaryObjecoes">~0</div>
+                    <div class="label">Objeções Esperadas</div>
+                </div>
+                <div class="summary-card">
+                    <div class="number" id="summaryRespostas">~0</div>
+                    <div class="label">Respostas a Preparar</div>
+                </div>
+            </div>
+            
+            <div class="prompt-box">
+                <button class="copy-btn" onclick="copyPrompt()">📋 Copiar Prompt</button>
+                <pre id="generatedPrompt">Gerando prompt...</pre>
+            </div>
+            
+            <div class="tips-box">
+                <h4>📝 Como usar o prompt:</h4>
+                <ul>
+                    <li>Clique em "Copiar Prompt" para copiar todo o texto</li>
+                    <li>Abra o <strong>ChatGPT</strong> ou <strong>Claude</strong> em uma nova aba</li>
+                    <li>Cole o prompt e envie</li>
+                    <li>A IA vai gerar uma Matriz completa com objeções, estratégias e scripts</li>
+                    <li>Revise e adapte as respostas com seu conhecimento específico</li>
+                </ul>
+            </div>
+            
+            <div class="result-section">
+                <h3>📊 Prévia da Estrutura da Matriz</h3>
+                <p style="color: #666; margin-bottom: 15px;">Esta é a estrutura que a IA vai preencher para você:</p>
+                
+                <div class="matrix-preview">
+                    <div class="matrix-row header">
+                        <div>Categoria</div>
+                        <div>Objeção / Estratégia / Resposta</div>
+                        <div>Prioridade</div>
+                    </div>
+                    <div id="matrixPreviewContent">
+                        <!-- Será preenchido dinamicamente -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="prevStep(3)">← Voltar</button>
+                <button class="btn btn-success" onclick="nextStep(5)">Concluir Atividade →</button>
+            </div>
+        </div>
+        
+        <!-- PASSO 5: FINALIZAÇÃO -->
+        <div class="card" id="step5">
+            <h2 class="card-title"><span>Passo 5</span> Checklist de Preparação</h2>
+            
+            <div class="intro-box">
+                <h3>✅ Antes da Reunião de Negociação</h3>
+                <p>Use este checklist para garantir que você está preparado para lidar com as objeções identificadas.</p>
+            </div>
+            
+            <div class="checklist">
+                <div class="checklist-item" onclick="toggleChecklist(this)">
+                    <div class="checklist-checkbox">✓</div>
+                    <div class="checklist-text">
+                        <strong>Gerei a Matriz de Objeções com IA</strong>
+                        <span>Copiei o prompt, usei a IA e revisei o resultado</span>
+                    </div>
+                </div>
+                
+                <div class="checklist-item" onclick="toggleChecklist(this)">
+                    <div class="checklist-checkbox">✓</div>
+                    <div class="checklist-text">
+                        <strong>Identifiquei as 3-5 objeções mais prováveis</strong>
+                        <span>Priorizei as objeções com maior chance de ocorrer</span>
+                    </div>
+                </div>
+                
+                <div class="checklist-item" onclick="toggleChecklist(this)">
+                    <div class="checklist-checkbox">✓</div>
+                    <div class="checklist-text">
+                        <strong>Memorizei as respostas principais</strong>
+                        <span>Ensaiei as respostas em voz alta até ficarem naturais</span>
+                    </div>
+                </div>
+                
+                <div class="checklist-item" onclick="toggleChecklist(this)">
+                    <div class="checklist-checkbox">✓</div>
+                    <div class="checklist-text">
+                        <strong>Preparei as evidências necessárias</strong>
+                        <span>Cases, calculadoras, referências, garantias, demonstrações</span>
+                    </div>
+                </div>
+                
+                <div class="checklist-item" onclick="toggleChecklist(this)">
+                    <div class="checklist-checkbox">✓</div>
+                    <div class="checklist-text">
+                        <strong>Planejei técnicas de inoculação</strong>
+                        <span>Identifiquei objeções para abordar preventivamente</span>
+                    </div>
+                </div>
+                
+                <div class="checklist-item" onclick="toggleChecklist(this)">
+                    <div class="checklist-checkbox">✓</div>
+                    <div class="checklist-text">
+                        <strong>Revisei as perguntas de validação</strong>
+                        <span>Sei como confirmar se a objeção foi realmente resolvida</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tips-box" style="margin-top: 25px;">
+                <h4>🎯 Lembre-se</h4>
+                <ul>
+                    <li>Objeções são <strong>sinais de interesse</strong>, não rejeição</li>
+                    <li>Nem toda objeção verbalizada é a <strong>objeção real</strong></li>
+                    <li>Use as <strong>4 técnicas de resposta</strong>: Questionar, Concordar e Redirecionar, Reformular, Evidenciar</li>
+                    <li>Após responder, sempre faça uma <strong>pergunta de validação</strong></li>
+                </ul>
+            </div>
+            
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="prevStep(4)">← Voltar ao Prompt</button>
+                <button class="btn btn-success" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let currentStep = 1;
+        let selectedCategories = ['preco'];
+        
+        function updateProgressSteps() {
+            document.querySelectorAll('.step-indicator').forEach((step, index) => {
+                step.classList.remove('active', 'completed');
+                if (index + 1 < currentStep) {
+                    step.classList.add('completed');
+                } else if (index + 1 === currentStep) {
+                    step.classList.add('active');
+                }
+            });
+        }
+        
+        function showStep(step) {
+            document.querySelectorAll('.card').forEach(card => card.classList.remove('active'));
+            document.getElementById('step' + step).classList.add('active');
+            currentStep = step;
+            updateProgressSteps();
+            
+            if (step === 4) {
+                generatePrompt();
+                updateMatrixPreview();
+            }
+        }
+        
+        function nextStep(step) {
+            if (step === 2 && !validateStep1()) return;
+            if (step === 4) {
+                updateSelectedCategories();
+            }
+            showStep(step);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        function prevStep(step) {
+            showStep(step);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        function validateStep1() {
+            const required = ['negName', 'yourCompany', 'clientCompany', 'decisionMaker', 'currentSituation'];
+            let valid = true;
+            
+            required.forEach(field => {
+                const el = document.getElementById(field);
+                if (!el.value.trim()) {
+                    el.style.borderColor = '#E74C3C';
+                    valid = false;
+                } else {
+                    el.style.borderColor = '#E8E8E8';
+                }
+            });
+            
+            if (!valid) {
+                alert('Por favor, preencha todos os campos obrigatórios (*)');
+            }
+            return valid;
+        }
+        
+        function toggleCategory(el) {
+            el.classList.toggle('selected');
+        }
+        
+        function updateSelectedCategories() {
+            selectedCategories = [];
+            document.querySelectorAll('.category-card.selected').forEach(card => {
+                selectedCategories.push(card.dataset.category);
+            });
+        }
+        
+        function getCategoryName(cat) {
+            const names = {
+                'preco': 'PREÇO',
+                'tempo': 'TEMPO',
+                'autoridade': 'AUTORIDADE',
+                'necessidade': 'NECESSIDADE',
+                'confianca': 'CONFIANÇA',
+                'tecnico': 'TÉCNICO'
+            };
+            return names[cat] || cat;
+        }
+        
+        function generatePrompt() {
+            const negName = document.getElementById('negName').value;
+            const yourCompany = document.getElementById('yourCompany').value;
+            const dealValue = document.getElementById('dealValue').value || 'Não informado';
+            const clientCompany = document.getElementById('clientCompany').value;
+            const decisionMaker = document.getElementById('decisionMaker').value;
+            const otherStakeholders = document.getElementById('otherStakeholders').value || 'Não informados';
+            const currentSituation = document.getElementById('currentSituation').value;
+            const competitors = document.getElementById('competitors').value || 'Não identificados';
+            const strengths = document.getElementById('strengths').value || 'Não informados';
+            const weaknesses = document.getElementById('weaknesses').value || 'Não informados';
+            const history = document.getElementById('history').value || 'Primeiro contato';
+            const timeline = document.getElementById('timeline').value || 'Não definido';
+            
+            const categoriesText = selectedCategories.map(c => getCategoryName(c)).join(', ');
+            
+            const prompt = `Você é um especialista em negociação B2B com 20 anos de experiência no mercado brasileiro. Preciso que você crie uma MATRIZ DE OBJEÇÕES completa e personalizada para a negociação descrita abaixo.
+
+═══════════════════════════════════════════
+CONTEXTO DA NEGOCIAÇÃO: ${negName}
+═══════════════════════════════════════════
+
+MINHA EMPRESA/SOLUÇÃO:
+${yourCompany}
+
+VALOR DA PROPOSTA:
+${dealValue}
+
+EMPRESA DO CLIENTE:
+${clientCompany}
+
+DECISOR PRINCIPAL:
+${decisionMaker}
+
+OUTROS ENVOLVIDOS:
+${otherStakeholders}
+
+SITUAÇÃO ATUAL DO CLIENTE:
+${currentSituation}
+
+CONCORRENTES NO PROCESSO:
+${competitors}
+
+PONTOS FORTES DA PROPOSTA:
+${strengths}
+
+VULNERABILIDADES/PONTOS DE ATENÇÃO:
+${weaknesses}
+
+HISTÓRICO COM O CLIENTE:
+${history}
+
+TIMELINE/URGÊNCIA:
+${timeline}
+
+═══════════════════════════════════════════
+CATEGORIAS PRIORITÁRIAS: ${categoriesText}
+═══════════════════════════════════════════
+
+INSTRUÇÕES PARA CRIAR A MATRIZ:
+
+Para cada categoria selecionada (${categoriesText}), crie uma seção completa com:
+
+1. **TOP 3-4 OBJEÇÕES MAIS PROVÁVEIS**
+   - Fraseado exato como o cliente provavelmente vai dizer
+   - Classificação de probabilidade: ALTA, MÉDIA ou BAIXA
+   - Se é objeção REAL ou potencialmente FALSA
+
+2. **PARA CADA OBJEÇÃO, FORNEÇA:**
+
+   A) **MOTIVAÇÃO REAL**
+   O que está por trás dessa objeção (medo, pressão, experiência passada, tática)
+
+   B) **ESTRATÉGIA RECOMENDADA**
+   Qual das 4 técnicas usar: QUESTIONAR, CONCORDAR E REDIRECIONAR, REFORMULAR ou EVIDENCIAR
+
+   C) **RESPOSTA PRÁTICA (SCRIPT)**
+   Texto exato que posso usar, adaptado ao contexto específico deste cliente
+
+   D) **PERGUNTA DE VALIDAÇÃO**
+   Como confirmar se a objeção foi resolvida
+
+   E) **EVIDÊNCIA/PROVA NECESSÁRIA**
+   Que material de apoio devo ter preparado
+
+3. **TÉCNICAS DE INOCULAÇÃO**
+   Para as 2 objeções mais prováveis, sugira como abordá-las PREVENTIVAMENTE durante a apresentação
+
+4. **SINAIS DE ALERTA**
+   Linguagem corporal e comportamentos que indicam que essa objeção está se formando
+
+═══════════════════════════════════════════
+FORMATO DE SAÍDA
+═══════════════════════════════════════════
+
+Organize a resposta assim:
+
+## 📊 MATRIZ DE OBJEÇÕES: ${negName}
+
+### 💰 CATEGORIA: [NOME]
+
+#### Objeção 1: "[frase exata]"
+- **Probabilidade:** ALTA/MÉDIA/BAIXA
+- **Tipo:** Real / Potencialmente Falsa
+- **Motivação real:** [explicação]
+- **Estratégia:** [técnica]
+- **Resposta prática:** "[script completo]"
+- **Validação:** "[pergunta]"
+- **Evidência:** [material necessário]
+
+[Repetir para cada objeção]
+
+### 🛡️ TÉCNICAS DE INOCULAÇÃO
+[Como abordar preventivamente]
+
+### ⚠️ SINAIS DE ALERTA
+[O que observar]
+
+---
+
+REQUISITOS:
+✓ Respostas em português brasileiro, tom profissional mas conversacional
+✓ Scripts realistas e naturais (não podem parecer decorados)
+✓ Específicos para este cliente e contexto
+✓ Considere o perfil do decisor nas respostas
+✓ Inclua respostas alternativas se a primeira não funcionar
+✓ Adapte ao valor/complexidade da negociação
+
+Por favor, gere a Matriz de Objeções completa.`;
+
+            document.getElementById('generatedPrompt').textContent = prompt;
+            
+            // Atualizar resumo
+            document.getElementById('summaryCategories').textContent = selectedCategories.length;
+            document.getElementById('summaryObjecoes').textContent = '~' + (selectedCategories.length * 3);
+            document.getElementById('summaryRespostas').textContent = '~' + (selectedCategories.length * 3);
+        }
+        
+        function updateMatrixPreview() {
+            const container = document.getElementById('matrixPreviewContent');
+            let html = '';
+            
+            selectedCategories.forEach(cat => {
+                html += `
+                    <div class="matrix-row">
+                        <div class="matrix-category" style="color: ${getCategoryColor(cat)}">${getCategoryName(cat)}</div>
+                        <div class="matrix-objecao">3-4 objeções específicas + estratégias + scripts</div>
+                        <div class="matrix-status"><span class="status-badge prioritaria">Prioritária</span></div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        function getCategoryColor(cat) {
+            const colors = {
+                'preco': '#C0392B',
+                'tempo': '#E67E22',
+                'autoridade': '#8E44AD',
+                'necessidade': '#16A085',
+                'confianca': '#3498DB',
+                'tecnico': '#7F8C8D'
+            };
+            return colors[cat] || '#333';
+        }
+        
+        function copyPrompt() {
+            const prompt = document.getElementById('generatedPrompt').textContent;
+            navigator.clipboard.writeText(prompt).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                btn.textContent = '✓ Copiado!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = '📋 Copiar Prompt';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+        
+        function toggleChecklist(el) {
+            el.classList.toggle('checked');
+        }
+        
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            updateProgressSteps();
+        });
+    </script>
+</body>
+</html>

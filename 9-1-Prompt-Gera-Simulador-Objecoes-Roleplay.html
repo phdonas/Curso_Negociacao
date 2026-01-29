@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt para Simulação de Objeções</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .header .description {
+            font-size: 1rem;
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .intro-section {
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #9b59b6;
+        }
+
+        .intro-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #4a148c;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .intro-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+
+        .intro-text {
+            color: #424242;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .phase-indicator {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-left: 5px solid #6c757d;
+            text-align: center;
+        }
+
+        .phase-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #495057;
+            margin-bottom: 10px;
+        }
+
+        .phase-description {
+            color: #6c757d;
+            font-size: 1rem;
+        }
+
+        .objection-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .objection-card {
+            background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 5px solid #9b59b6;
+            transition: transform 0.3s ease;
+        }
+
+        .objection-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .objection-card h3 {
+            color: #4a148c;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .objection-card .icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+
+        .objection-card p {
+            color: #495057;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .instructions-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #fd7e14;
+        }
+
+        .instructions-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #d63384;
+            margin-bottom: 20px;
+        }
+
+        .instruction-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border-left: 3px solid #fd7e14;
+        }
+
+        .instruction-step {
+            font-weight: 600;
+            color: #d63384;
+            margin-bottom: 8px;
+        }
+
+        .instruction-detail {
+            color: #495057;
+            font-size: 0.95rem;
+        }
+
+        .prompt-container {
+            background: #2c3e50;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .prompt-header {
+            background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+            color: white;
+            padding: 20px;
+            margin: -30px -30px 30px -30px;
+            text-align: center;
+        }
+
+        .prompt-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .prompt-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .prompt-text {
+            background: #34495e;
+            color: #ecf0f1;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            line-height: 1.8;
+            padding: 25px;
+            border-radius: 10px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-x: auto;
+            border: 2px solid #9b59b6;
+        }
+
+        .variable-highlight {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .section-divider {
+            color: #9b59b6;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin: 20px 0 15px 0;
+        }
+
+        .copy-button {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 20px auto;
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+        }
+
+        .copy-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(220, 53, 69, 0.4);
+        }
+
+        .simulation-process {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #2196f3;
+        }
+
+        .process-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #0d47a1;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .process-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+
+        .process-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .process-step {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #2196f3;
+        }
+
+        .step-number {
+            background: #2196f3;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin: 0 auto 15px;
+        }
+
+        .step-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #0d47a1;
+            margin-bottom: 10px;
+        }
+
+        .step-description {
+            color: #424242;
+            font-size: 0.9rem;
+        }
+
+        .usage-tips {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #ff9800;
+        }
+
+        .tips-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #e65100;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .tips-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+
+        .tip-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border-left: 3px solid #ff9800;
+        }
+
+        .tip-title {
+            font-weight: 600;
+            color: #e65100;
+            margin-bottom: 5px;
+        }
+
+        .tip-text {
+            color: #424242;
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 768px) {
+            .container { margin: 10px; }
+            .header { padding: 30px 20px; }
+            .content { padding: 25px 20px; }
+            .header h1 { font-size: 2.2rem; }
+            .prompt-text { font-size: 0.9rem; }
+            .objection-types { grid-template-columns: 1fr; }
+            .process-steps { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎭 Simulação de Objeções</h1>
+            <div class="subtitle">Prompt para Inteligência Artificial</div>
+            <div class="description">Ferramenta avançada para antecipar resistências e preparar respostas eficazes</div>
+        </div>
+
+        <div class="content">
+            <div class="intro-section">
+                <h2 class="intro-title">
+                    <span class="intro-icon">🎯</span>
+                    Objetivo do Prompt
+                </h2>
+                <div class="intro-text">
+                    Este prompt foi desenvolvido para simular cenários reais de objeções durante negociações presenciais. Ele orienta a IA a antecipar resistências específicas do cliente, criar diálogos realistas e preparar estratégias de resposta que transformem objeções em oportunidades de fechamento.
+                </div>
+            </div>
+
+            <div class="phase-indicator">
+                <div class="phase-title">⚡ FASE 3 - EXECUÇÃO ASSISTIDA</div>
+                <div class="phase-description">30% do tempo do Framework PIA | Prepara para resistências e objeções</div>
+            </div>
+
+            <div class="objection-types">
+                <div class="objection-card">
+                    <h3><span class="icon">💰</span>Objeções de Preço</h3>
+                    <p>"Está muito caro", "Não temos orçamento", "Preciso comparar preços"</p>
+                </div>
+                <div class="objection-card">
+                    <h3><span class="icon">⏰</span>Objeções de Tempo</h3>
+                    <p>"Agora não é o momento", "Preciso pensar", "Vamos avaliar no próximo ano"</p>
+                </div>
+                <div class="objection-card">
+                    <h3><span class="icon">🔍</span>Objeções de Autoridade</h3>
+                    <p>"Preciso consultar meu sócio", "Vou discutir com a equipe", "Não é minha decisão"</p>
+                </div>
+                <div class="objection-card">
+                    <h3><span class="icon">❓</span>Objeções de Necessidade</h3>
+                    <p>"Não precisamos disso", "Já temos solução", "Não vejo necessidade"</p>
+                </div>
+                <div class="objection-card">
+                    <h3><span class="icon">🤔</span>Objeções de Confiança</h3>
+                    <p>"Não conhecemos vocês", "Preciso de referências", "E se não der certo?"</p>
+                </div>
+                <div class="objection-card">
+                    <h3><span class="icon">🏃</span>Objeções de Pressa</h3>
+                    <p>"Estou com pressa", "Não tenho tempo agora", "Vamos deixar para depois"</p>
+                </div>
+            </div>
+
+            <div class="simulation-process">
+                <h2 class="process-title">
+                    <span class="process-icon">⚙️</span>
+                    Processo de Simulação
+                </h2>
+                <div class="process-steps">
+                    <div class="process-step">
+                        <div class="step-number">1</div>
+                        <div class="step-title">Identificação</div>
+                        <div class="step-description">IA identifica objeções mais prováveis para o perfil</div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">2</div>
+                        <div class="step-title">Priorização</div>
+                        <div class="step-description">Classifica por probabilidade e impacto na negociação</div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">3</div>
+                        <div class="step-title">Simulação</div>
+                        <div class="step-description">Cria diálogos realistas cliente vs vendedor</div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">4</div>
+                        <div class="step-title">Estratégias</div>
+                        <div class="step-description">Desenvolve respostas e técnicas de contorno</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="instructions-section">
+                <h2 class="instructions-title">📋 Como Usar Este Prompt</h2>
+                
+                <div class="instruction-item">
+                    <div class="instruction-step">1. Complete as Fases Anteriores</div>
+                    <div class="instruction-detail">Use insights das análises de perfil e preditiva para contextualizar as objeções.</div>
+                </div>
+                
+                <div class="instruction-item">
+                    <div class="instruction-step">2. Defina o Cenário Específico</div>
+                    <div class="instruction-detail">Seja preciso sobre cliente, produto, valor e contexto da negociação.</div>
+                </div>
+                
+                <div class="instruction-item">
+                    <div class="instruction-step">3. Inclua Informações Contextuais</div>
+                    <div class="instruction-detail">Forneça dados sobre concorrência, timing e pressões do mercado.</div>
+                </div>
+                
+                <div class="instruction-item">
+                    <div class="instruction-step">4. Pratique os Diálogos</div>
+                    <div class="instruction-detail">Use as simulações para treinar respostas até ficarem naturais.</div>
+                </div>
+                
+                <div class="instruction-item">
+                    <div class="instruction-step">5. Adapte na Prática</div>
+                    <div class="instruction-detail">Ajuste as respostas baseado na reação real do cliente durante a negociação.</div>
+                </div>
+            </div>
+
+            <div class="prompt-container">
+                <div class="prompt-header">
+                    <div class="prompt-title">🤖 Prompt Completo</div>
+                    <div class="prompt-subtitle">Copie, personalize e use na sua IA</div>
+                </div>
+                
+                <div class="prompt-text">Atue como especialista em tratamento de objeções para negociações B2B presenciais no Brasil, com mais de 20 anos de experiência em psicologia da persuasão, técnicas de vendas consultivas e análise comportamental aplicada a pequenas e médias empresas.
+
+Simule uma negociação presencial completa e antecipe as principais objeções para o seguinte cenário:
+
+<span class="section-divider">═══ DADOS DO CENÁRIO ═══</span>
+
+<strong>INFORMAÇÕES DO VENDEDOR:</strong>
+- Nome: <span class="variable-highlight">[seu nome]</span>
+- Empresa: <span class="variable-highlight">[sua empresa]</span>
+- Experiência no setor: <span class="variable-highlight">[anos de experiência]</span>
+- Estilo de venda: <span class="variable-highlight">[consultivo, técnico, relacional]</span>
+
+<strong>PERFIL DO CLIENTE:</strong>
+- Empresa: <span class="variable-highlight">[nome, setor, porte]</span>
+- Decisor: <span class="variable-highlight">[nome, cargo, idade aproximada]</span>
+- Perfil comportamental: <span class="variable-highlight">[analítico, impulsivo, conservador, inovador]</span>
+- Experiência com fornecedores: <span class="variable-highlight">[experiente, iniciante, já teve problemas]</span>
+- Pressões internas: <span class="variable-highlight">[orçamento, prazo, política interna]</span>
+
+<strong>CONTEXTO DA NEGOCIAÇÃO:</strong>
+- Produto/serviço: <span class="variable-highlight">[descrição detalhada]</span>
+- Valor total: <span class="variable-highlight">[investimento em R$]</span>
+- Forma de pagamento proposta: <span class="variable-highlight">[à vista, parcelado, condições]</span>
+- Prazo para implementação: <span class="variable-highlight">[cronograma]</span>
+- Urgência do cliente: <span class="variable-highlight">[alta, média, baixa - justificativa]</span>
+
+<strong>SITUAÇÃO COMPETITIVA:</strong>
+- Concorrentes envolvidos: <span class="variable-highlight">[quais empresas, número de cotações]</span>
+- Principal vantagem competitiva: <span class="variable-highlight">[diferencial único]</span>
+- Possíveis desvantagens: <span class="variable-highlight">[preço, prazo, reconhecimento]</span>
+- Relacionamento anterior: <span class="variable-highlight">[primeira reunião, contato anterior, indicação]</span>
+
+<strong>CONTEXTO EXTERNO:</strong>
+- Situação econômica do setor: <span class="variable-highlight">[crescimento, estagnação, crise]</span>
+- Época do ano: <span class="variable-highlight">[sazonalidade, orçamentos, férias]</span>
+- Pressões do mercado: <span class="variable-highlight">[regulamentação, concorrência, demanda]</span>
+- Momento da empresa cliente: <span class="variable-highlight">[expansão, consolidação, dificuldades]</span>
+
+<span class="section-divider">═══ SIMULAÇÃO SOLICITADA ═══</span>
+
+Com base neste cenário, realize uma simulação completa estruturada da seguinte forma:
+
+<strong>1. RANKING DE OBJEÇÕES (Top 10)</strong>
+Identifique as 10 objeções mais prováveis, classificadas por:
+- Probabilidade de ocorrência (1-100%)
+- Impacto na negociação (baixo, médio, alto)
+- Momento provável de surgimento
+- Dificuldade para contornar
+
+<strong>2. ANÁLISE PROFUNDA DAS 5 PRINCIPAIS OBJEÇÕES</strong>
+Para cada uma das 5 objeções mais críticas, forneça:
+
+A) **FRASEADO EXATO ESPERADO**
+Como o cliente provavelmente expressará a objeção
+
+B) **MOTIVAÇÃO REAL**
+O que realmente está por trás da objeção (medo, pressão, experiência)
+
+C) **LINGUAGEM CORPORAL ASSOCIADA**
+Sinais não-verbais que podem indicar esta objeção
+
+D) **ESTRATÉGIA DE RESPOSTA**
+- Técnica recomendada (questionar, concordar, reformular, evidenciar)
+- Sequência ideal de abordagem
+- Timing para responder
+
+E) **RESPOSTA PRÁTICA EFICAZ**
+Script exato para usar na situação real
+
+F) **PERGUNTA DE VALIDAÇÃO**
+Como confirmar se a objeção foi realmente resolvida
+
+<strong>3. SIMULAÇÃO DE DIÁLOGOS REALISTAS</strong>
+Para as 3 objeções mais críticas, crie diálogos completos:
+
+**MODELO DE DIÁLOGO:**
+CLIENTE: [objeção inicial]
+VENDEDOR: [resposta + técnica + pergunta]
+CLIENTE: [reação provável/contra-argumento]
+VENDEDOR: [tratamento da reação]
+CLIENTE: [sinalização de resolução ou nova resistência]
+VENDEDOR: [fechamento ou redirecionamento]
+
+<strong>4. ESTRATÉGIAS PREVENTIVAS</strong>
+- Como abordar objeções antes delas surgirem
+- Pontos para reforçar durante apresentação
+- Evidências/provas para levar à reunião
+- Timing ideal para apresentar informações preventivas
+
+<strong>5. SINAIS DE ALERTA</strong>
+- Linguagem corporal que indica objeção iminente
+- Mudanças na tonalidade de voz
+- Perguntas que precedem objeções
+- Comportamentos que indicam resistência
+
+<strong>6. CONTRA-ATAQUES E ESCALAÇÕES</strong>
+- Possíveis contra-argumentos após suas respostas
+- Como manter controle da conversa
+- Quando insistir vs quando recuar
+- Estratégias se objeção se tornar impasse
+
+<strong>7. OBJEÇÕES DE ÚLTIMA HORA</strong>
+- Resistências que podem surgir no fechamento
+- Como lidar com "preciso pensar"
+- Estratégias para criar urgência sem pressão
+- Técnicas para garantir próximos passos
+
+<strong>8. PREPARAÇÃO PSICOLÓGICA</strong>
+- Como manter confiança durante objeções
+- Técnicas para controlar nervosismo
+- Estratégias para usar objeções como oportunidades
+- Mindset adequado para cada tipo de resistência
+
+<span class="section-divider">═══ DIRETRIZES DE SIMULAÇÃO ═══</span>
+
+<strong>CRITÉRIOS DE REALISMO:</strong>
+- Use linguagem típica do perfil do cliente
+- Considere cultura empresarial brasileira
+- Adapte ao nível de formalidade da relação
+- Inclua regionalismo e contexto local
+
+<strong>FOCO EM RESULTADOS:</strong>
+- Priorize objeções que realmente afetam fechamento
+- Forneça respostas práticas e testadas
+- Mantenha tom profissional mas humano
+- Foque em transformar objeção em oportunidade
+
+<strong>PERSONALIZAÇÃO:</strong>
+- Adapte ao perfil específico do decisor
+- Considere histórico e contexto da empresa
+- Use informações coletadas nas fases anteriores
+- Conecte com objetivos e dores específicas
+
+Crie uma simulação tão realista que eu me sinta preparado para qualquer objeção que possa surgir durante a negociação presencial.</div>
+                
+                <button class="copy-button" onclick="copyPrompt()">📋 Copiar Prompt Completo</button>
+            </div>
+
+            <div class="usage-tips">
+                <h2 class="tips-title">
+                    <span class="tips-icon">💡</span>
+                    Dicas para Simulação Eficaz
+                </h2>
+                
+                <div class="tip-item">
+                    <div class="tip-title">Pratique em Voz Alta</div>
+                    <div class="tip-text">Após receber as simulações, pratique as respostas falando em voz alta para ganhar naturalidade.</div>
+                </div>
+                
+                <div class="tip-item">
+                    <div class="tip-title">Personalize por Cliente</div>
+                    <div class="tip-text">Cada cliente tem objeções específicas. Não use respostas genéricas para perfis diferentes.</div>
+                </div>
+                
+                <div class="tip-item">
+                    <div class="tip-title">Foque na Emoção</div>
+                    <div class="tip-text">Objeções são muitas vezes emocionais. Trate primeiro a emoção, depois a lógica.</div>
+                </div>
+                
+                <div class="tip-item">
+                    <div class="tip-title">Prepare Evidências</div>
+                    <div class="tip-text">Tenha sempre provas concretas (cases, números, referências) para sustentar suas respostas.</div>
+                </div>
+                
+                <div class="tip-item">
+                    <div class="tip-title">Mantenha Calma</div>
+                    <div class="tip-text">Objeções são normais e esperadas. Veja como oportunidades de esclarecer valor.</div>
+                </div>
+                
+                <div class="tip-item">
+                    <div class="tip-title">Valide Sempre</div>
+                    <div class="tip-text">Confirme se a objeção foi realmente resolvida antes de prosseguir na negociação.</div>
+                </div>
+                
+                <div class="tip-item">
+                    <div class="tip-title">Aprenda com Cada Negociação</div>
+                    <div class="tip-text">Documente objeções reais que surgiram e refine suas respostas continuamente.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function copyPrompt() {
+            const promptText = document.querySelector('.prompt-text').textContent;
+            navigator.clipboard.writeText(promptText).then(function() {
+                const button = document.querySelector('.copy-button');
+                const originalText = button.textContent;
+                button.textContent = '✅ Prompt Copiado!';
+                button.style.background = 'linear-gradient(135deg, #27ae60 0%, #2ecc71 100%)';
+                
+                setTimeout(function() {
+                    button.textContent = originalText;
+                    button.style.background = 'linear-gradient(135deg, #dc3545 0%, #c82333 100%)';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

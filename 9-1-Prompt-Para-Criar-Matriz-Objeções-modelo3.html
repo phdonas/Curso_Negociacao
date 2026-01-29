@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt para Geração de Matriz de Objeções</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #8e44ad 0%, #3498db 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #3498db 0%, #8e44ad 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .header .description {
+            font-size: 1rem;
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .intro-section {
+            background: linear-gradient(135deg, #e8f4fd 0%, #d1ecf1 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #3498db;
+        }
+
+        .intro-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .intro-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+
+        .intro-text {
+            color: #424242;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .framework-integration {
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-left: 5px solid #8e44ad;
+            text-align: center;
+        }
+
+        .framework-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #4a148c;
+            margin-bottom: 15px;
+        }
+
+        .framework-description {
+            color: #6c757d;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .categories-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #28a745;
+        }
+
+        .categories-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #155724;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .category-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border-left: 4px solid;
+            transition: transform 0.3s ease;
+        }
+
+        .category-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .category-card.preco { border-left-color: #dc3545; }
+        .category-card.tempo { border-left-color: #fd7e14; }
+        .category-card.autoridade { border-left-color: #6f42c1; }
+        .category-card.necessidade { border-left-color: #20c997; }
+        .category-card.confianca { border-left-color: #0dcaf0; }
+        .category-card.tecnico { border-left-color: #6c757d; }
+
+        .category-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .category-name {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .category-description {
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+
+        .instructions-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #ffc107;
+        }
+
+        .instructions-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #d63384;
+            margin-bottom: 20px;
+        }
+
+        .instruction-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border-left: 3px solid #ffc107;
+        }
+
+        .instruction-step {
+            font-weight: 600;
+            color: #d63384;
+            margin-bottom: 8px;
+        }
+
+        .instruction-detail {
+            color: #495057;
+            font-size: 0.95rem;
+        }
+
+        .prompt-container {
+            background: #2c3e50;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .prompt-header {
+            background: linear-gradient(135deg, #8e44ad 0%, #3498db 100%);
+            color: white;
+            padding: 20px;
+            margin: -30px -30px 30px -30px;
+            text-align: center;
+        }
+
+        .prompt-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .prompt-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .prompt-text {
+            background: #34495e;
+            color: #ecf0f1;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            line-height: 1.8;
+            padding: 25px;
+            border-radius: 10px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-x: auto;
+            border: 2px solid #8e44ad;
+        }
+
+        .variable-highlight {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .section-divider {
+            color: #3498db;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin: 20px 0 15px 0;
+        }
+
+        .copy-button {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 20px auto;
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        .copy-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4);
+        }
+
+        .output-format {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #ff9800;
+        }
+
+        .format-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #e65100;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .format-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+
+        .format-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border-left: 3px solid #ff9800;
+        }
+
+        .format-subtitle {
+            font-weight: 600;
+            color: #e65100;
+            margin-bottom: 8px;
+        }
+
+        .format-description {
+            color: #424242;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .usage-tips {
+            background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+            border-radius: 15px;
+            padding: 30px;
+            border-left: 5px solid #28a745;
+        }
+
+        .tips-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #155724;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .tips-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .tip-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 3px solid #28a745;
+        }
+
+        .tip-title {
+            font-weight: 600;
+            color: #155724;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .tip-text {
+            color: #424242;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .container { margin: 10px; }
+            .header { padding: 30px 20px; }
+            .content { padding: 25px 20px; }
+            .header h1 { font-size: 2.2rem; }
+            .prompt-text { font-size: 0.9rem; }
+            .categories-grid { grid-template-columns: 1fr; }
+            .tips-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Geração de Matriz</h1>
+            <div class="subtitle">Prompt para Inteligência Artificial</div>
+            <div class="description">Ferramenta especializada para criar matrizes personalizadas de objeções por cliente</div>
+        </div>
+
+        <div class="content">
+            <div class="intro-section">
+                <h2 class="intro-title">
+                    <span class="intro-icon">🎯</span>
+                    Objetivo do Prompt
+                </h2>
+                <div class="intro-text">
+                    Este prompt foi desenvolvido para gerar matrizes de objeções personalizadas para cada negociação específica. Ele orienta a IA a analisar o perfil único do cliente, o contexto da negociação e as características do produto/serviço para criar uma matriz estratégica sob medida, maximizando a preparação do vendedor.
+                </div>
+            </div>
+
+            <div class="framework-integration">
+                <div class="framework-title">🚀 Integração com Framework PIA</div>
+                <div class="framework-description">
+                    Esta ferramenta funciona como complemento da Fase 3 (Execução Assistida), criando uma matriz específica baseada nos insights das Fases 1 e 2, personalizando as objeções mais prováveis para cada cliente único.
+                </div>
+            </div>
+
+            <div class="categories-section">
+                <h3 class="categories-title">🔍 Categorias de Objeções Analisadas</h3>
+                <div class="categories-grid">
+                    <div class="category-card preco">
+                        <div class="category-icon">💰</div>
+                        <div class="category-name">PREÇO</div>
+                        <div class="category-description">Custo, orçamento, investimento, forma de pagamento</div>
+                    </div>
+                    <div class="category-card tempo">
+                        <div class="category-icon">⏰</div>
+                        <div class="category-name">TEMPO</div>
+                        <div class="category-description">Prazo, urgência, momento ideal, timing</div>
+                    </div>
+                    <div class="category-card autoridade">
+                        <div class="category-icon">👥</div>
+                        <div class="category-name">AUTORIDADE</div>
+                        <div class="category-description">Decisão, aprovação, hierarquia, influenciadores</div>
+                    </div>
+                    <div class="category-card necessidade">
+                        <div class="category-icon">❓</div>
+                        <div class="category-name">NECESSIDADE</div>
+                        <div class="category-description">Utilidade, relevância, prioridade, urgência</div>
+                    </div>
+                    <div class="category-card confianca">
+                        <div class="category-icon">🤝</div>
+                        <div class="category-name">CONFIANÇA</div>
+                        <div class="category-description">Credibilidade, segurança, risco, referências</div>
+                    </div>
+                    <div class="category-card tecnico">
+                        <div class="category-icon">⚙️</div>
+                        <div class="category-name">TÉCNICO</div>
+                        <div class="category-description">Especificações, funcionalidade, compatibilidade</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="instructions-section">
+                <h2 class="instructions-title">📋 Como Usar Este Prompt</h2>
+                
+                <div class="instruction-item">
+                    <div class="instruction-step">1. Complete as Análises Anteriores</div>
+                    <div class="instruction-detail">Use os resultados da Análise de Perfil e Análise Preditiva como base para personalização.</div>
+                </div>
+                
+                <div class="instruction-item">
+                    <div class="instruction-step">2. Reúna Dados Específicos</div>
+                    <div class="instruction-detail">Compile informações detalhadas sobre cliente, produto, concorrência e contexto da negociação.</div>
+                </div>
+                
+                <div class="instruction-item">
+                    <div class="instruction-step">3. Personalize Todas as Variáveis</div>
+                    <div class="instruction-detail">Substitua todos os campos entre [colchetes] com dados reais e específicos do seu caso.</div>
+                </div>
+                
+                <div class="instruction-item">
+                    <div class="instruction-step">4. Execute na IA</div>
+                    <div class="instruction-detail">Cole o prompt completo no ChatGPT, Claude ou sua IA preferida para gerar a matriz.</div>
+                </div>
+                
+                <div class="instruction-item">
+                    <div class="instruction-step">5. Imprima e Pratique</div>
+                    <div class="instruction-detail">Use a matriz gerada para preparação e tenha como consulta rápida durante a negociação.</div>
+                </div>
+            </div>
+
+            <div class="prompt-container">
+                <div class="prompt-header">
+                    <div class="prompt-title">🤖 Prompt Completo</div>
+                    <div class="prompt-subtitle">Copie, personalize e use na sua IA</div>
+                </div>
+                
+                <div class="prompt-text">Atue como especialista em preparação de negociações B2B no Brasil, com expertise em análise comportamental, tratamento de objeções e criação de matrizes estratégicas personalizadas para vendas presenciais.
+
+Crie uma matriz de objeções personalizada e específica para o seguinte cenário de negociação:
+
+<span class="section-divider">═══ DADOS DO CLIENTE ═══</span>
+
+<strong>INFORMAÇÕES DA EMPRESA:</strong>
+- Nome da empresa: <span class="variable-highlight">[razão social completa]</span>
+- Setor de atuação: <span class="variable-highlight">[área específica - ex: indústria alimentícia, varejo de moda]</span>
+- Porte: <span class="variable-highlight">[micro, pequena, média - incluir número funcionários]</span>
+- Faturamento anual: <span class="variable-highlight">[faixa de receita se disponível]</span>
+- Localização: <span class="variable-highlight">[cidade, estado, região]</span>
+- Tempo de mercado: <span class="variable-highlight">[anos de operação]</span>
+- Cultura organizacional: <span class="variable-highlight">[conservadora, inovadora, familiar, corporativa]</span>
+
+<strong>PERFIL DO DECISOR PRINCIPAL:</strong>
+- Nome: <span class="variable-highlight">[nome completo]</span>
+- Cargo: <span class="variable-highlight">[posição hierárquica específica]</span>
+- Idade: <span class="variable-highlight">[faixa etária]</span>
+- Formação: <span class="variable-highlight">[área de formação acadêmica]</span>
+- Experiência: <span class="variable-highlight">[anos na empresa e no mercado]</span>
+- Estilo de decisão: <span class="variable-highlight">[analítico, intuitivo, conservador, arriscado]</span>
+- Motivadores principais: <span class="variable-highlight">[economia, crescimento, segurança, inovação]</span>
+
+<strong>OUTROS INFLUENCIADORES:</strong>
+- Influenciadores secundários: <span class="variable-highlight">[outros envolvidos na decisão]</span>
+- Processo decisório: <span class="variable-highlight">[individual, comitê, múltiplos níveis]</span>
+- Histórico de decisões: <span class="variable-highlight">[rápido, lento, cauteloso, impulsivo]</span>
+
+<span class="section-divider">═══ CONTEXTO DA NEGOCIAÇÃO ═══</span>
+
+<strong>PRODUTO/SERVIÇO OFERECIDO:</strong>
+- Descrição detalhada: <span class="variable-highlight">[especificação completa da solução]</span>
+- Categoria: <span class="variable-highlight">[software, equipamento, consultoria, etc.]</span>
+- Valor do investimento: <span class="variable-highlight">[valor total em R$]</span>
+- Forma de pagamento: <span class="variable-highlight">[à vista, parcelado, leasing]</span>
+- Prazo de entrega: <span class="variable-highlight">[cronograma de implementação]</span>
+- Nível de complexidade: <span class="variable-highlight">[simples, médio, complexo]</span>
+
+<strong>NECESSIDADE IDENTIFICADA:</strong>
+- Problema específico: <span class="variable-highlight">[dor principal do cliente]</span>
+- Urgência: <span class="variable-highlight">[alta, média, baixa - com justificativa]</span>
+- Impacto se não resolver: <span class="variable-highlight">[consequências da inação]</span>
+- Tentativas anteriores: <span class="variable-highlight">[soluções já testadas]</span>
+
+<strong>AMBIENTE COMPETITIVO:</strong>
+- Concorrentes diretos: <span class="variable-highlight">[empresas que competem pela venda]</span>
+- Vantagens da concorrência: <span class="variable-highlight">[pontos fortes dos competitors]</span>
+- Suas vantagens competitivas: <span class="variable-highlight">[diferenciais únicos]</span>
+- Histórico com fornecedores: <span class="variable-highlight">[experiências anteriores do cliente]</span>
+
+<span class="section-divider">═══ CONTEXTO SITUACIONAL ═══</span>
+
+<strong>MOMENTO DA EMPRESA:</strong>
+- Situação atual: <span class="variable-highlight">[crescimento, estabilidade, dificuldades, expansão]</span>
+- Orçamento disponível: <span class="variable-highlight">[informações sobre capacidade financeira]</span>
+- Pressões externas: <span class="variable-highlight">[mercado, regulamentação, concorrência]</span>
+- Projetos em andamento: <span class="variable-highlight">[iniciativas que competem por atenção/recursos]</span>
+
+<strong>TIMING E SAZONALIDADE:</strong>
+- Época do ano: <span class="variable-highlight">[mês, trimestre, impacto sazonal]</span>
+- Ciclo orçamentário: <span class="variable-highlight">[início, meio, fim do ano fiscal]</span>
+- Eventos próximos: <span class="variable-highlight">[lançamentos, eventos, marcos importantes]</span>
+
+<span class="section-divider">═══ MATRIZ SOLICITADA ═══</span>
+
+Com base nestes dados, crie uma matriz personalizada estruturada da seguinte forma:
+
+<strong>1. ANÁLISE DE PROBABILIDADES</strong>
+Para cada categoria (Preço, Tempo, Autoridade, Necessidade, Confiança, Técnico), indique:
+- Probabilidade de ocorrência (0-100%)
+- Nível de impacto na negociação (Baixo/Médio/Alto)
+- Justificativa baseada no perfil do cliente
+
+<strong>2. TOP 10 OBJEÇÕES ESPECÍFICAS</strong>
+Liste as 10 objeções mais prováveis para este cliente específico, incluindo:
+- Categoria da objeção
+- Fraseado exato esperado (como o cliente provavelmente dirá)
+- Probabilidade de ocorrência
+- Momento provável na negociação
+- Nível de dificuldade para contornar
+
+<strong>3. ESTRATÉGIAS PERSONALIZADAS</strong>
+Para cada objeção do Top 10, forneça:
+- Estratégia específica (questionar, valorizar, evidenciar, etc.)
+- Resposta adaptada ao perfil do decisor
+- Pergunta de validação personalizada
+- Evidência/prova específica necessária
+- Sinais de que a objeção foi resolvida
+
+<strong>4. OBJEÇÕES PREVENTIVAS</strong>
+Identifique:
+- Objeções que podem ser evitadas na apresentação
+- Momentos ideais para abordar preventivamente
+- Informações que neutralizam objeções antes de surgirem
+- Evidências para levar à reunião
+
+<strong>5. CENÁRIOS DE ESCALAÇÃO</strong>
+Para objeções críticas, prepare:
+- Possíveis contra-argumentos do cliente
+- Estratégias de contorno para resistências persistentes
+- Momentos para recuar vs insistir
+- Alternativas se objeção se tornar impasse
+
+<strong>6. ADAPTAÇÃO AO PERFIL</strong>
+Ajuste respostas considerando:
+- Linguagem adequada ao nível hierárquico
+- Tom apropriado para a cultura da empresa
+- Velocidade de resposta (decisor analítico vs intuitivo)
+- Tipo de evidência mais convincente para este perfil
+
+<span class="section-divider">═══ FORMATO DE ENTREGA ═══</span>
+
+<strong>APRESENTE EM FORMATO DE TABELA ORGANIZADA:</strong>
+
+| Categoria | Objeção Específica | Estratégia | Resposta Personalizada | Pergunta Validação | Evidência Necessária |
+
+<strong>INCLUA SEÇÕES ADICIONAIS:</strong>
+- Resumo executivo com principais riscos
+- Top 3 objeções mais críticas com foco especial
+- Checklist de preparação pré-reunião
+- Sinais de alerta durante a negociação
+
+<strong>PERSONALIZE COMPLETAMENTE:</strong>
+- Use o nome da empresa e do decisor nas respostas
+- Adapte linguagem ao setor e cultura organizacional
+- Considere especificidades regionais e culturais
+- Foque em dados e informações fornecidas
+
+Crie uma matriz que seja específica, prática e imediatamente utilizável para esta negociação única.</div>
+                
+                <button class="copy-button" onclick="copyPrompt()">📋 Copiar Prompt Completo</button>
+            </div>
+
+            <div class="output-format">
+                <h2 class="format-title">
+                    <span class="format-icon">📋</span>
+                    Formato da Matriz Gerada
+                </h2>
+                
+                <div class="format-item">
+                    <div class="format-subtitle">Análise de Probabilidades</div>
+                    <div class="format-description">Percentual de ocorrência e impacto de cada categoria de objeção específica para este cliente.</div>
+                </div>
+                
+                <div class="format-item">
+                    <div class="format-subtitle">Top 10 Objeções Específicas</div>
+                    <div class="format-description">Lista priorizada com fraseado exato e probabilidade personalizada para o perfil do cliente.</div>
+                </div>
+                
+                <div class="format-item">
+                    <div class="format-subtitle">Estratégias Personalizadas</div>
+                    <div class="format-description">Abordagens específicas adaptadas ao estilo do decisor e cultura da empresa.</div>
+                </div>
+                
+                <div class="format-item">
+                    <div class="format-subtitle">Tabela Organizada</div>
+                    <div class="format-description">Matriz visual com todas as informações estruturadas para consulta rápida durante a negociação.</div>
+                </div>
+                
+                <div class="format-item">
+                    <div class="format-subtitle">Checklist de Preparação</div>
+                    <div class="format-description">Lista de ações e materiais necessários antes da reunião presencial.</div>
+                </div>
+            </div>
+
+            <div class="usage-tips">
+                <h2 class="tips-title">
+                    <span class="tips-icon">💡</span>
+                    Dicas para Matriz Personalizada
+                </h2>
+                <div class="tips-grid">
+                    <div class="tip-card">
+                        <div class="tip-title">Seja Específico nos Dados</div>
+                        <div class="tip-text">Quanto mais detalhes sobre o cliente, mais precisa será a matriz. Use informações reais coletadas.</div>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-title">Atualize Constantemente</div>
+                        <div class="tip-text">Regenere a matriz se houver mudanças no contexto, decisor ou condições da negociação.</div>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-title">Pratique as Respostas</div>
+                        <div class="tip-text">Use a matriz gerada para ensaiar cenários e tornar as respostas mais naturais.</div>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-title">Combine com Outros Prompts</div>
+                        <div class="tip-text">Use junto com análises de perfil e preditiva do Framework PIA para máxima eficácia.</div>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-title">Adapte Durante a Reunião</div>
+                        <div class="tip-text">Use a matriz como guia, mas adapte conforme as reações reais do cliente.</div>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-title">Documente Resultados</div>
+                        <div class="tip-text">Anote quais objeções realmente surgiram para refinar futuras matrizes.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function copyPrompt() {
+            const promptText = document.querySelector('.prompt-text').textContent;
+            navigator.clipboard.writeText(promptText).then(function() {
+                const button = document.querySelector('.copy-button');
+                const originalText = button.textContent;
+                button.textContent = '✅ Prompt Copiado!';
+                button.style.background = 'linear-gradient(135deg, #27ae60 0%, #2ecc71 100%)';
+                
+                setTimeout(function() {
+                    button.textContent = originalText;
+                    button.style.background = 'linear-gradient(135deg, #e74c3c 0%, #c0392b 100%)';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
