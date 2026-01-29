@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plano de Negociação - Visual Cards | ANC</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --azul-principal: #1e3a5f;
+            --azul-claro: #2c5282;
+            --laranja: #e67e22;
+            --laranja-claro: #f39c12;
+            --verde: #27ae60;
+            --verde-claro: #2ecc71;
+            --vermelho: #c0392b;
+            --cinza-fundo: #f8f9fa;
+            --cinza-borda: #dee2e6;
+            --branco: #ffffff;
+            --texto-escuro: #212529;
+            --texto-medio: #495057;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            background: linear-gradient(135deg, #1e3a5f 0%, #e67e22 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            background: var(--branco);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3a5f 0%, #2c5282 100%);
+            color: var(--branco);
+            text-align: center;
+            padding: 35px 30px;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--laranja), var(--laranja-claro));
+        }
+
+        .header-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--laranja), var(--laranja-claro));
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+        }
+
+        .header p { font-size: 1rem; opacity: 0.9; }
+
+        /* Identificação */
+        .identificacao {
+            padding: 25px 30px;
+            background: var(--cinza-fundo);
+            border-bottom: 1px solid var(--cinza-borda);
+        }
+
+        .identificacao-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .identificacao-header h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--azul-principal);
+            font-size: 1.1rem;
+        }
+
+        .status-salvamento {
+            font-size: 0.85rem;
+            color: var(--verde);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .status-salvamento.visivel { opacity: 1; }
+
+        .identificacao-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .campo { display: flex; flex-direction: column; }
+
+        .campo label {
+            font-weight: 600;
+            color: var(--azul-principal);
+            margin-bottom: 5px;
+            font-size: 0.85rem;
+        }
+
+        .campo input, .campo select {
+            padding: 10px 12px;
+            border: 2px solid var(--cinza-borda);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-family: 'Source Sans Pro', sans-serif;
+            transition: border-color 0.3s ease;
+        }
+
+        .campo input:focus, .campo select:focus {
+            outline: none;
+            border-color: var(--laranja);
+        }
+
+        /* Timer Badge */
+        .timer-info {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            border: 2px solid var(--laranja);
+            border-radius: 12px;
+            padding: 15px 25px;
+            margin: 0 30px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .timer-info span {
+            font-size: 0.95rem;
+            color: var(--texto-escuro);
+        }
+
+        .timer-info strong {
+            color: var(--laranja);
+        }
+
+        .time-badge {
+            display: inline-block;
+            background: var(--laranja);
+            color: var(--branco);
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 25px;
+            padding: 30px;
+        }
+
+        .card {
+            background: var(--branco);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            border: 2px solid var(--cinza-borda);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--azul-principal), var(--laranja));
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+            border-color: var(--laranja);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--cinza-fundo);
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            margin-right: 15px;
+            background: linear-gradient(135deg, var(--azul-principal), var(--azul-claro));
+            color: var(--branco);
+        }
+
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--texto-escuro);
+        }
+
+        .card-content { color: var(--texto-medio); }
+
+        .card-content h4 {
+            color: var(--azul-principal);
+            margin: 18px 0 10px 0;
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+
+        .card-content h4:first-child { margin-top: 0; }
+
+        .input-line {
+            border: none;
+            border-bottom: 2px solid var(--cinza-borda);
+            background: transparent;
+            padding: 10px 0;
+            margin: 8px 0;
+            width: 100%;
+            font-size: 0.9rem;
+            font-family: 'Source Sans Pro', sans-serif;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-line:focus {
+            outline: none;
+            border-bottom-color: var(--laranja);
+        }
+
+        .input-line::placeholder {
+            color: #adb5bd;
+            font-style: italic;
+        }
+
+        /* Checkboxes */
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: background 0.2s ease;
+        }
+
+        .checkbox-item:hover {
+            background: var(--cinza-fundo);
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+            accent-color: var(--laranja);
+            cursor: pointer;
+        }
+
+        /* Estilos Negociador */
+        .estilos-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .estilo-option {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border: 2px solid var(--cinza-borda);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .estilo-option:hover {
+            border-color: var(--laranja);
+            background: #fff8f0;
+        }
+
+        .estilo-option.selected {
+            border-color: var(--laranja);
+            background: linear-gradient(135deg, #fff8f0, #ffedd5);
+        }
+
+        .estilo-option input {
+            margin-right: 8px;
+            accent-color: var(--laranja);
+        }
+
+        /* Níveis de Concessão */
+        .nivel-concessao {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .nivel-concessao.nivel-1 {
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            border-left: 4px solid var(--verde);
+        }
+
+        .nivel-concessao.nivel-2 {
+            background: linear-gradient(135deg, #fefce8, #fef9c3);
+            border-left: 4px solid var(--laranja-claro);
+        }
+
+        .nivel-concessao.nivel-3 {
+            background: linear-gradient(135deg, #fef2f2, #fee2e2);
+            border-left: 4px solid var(--vermelho);
+        }
+
+        .nivel-concessao h5 {
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+        }
+
+        .nivel-1 h5 { color: #15803d; }
+        .nivel-2 h5 { color: #b45309; }
+        .nivel-3 h5 { color: #b91c1c; }
+
+        /* Botões */
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 30px;
+            background: var(--cinza-fundo);
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--azul-principal), var(--azul-claro));
+            color: var(--branco);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(30, 58, 95, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--verde), var(--verde-claro));
+            color: var(--branco);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(39, 174, 96, 0.3);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--laranja), var(--laranja-claro));
+            color: var(--branco);
+        }
+
+        .btn-secondary {
+            background: var(--branco);
+            color: var(--texto-medio);
+            border: 2px solid var(--cinza-borda);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.active { display: flex; }
+
+        .modal {
+            background: var(--branco);
+            border-radius: 16px;
+            max-width: 700px;
+            width: 90%;
+            max-height: 80vh;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--azul-principal), var(--laranja));
+            color: var(--branco);
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 { font-family: 'Playfair Display', serif; }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--branco);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 25px;
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+
+        .modal-body textarea {
+            width: 100%;
+            min-height: 280px;
+            padding: 15px;
+            border: 2px solid var(--cinza-borda);
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+        }
+
+        .modal-footer {
+            padding: 20px 25px;
+            background: var(--cinza-fundo);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 25px;
+            border-top: 1px solid var(--cinza-borda);
+        }
+
+        .footer p {
+            color: var(--texto-medio);
+            font-size: 0.95rem;
+        }
+
+        .footer strong { color: var(--azul-principal); }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.6rem; }
+            .cards-grid { grid-template-columns: 1fr; padding: 20px; }
+            .identificacao-grid { grid-template-columns: 1fr; }
+            .estilos-grid { grid-template-columns: 1fr; }
+            .timer-info { flex-direction: column; text-align: center; }
+        }
+
+        /* Print */
+        @media print {
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; border-radius: 0; }
+            .btn-container { display: none; }
+            .card:hover { transform: none; }
+            .modal-overlay { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-badge">📋 Ferramenta Prática</div>
+            <h1>Plano de Negociação</h1>
+            <p>Visual Cards - Preparação Estruturada em 8 Passos</p>
+        </div>
+
+        <div class="identificacao">
+            <div class="identificacao-header">
+                <h3>📝 Identificação da Negociação</h3>
+                <span class="status-salvamento" id="statusSalvamento">💾 Salvo automaticamente</span>
+            </div>
+            <div class="identificacao-grid">
+                <div class="campo">
+                    <label for="nomeUsuario">Seu Nome</label>
+                    <input type="text" id="nomeUsuario" placeholder="Nome completo">
+                </div>
+                <div class="campo">
+                    <label for="dataNegociacao">Data da Negociação</label>
+                    <input type="date" id="dataNegociacao">
+                </div>
+                <div class="campo">
+                    <label for="nomeCliente">Nome do Cliente/Empresa</label>
+                    <input type="text" id="nomeCliente" placeholder="Cliente ou empresa">
+                </div>
+                <div class="campo">
+                    <label for="tipoFramework">Framework</label>
+                    <select id="tipoFramework">
+                        <option value="">Selecione...</option>
+                        <option value="simples">🟢 Simples (até R$ 50k)</option>
+                        <option value="medio">🟡 Médio (R$ 50k - R$ 500k)</option>
+                        <option value="complexo">🔴 Complexo (acima R$ 500k)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="timer-info">
+            <span>⏱️ <strong>Tempo estimado de preparação:</strong> 45-60 minutos</span>
+            <span class="time-badge">Investimento que vale a pena!</span>
+        </div>
+
+        <div class="cards-grid">
+            <!-- Card 1: Objetivo e Contexto -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🎯</div>
+                    <div class="card-title">1. Objetivo e Contexto</div>
+                </div>
+                <div class="card-content">
+                    <h4>Objetivo SMART da Negociação:</h4>
+                    <input type="text" class="input-line" id="objetivoSmart" placeholder="Específico, Mensurável, Alcançável, Relevante, Temporal">
+                    
+                    <h4>Contexto da Oportunidade:</h4>
+                    <input type="text" class="input-line" id="contextoOportunidade" placeholder="Como surgiu essa oportunidade?">
+                    
+                    <h4>Histórico com o Cliente:</h4>
+                    <input type="text" class="input-line" id="historicoCliente" placeholder="Relacionamento anterior, compras, interações">
+                </div>
+            </div>
+
+            <!-- Card 2: ZOAP - Zona de Acordo -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">📊</div>
+                    <div class="card-title">2. ZOAP - Zona de Acordo</div>
+                </div>
+                <div class="card-content">
+                    <h4>Âncora (Primeira Proposta):</h4>
+                    <input type="text" class="input-line" id="ancora" placeholder="R$ - Valor inicial ambicioso">
+                    
+                    <h4>Meta (Objetivo Realista):</h4>
+                    <input type="text" class="input-line" id="meta" placeholder="R$ - Valor que busco atingir">
+                    
+                    <h4>Mínimo Aceitável (Ponto de Reserva):</h4>
+                    <input type="text" class="input-line" id="minimo" placeholder="R$ - Abaixo disso, não fecho">
+                    
+                    <h4>Justificativa da Âncora:</h4>
+                    <input type="text" class="input-line" id="justificativaAncora" placeholder="Por que este valor faz sentido?">
+                </div>
+            </div>
+
+            <!-- Card 3: Estratégia de Descoberta -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🔍</div>
+                    <div class="card-title">3. Estratégia de Descoberta</div>
+                </div>
+                <div class="card-content">
+                    <h4>Informações que preciso obter:</h4>
+                    <input type="text" class="input-line" id="infoSituacao" placeholder="Sobre a situação atual do cliente">
+                    <input type="text" class="input-line" id="infoDecisao" placeholder="Sobre o processo decisório">
+                    <input type="text" class="input-line" id="infoConcorrencia" placeholder="Sobre alternativas/concorrência">
+                    
+                    <h4>Perguntas-chave preparadas (SPIN):</h4>
+                    <input type="text" class="input-line" id="perguntaNecessidade" placeholder="1. Para entender necessidades">
+                    <input type="text" class="input-line" id="perguntaProcesso" placeholder="2. Para mapear processo">
+                    <input type="text" class="input-line" id="perguntaDecisores" placeholder="3. Para identificar decisores">
+                </div>
+            </div>
+
+            <!-- Card 4: Proposta Estruturada -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">💼</div>
+                    <div class="card-title">4. Proposta Estruturada (CVB)</div>
+                </div>
+                <div class="card-content">
+                    <h4>Principal problema do cliente:</h4>
+                    <input type="text" class="input-line" id="problemaCliente" placeholder="Dor ou necessidade identificada">
+                    
+                    <h4>CVB - Característica → Vantagem → Benefício:</h4>
+                    <input type="text" class="input-line" id="caracteristica" placeholder="Característica da solução">
+                    <input type="text" class="input-line" id="vantagem" placeholder="Vantagem vs. alternativas">
+                    <input type="text" class="input-line" id="beneficio" placeholder="Benefício específico para o cliente">
+                    
+                    <h4>Prova/Evidência:</h4>
+                    <input type="text" class="input-line" id="prova" placeholder="Case relevante ou referência">
+                    
+                    <h4>Investimento + ROI:</h4>
+                    <input type="text" class="input-line" id="investimentoRoi" placeholder="Valor + Justificativa de retorno">
+                </div>
+            </div>
+
+            <!-- Card 5: Plano de Concessões -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🤝</div>
+                    <div class="card-title">5. Plano de Concessões</div>
+                </div>
+                <div class="card-content">
+                    <div class="nivel-concessao nivel-1">
+                        <h5>🟢 Nível 1 - Fáceis (Dar primeiro)</h5>
+                        <input type="text" class="input-line" id="concessaoFacil" placeholder="Concessão de baixo custo, alto valor percebido">
+                    </div>
+                    
+                    <div class="nivel-concessao nivel-2">
+                        <h5>🟡 Nível 2 - Estratégicas (Trocar)</h5>
+                        <input type="text" class="input-line" id="concessaoEstrategica" placeholder="Concessão">
+                        <input type="text" class="input-line" id="contrapartida2" placeholder="Contrapartida exigida">
+                    </div>
+                    
+                    <div class="nivel-concessao nivel-3">
+                        <h5>🔴 Nível 3 - Limite (Último recurso)</h5>
+                        <input type="text" class="input-line" id="concessaoLimite" placeholder="Concessão máxima possível">
+                        <input type="text" class="input-line" id="contrapartida3" placeholder="Contrapartida obrigatória">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 6: MAANA (Plano B) -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🎯</div>
+                    <div class="card-title">6. MAANA - Plano B</div>
+                </div>
+                <div class="card-content">
+                    <h4>Minhas Alternativas (se não fechar):</h4>
+                    <input type="text" class="input-line" id="alternativa1" placeholder="Alternativa 1 + Probabilidade">
+                    <input type="text" class="input-line" id="alternativa2" placeholder="Alternativa 2 + Probabilidade">
+                    
+                    <h4>Ponto de Reserva (Walk Away):</h4>
+                    <input type="text" class="input-line" id="pontoReserva" placeholder="Condição mínima para continuar">
+                    
+                    <h4>MAANA do Cliente (alternativas dele):</h4>
+                    <input type="text" class="input-line" id="maanaCliente" placeholder="Principal alternativa do cliente">
+                    <input type="text" class="input-line" id="fracoMaana" placeholder="Pontos fracos da alternativa dele">
+                    <input type="text" class="input-line" id="custoNaoDecidir" placeholder="Custo de não decidir agora">
+                </div>
+            </div>
+
+            <!-- Card 7: Perfil do Cliente -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">👥</div>
+                    <div class="card-title">7. Perfil do Cliente</div>
+                </div>
+                <div class="card-content">
+                    <h4>Decisor Principal:</h4>
+                    <input type="text" class="input-line" id="decisorPrincipal" placeholder="Nome e cargo">
+                    
+                    <h4>Estilo de Negociação (DISC):</h4>
+                    <div class="estilos-grid">
+                        <label class="estilo-option">
+                            <input type="radio" name="estiloDISC" value="analitico"> Analítico (C)
+                        </label>
+                        <label class="estilo-option">
+                            <input type="radio" name="estiloDISC" value="expressivo"> Expressivo (I)
+                        </label>
+                        <label class="estilo-option">
+                            <input type="radio" name="estiloDISC" value="condutor"> Condutor (D)
+                        </label>
+                        <label class="estilo-option">
+                            <input type="radio" name="estiloDISC" value="amavel"> Amável (S)
+                        </label>
+                    </div>
+                    
+                    <h4>Motivações (pessoais/profissionais):</h4>
+                    <input type="text" class="input-line" id="motivacoes" placeholder="O que o motiva a decidir?">
+                    
+                    <h4>Estratégia de Abordagem:</h4>
+                    <input type="text" class="input-line" id="estrategiaAbordagem" placeholder="Como iniciar e conduzir a conversa">
+                </div>
+            </div>
+
+            <!-- Card 8: Checklist de Execução -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">✅</div>
+                    <div class="card-title">8. Checklist de Execução</div>
+                </div>
+                <div class="card-content">
+                    <h4>Antes da Negociação:</h4>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="checkPlano"> Plano revisado e atualizado
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="checkMaterial"> Material de apoio organizado
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="checkObjetivos"> Objetivos e limites claros
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="checkMental"> Preparação mental realizada
+                        </label>
+                    </div>
+                    
+                    <h4>Durante a Negociação:</h4>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="checkRoteiro"> Seguir roteiro de descoberta
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="checkAdaptar"> Adaptar baseado em reações
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="checkConcessoes"> Manter disciplina nas concessões
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="checkMaana"> Lembrar do MAANA sob pressão
+                        </label>
+                    </div>
+                    
+                    <h4>Após a Negociação:</h4>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="checkConfirmar"> Confirmar acordo por escrito
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="checkAvaliar"> Avaliar processo e resultado
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="checkLicoes"> Documentar lições aprendidas
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="checkProximos"> Definir próximos passos
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="btn-container">
+            <button class="btn btn-success" onclick="abrirModalExportacao()">📤 Exportar JSON</button>
+            <button class="btn btn-primary" onclick="window.print()">🖨️ Imprimir Plano</button>
+            <button class="btn btn-warning" onclick="limparFormulario()">🔄 Novo Plano</button>
+        </div>
+
+        <div class="footer">
+            <p><strong>Negociação para Vendas: Método do Professor</strong> | Prof. Paulo H. Donassolo</p>
+            <p style="font-size: 0.85rem; margin-top: 8px; opacity: 0.8;">Ferramenta prática de preparação para negociações de alta performance</p>
+        </div>
+    </div>
+
+    <!-- Modal Exportação -->
+    <div class="modal-overlay" id="modalExportacao">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>📤 Exportar Plano (JSON)</h3>
+                <button class="modal-close" onclick="fecharModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <textarea id="jsonOutput" readonly></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success" onclick="copiarJSON()">📋 Copiar</button>
+                <button class="btn btn-primary" onclick="baixarJSON()">💾 Baixar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'anc_plano_negociacao_visual_cards';
+        let dadosExportacao = null;
+
+        // IDs dos campos para auto-save
+        const camposTexto = [
+            'nomeUsuario', 'dataNegociacao', 'nomeCliente', 'tipoFramework',
+            'objetivoSmart', 'contextoOportunidade', 'historicoCliente',
+            'ancora', 'meta', 'minimo', 'justificativaAncora',
+            'infoSituacao', 'infoDecisao', 'infoConcorrencia',
+            'perguntaNecessidade', 'perguntaProcesso', 'perguntaDecisores',
+            'problemaCliente', 'caracteristica', 'vantagem', 'beneficio', 'prova', 'investimentoRoi',
+            'concessaoFacil', 'concessaoEstrategica', 'contrapartida2', 'concessaoLimite', 'contrapartida3',
+            'alternativa1', 'alternativa2', 'pontoReserva', 'maanaCliente', 'fracoMaana', 'custoNaoDecidir',
+            'decisorPrincipal', 'motivacoes', 'estrategiaAbordagem'
+        ];
+
+        const camposCheckbox = [
+            'checkPlano', 'checkMaterial', 'checkObjetivos', 'checkMental',
+            'checkRoteiro', 'checkAdaptar', 'checkConcessoes', 'checkMaana',
+            'checkConfirmar', 'checkAvaliar', 'checkLicoes', 'checkProximos'
+        ];
+
+        function mostrarStatusSalvamento() {
+            const status = document.getElementById('statusSalvamento');
+            status.classList.add('visivel');
+            setTimeout(() => status.classList.remove('visivel'), 2000);
+        }
+
+        function coletarDados() {
+            const dados = {
+                _meta: {
+                    tipo: "plano_negociacao_visual_cards",
+                    versao: "2.0",
+                    exportadoEm: new Date().toISOString()
+                },
+                identificacao: {
+                    usuario: document.getElementById('nomeUsuario').value,
+                    dataNegociacao: document.getElementById('dataNegociacao').value,
+                    cliente: document.getElementById('nomeCliente').value,
+                    framework: document.getElementById('tipoFramework').value
+                },
+                objetivoContexto: {
+                    objetivoSmart: document.getElementById('objetivoSmart').value,
+                    contexto: document.getElementById('contextoOportunidade').value,
+                    historico: document.getElementById('historicoCliente').value
+                },
+                zoap: {
+                    ancora: document.getElementById('ancora').value,
+                    meta: document.getElementById('meta').value,
+                    minimo: document.getElementById('minimo').value,
+                    justificativa: document.getElementById('justificativaAncora').value
+                },
+                descoberta: {
+                    informacoes: {
+                        situacao: document.getElementById('infoSituacao').value,
+                        decisao: document.getElementById('infoDecisao').value,
+                        concorrencia: document.getElementById('infoConcorrencia').value
+                    },
+                    perguntas: {
+                        necessidade: document.getElementById('perguntaNecessidade').value,
+                        processo: document.getElementById('perguntaProcesso').value,
+                        decisores: document.getElementById('perguntaDecisores').value
+                    }
+                },
+                propostaCVB: {
+                    problema: document.getElementById('problemaCliente').value,
+                    caracteristica: document.getElementById('caracteristica').value,
+                    vantagem: document.getElementById('vantagem').value,
+                    beneficio: document.getElementById('beneficio').value,
+                    prova: document.getElementById('prova').value,
+                    investimentoRoi: document.getElementById('investimentoRoi').value
+                },
+                concessoes: {
+                    nivel1: { concessao: document.getElementById('concessaoFacil').value },
+                    nivel2: {
+                        concessao: document.getElementById('concessaoEstrategica').value,
+                        contrapartida: document.getElementById('contrapartida2').value
+                    },
+                    nivel3: {
+                        concessao: document.getElementById('concessaoLimite').value,
+                        contrapartida: document.getElementById('contrapartida3').value
+                    }
+                },
+                maana: {
+                    minhasAlternativas: [
+                        document.getElementById('alternativa1').value,
+                        document.getElementById('alternativa2').value
+                    ],
+                    pontoReserva: document.getElementById('pontoReserva').value,
+                    maanaCliente: document.getElementById('maanaCliente').value,
+                    fracoMaana: document.getElementById('fracoMaana').value,
+                    custoNaoDecidir: document.getElementById('custoNaoDecidir').value
+                },
+                perfilCliente: {
+                    decisor: document.getElementById('decisorPrincipal').value,
+                    estiloDISC: document.querySelector('input[name="estiloDISC"]:checked')?.value || '',
+                    motivacoes: document.getElementById('motivacoes').value,
+                    estrategia: document.getElementById('estrategiaAbordagem').value
+                },
+                checklist: {
+                    antes: {
+                        planoRevisado: document.getElementById('checkPlano').checked,
+                        materialOrganizado: document.getElementById('checkMaterial').checked,
+                        objetivosClaros: document.getElementById('checkObjetivos').checked,
+                        preparacaoMental: document.getElementById('checkMental').checked
+                    },
+                    durante: {
+                        seguirRoteiro: document.getElementById('checkRoteiro').checked,
+                        adaptarReacoes: document.getElementById('checkAdaptar').checked,
+                        disciplinaConcessoes: document.getElementById('checkConcessoes').checked,
+                        lembrarMaana: document.getElementById('checkMaana').checked
+                    },
+                    apos: {
+                        confirmarEscrito: document.getElementById('checkConfirmar').checked,
+                        avaliarProcesso: document.getElementById('checkAvaliar').checked,
+                        documentarLicoes: document.getElementById('checkLicoes').checked,
+                        proximosPassos: document.getElementById('checkProximos').checked
+                    }
+                }
+            };
+            return dados;
+        }
+
+        function autoSave() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(coletarDados()));
+            mostrarStatusSalvamento();
+        }
+
+        function carregarDados() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                try {
+                    const d = JSON.parse(saved);
+                    
+                    // Identificação
+                    if (d.identificacao) {
+                        if (d.identificacao.usuario) document.getElementById('nomeUsuario').value = d.identificacao.usuario;
+                        if (d.identificacao.dataNegociacao) document.getElementById('dataNegociacao').value = d.identificacao.dataNegociacao;
+                        if (d.identificacao.cliente) document.getElementById('nomeCliente').value = d.identificacao.cliente;
+                        if (d.identificacao.framework) document.getElementById('tipoFramework').value = d.identificacao.framework;
+                    }
+                    
+                    // Objetivo e Contexto
+                    if (d.objetivoContexto) {
+                        if (d.objetivoContexto.objetivoSmart) document.getElementById('objetivoSmart').value = d.objetivoContexto.objetivoSmart;
+                        if (d.objetivoContexto.contexto) document.getElementById('contextoOportunidade').value = d.objetivoContexto.contexto;
+                        if (d.objetivoContexto.historico) document.getElementById('historicoCliente').value = d.objetivoContexto.historico;
+                    }
+                    
+                    // ZOAP
+                    if (d.zoap) {
+                        if (d.zoap.ancora) document.getElementById('ancora').value = d.zoap.ancora;
+                        if (d.zoap.meta) document.getElementById('meta').value = d.zoap.meta;
+                        if (d.zoap.minimo) document.getElementById('minimo').value = d.zoap.minimo;
+                        if (d.zoap.justificativa) document.getElementById('justificativaAncora').value = d.zoap.justificativa;
+                    }
+                    
+                    // Descoberta
+                    if (d.descoberta) {
+                        if (d.descoberta.informacoes) {
+                            if (d.descoberta.informacoes.situacao) document.getElementById('infoSituacao').value = d.descoberta.informacoes.situacao;
+                            if (d.descoberta.informacoes.decisao) document.getElementById('infoDecisao').value = d.descoberta.informacoes.decisao;
+                            if (d.descoberta.informacoes.concorrencia) document.getElementById('infoConcorrencia').value = d.descoberta.informacoes.concorrencia;
+                        }
+                        if (d.descoberta.perguntas) {
+                            if (d.descoberta.perguntas.necessidade) document.getElementById('perguntaNecessidade').value = d.descoberta.perguntas.necessidade;
+                            if (d.descoberta.perguntas.processo) document.getElementById('perguntaProcesso').value = d.descoberta.perguntas.processo;
+                            if (d.descoberta.perguntas.decisores) document.getElementById('perguntaDecisores').value = d.descoberta.perguntas.decisores;
+                        }
+                    }
+                    
+                    // Proposta CVB
+                    if (d.propostaCVB) {
+                        if (d.propostaCVB.problema) document.getElementById('problemaCliente').value = d.propostaCVB.problema;
+                        if (d.propostaCVB.caracteristica) document.getElementById('caracteristica').value = d.propostaCVB.caracteristica;
+                        if (d.propostaCVB.vantagem) document.getElementById('vantagem').value = d.propostaCVB.vantagem;
+                        if (d.propostaCVB.beneficio) document.getElementById('beneficio').value = d.propostaCVB.beneficio;
+                        if (d.propostaCVB.prova) document.getElementById('prova').value = d.propostaCVB.prova;
+                        if (d.propostaCVB.investimentoRoi) document.getElementById('investimentoRoi').value = d.propostaCVB.investimentoRoi;
+                    }
+                    
+                    // Concessões
+                    if (d.concessoes) {
+                        if (d.concessoes.nivel1) {
+                            if (d.concessoes.nivel1.concessao) document.getElementById('concessaoFacil').value = d.concessoes.nivel1.concessao;
+                        }
+                        if (d.concessoes.nivel2) {
+                            if (d.concessoes.nivel2.concessao) document.getElementById('concessaoEstrategica').value = d.concessoes.nivel2.concessao;
+                            if (d.concessoes.nivel2.contrapartida) document.getElementById('contrapartida2').value = d.concessoes.nivel2.contrapartida;
+                        }
+                        if (d.concessoes.nivel3) {
+                            if (d.concessoes.nivel3.concessao) document.getElementById('concessaoLimite').value = d.concessoes.nivel3.concessao;
+                            if (d.concessoes.nivel3.contrapartida) document.getElementById('contrapartida3').value = d.concessoes.nivel3.contrapartida;
+                        }
+                    }
+                    
+                    // MAANA
+                    if (d.maana) {
+                        if (d.maana.minhasAlternativas && d.maana.minhasAlternativas[0]) document.getElementById('alternativa1').value = d.maana.minhasAlternativas[0];
+                        if (d.maana.minhasAlternativas && d.maana.minhasAlternativas[1]) document.getElementById('alternativa2').value = d.maana.minhasAlternativas[1];
+                        if (d.maana.pontoReserva) document.getElementById('pontoReserva').value = d.maana.pontoReserva;
+                        if (d.maana.maanaCliente) document.getElementById('maanaCliente').value = d.maana.maanaCliente;
+                        if (d.maana.fracoMaana) document.getElementById('fracoMaana').value = d.maana.fracoMaana;
+                        if (d.maana.custoNaoDecidir) document.getElementById('custoNaoDecidir').value = d.maana.custoNaoDecidir;
+                    }
+                    
+                    // Perfil Cliente
+                    if (d.perfilCliente) {
+                        if (d.perfilCliente.decisor) document.getElementById('decisorPrincipal').value = d.perfilCliente.decisor;
+                        if (d.perfilCliente.estiloDISC) {
+                            const radio = document.querySelector(`input[name="estiloDISC"][value="${d.perfilCliente.estiloDISC}"]`);
+                            if (radio) radio.checked = true;
+                        }
+                        if (d.perfilCliente.motivacoes) document.getElementById('motivacoes').value = d.perfilCliente.motivacoes;
+                        if (d.perfilCliente.estrategia) document.getElementById('estrategiaAbordagem').value = d.perfilCliente.estrategia;
+                    }
+                    
+                    // Checklist
+                    if (d.checklist) {
+                        if (d.checklist.antes) {
+                            document.getElementById('checkPlano').checked = d.checklist.antes.planoRevisado || false;
+                            document.getElementById('checkMaterial').checked = d.checklist.antes.materialOrganizado || false;
+                            document.getElementById('checkObjetivos').checked = d.checklist.antes.objetivosClaros || false;
+                            document.getElementById('checkMental').checked = d.checklist.antes.preparacaoMental || false;
+                        }
+                        if (d.checklist.durante) {
+                            document.getElementById('checkRoteiro').checked = d.checklist.durante.seguirRoteiro || false;
+                            document.getElementById('checkAdaptar').checked = d.checklist.durante.adaptarReacoes || false;
+                            document.getElementById('checkConcessoes').checked = d.checklist.durante.disciplinaConcessoes || false;
+                            document.getElementById('checkMaana').checked = d.checklist.durante.lembrarMaana || false;
+                        }
+                        if (d.checklist.apos) {
+                            document.getElementById('checkConfirmar').checked = d.checklist.apos.confirmarEscrito || false;
+                            document.getElementById('checkAvaliar').checked = d.checklist.apos.avaliarProcesso || false;
+                            document.getElementById('checkLicoes').checked = d.checklist.apos.documentarLicoes || false;
+                            document.getElementById('checkProximos').checked = d.checklist.apos.proximosPassos || false;
+                        }
+                    }
+                } catch (e) {
+                    console.error('Erro ao carregar dados:', e);
+                }
+            }
+        }
+
+        function limparFormulario() {
+            if (confirm('Tem certeza que deseja limpar todo o plano? Esta ação não pode ser desfeita.')) {
+                localStorage.removeItem(STORAGE_KEY);
+                location.reload();
+            }
+        }
+
+        function abrirModalExportacao() {
+            dadosExportacao = coletarDados();
+            document.getElementById('jsonOutput').value = JSON.stringify(dadosExportacao, null, 2);
+            document.getElementById('modalExportacao').classList.add('active');
+        }
+
+        function fecharModal() {
+            document.getElementById('modalExportacao').classList.remove('active');
+        }
+
+        function copiarJSON() {
+            const textarea = document.getElementById('jsonOutput');
+            textarea.select();
+            navigator.clipboard.writeText(textarea.value)
+                .then(() => alert('JSON copiado para a área de transferência!'))
+                .catch(() => {
+                    document.execCommand('copy');
+                    alert('JSON copiado!');
+                });
+        }
+
+        function baixarJSON() {
+            try {
+                const blob = new Blob([JSON.stringify(dadosExportacao, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                const nomeCliente = document.getElementById('nomeCliente').value.replace(/\s+/g, '_') || 'cliente';
+                const data = document.getElementById('dataNegociacao').value || new Date().toISOString().slice(0,10);
+                a.download = `plano_negociacao_${nomeCliente}_${data}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                fecharModal();
+            } catch (err) {
+                alert('Para baixar, copie o conteúdo e cole em um arquivo .json');
+            }
+        }
+
+        // Event Listeners
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') fecharModal();
+        });
+
+        document.getElementById('modalExportacao').addEventListener('click', e => {
+            if (e.target === document.getElementById('modalExportacao')) fecharModal();
+        });
+
+        // Auto-save em todos os campos
+        document.querySelectorAll('input, select').forEach(el => {
+            el.addEventListener('change', autoSave);
+            if (el.type === 'text' || el.tagName === 'SELECT') {
+                el.addEventListener('blur', autoSave);
+            }
+        });
+
+        // Estilo selecionado nos radio buttons
+        document.querySelectorAll('.estilo-option input').forEach(radio => {
+            radio.addEventListener('change', function() {
+                document.querySelectorAll('.estilo-option').forEach(opt => opt.classList.remove('selected'));
+                if (this.checked) {
+                    this.closest('.estilo-option').classList.add('selected');
+                }
+                autoSave();
+            });
+        });
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            carregarDados();
+            
+            // Data padrão
+            if (!document.getElementById('dataNegociacao').value) {
+                document.getElementById('dataNegociacao').value = new Date().toISOString().split('T')[0];
+            }
+            
+            // Marcar estilo selecionado visualmente
+            const estiloSelecionado = document.querySelector('input[name="estiloDISC"]:checked');
+            if (estiloSelecionado) {
+                estiloSelecionado.closest('.estilo-option').classList.add('selected');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Framework Negociação Simples</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.3em;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .complexity-header {
+            background: linear-gradient(135deg, rgba(72, 187, 120, 0.1) 0%, rgba(56, 161, 105, 0.1) 100%);
+            border: 2px solid #48bb78;
+            padding: 30px;
+            margin: 40px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .complexity-title {
+            font-size: 2.2em;
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .complexity-subtitle {
+            font-size: 1.1em;
+            color: #4a5568;
+            margin-bottom: 20px;
+        }
+
+        .complexity-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .stat-value {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #48bb78;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #718096;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            padding: 40px;
+        }
+
+        .framework-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            border: 2px solid #f0f0f0;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .framework-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        }
+
+        .framework-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-right: 15px;
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+        }
+
+        .card-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .card-content {
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        .section-subtitle {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #2d3748;
+            margin: 15px 0 10px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .time-estimate {
+            background: #f0fdf4;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #48bb78;
+            font-weight: 600;
+        }
+
+        .checklist {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .checklist h4 {
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+
+        .checkbox-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .checkbox-list li {
+            margin: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            font-size: 14px;
+        }
+
+        .checkbox-list li::before {
+            content: '☐';
+            position: absolute;
+            left: 0;
+            color: #48bb78;
+            font-size: 16px;
+        }
+
+        .process-step {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 4px solid #48bb78;
+        }
+
+        .process-step strong {
+            color: #2d3748;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .input-placeholder {
+            background: #f9f9f9;
+            border: 2px dashed #d2d6dc;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin: 8px 0;
+            color: #9ca3af;
+            font-style: italic;
+        }
+
+        .footer {
+            background: #f7fafc;
+            text-align: center;
+            padding: 30px;
+            border-top: 1px solid #e2e8f0;
+            color: #718096;
+            font-size: 1.1em;
+            font-weight: 500;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+                border-radius: 0;
+            }
+            
+            .framework-card:hover {
+                transform: none;
+                box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.2em;
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+            
+            .complexity-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🟢 Framework Simples</h1>
+            <p>Para Negociações Diretas e Eficientes</p>
+        </div>
+
+        <div class="complexity-header">
+            <div class="complexity-title">Negociação Simples</div>
+            <div class="complexity-subtitle">Para transações diretas e relacionamentos estabelecidos</div>
+            <div class="complexity-stats">
+                <div class="stat-item">
+                    <div class="stat-value">15-30 min</div>
+                    <div class="stat-label">Tempo Prep</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">1-3 dias</div>
+                    <div class="stat-label">Ciclo Médio</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">1-2 pessoas</div>
+                    <div class="stat-label">Decisores</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">Até R$ 50k</div>
+                    <div class="stat-label">Valor Típico</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="cards-grid">
+            <!-- Card 1: Preparação Rápida -->
+            <div class="framework-card">
+                <div class="card-header">
+                    <div class="card-icon">⚡</div>
+                    <div class="card-title">Preparação Rápida</div>
+                </div>
+                <div class="card-content">
+                    <div class="time-estimate">
+                        ⏱️ <strong>15-30 minutos</strong> de preparação total
+                    </div>
+                    
+                    <div class="section-subtitle">🎯 Objetivo Principal:</div>
+                    <div class="input-placeholder">Resultado específico que preciso alcançar</div>
+                    
+                    <div class="section-subtitle">💰 Faixa de Valor:</div>
+                    <div style="display: flex; gap: 10px;">
+                        <div class="input-placeholder" style="flex: 1;">Valor Mínimo</div>
+                        <div class="input-placeholder" style="flex: 1;">Valor Ideal</div>
+                    </div>
+                    
+                    <div class="section-subtitle">🔍 3 Perguntas-Chave:</div>
+                    <div class="input-placeholder">1. Para confirmar necessidade</div>
+                    <div class="input-placeholder">2. Para identificar urgência</div>
+                    <div class="input-placeholder">3. Para confirmar decisor</div>
+                    
+                    <div class="checklist">
+                        <h4>✅ Checklist Preparação:</h4>
+                        <ul class="checkbox-list">
+                            <li>Cliente qualificado (BANT básico)</li>
+                            <li>Proposta preparada</li>
+                            <li>Preço definido + 1 alternativa</li>
+                            <li>Próximos passos claros</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: Execução Direta -->
+            <div class="framework-card">
+                <div class="card-header">
+                    <div class="card-icon">🎯</div>
+                    <div class="card-title">Execução Direta</div>
+                </div>
+                <div class="card-content">
+                    <div class="section-subtitle">📋 Roteiro de Reunião (30-45 min):</div>
+                    
+                    <div class="process-step">
+                        <strong>1. Abertura (5 min)</strong>
+                        • Confirmar agenda<br>
+                        • Validar contexto<br>
+                        • Definir expectativas
+                    </div>
+                    
+                    <div class="process-step">
+                        <strong>2. Descoberta Rápida (10 min)</strong>
+                        • Confirmar necessidade<br>
+                        • Identificar urgência<br>
+                        • Validar decisor
+                    </div>
+                    
+                    <div class="process-step">
+                        <strong>3. Apresentação Focada (15 min)</strong>
+                        • Solução específica<br>
+                        • 2-3 benefícios principais<br>
+                        • Prova/referência
+                    </div>
+                    
+                    <div class="process-step">
+                        <strong>4. Fechamento (10 min)</strong>
+                        • Proposta clara<br>
+                        • Tratamento de objeções<br>
+                        • Próximos passos
+                    </div>
+                    
+                    <div class="section-subtitle">🤝 Concessão Padrão:</div>
+                    <div class="input-placeholder">Única concessão preparada + contrapartida</div>
+                </div>
+            </div>
+
+            <!-- Card 3: Fechamento Ágil -->
+            <div class="framework-card">
+                <div class="card-header">
+                    <div class="card-icon">🏁</div>
+                    <div class="card-title">Fechamento Ágil</div>
+                </div>
+                <div class="card-content">
+                    <div class="section-subtitle">⚡ Técnicas de Fechamento Rápido:</div>
+                    <ul class="checkbox-list">
+                        <li><strong>Fechamento Direto:</strong> "Podemos prosseguir?"</li>
+                        <li><strong>Alternativa:</strong> "Opção A ou B?"</li>
+                        <li><strong>Assumptivo:</strong> "Quando implementamos?"</li>
+                        <li><strong>Urgência:</strong> "Até sexta conseguimos X"</li>
+                    </ul>
+                    
+                    <div class="section-subtitle">📝 Pós-Negociação (5 min):</div>
+                    <div class="input-placeholder">Resultado alcançado</div>
+                    <div class="input-placeholder">Próximo passo definido</div>
+                    <div class="input-placeholder">Data follow-up</div>
+                    
+                    <div class="checklist">
+                        <h4>📧 Follow-up Imediato:</h4>
+                        <ul class="checkbox-list">
+                            <li>E-mail resumo enviado (2h)</li>
+                            <li>Proposta formal (24h)</li>
+                            <li>Contato de confirmação agendado</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 4: Quando Usar -->
+            <div class="framework-card">
+                <div class="card-header">
+                    <div class="card-icon">🎯</div>
+                    <div class="card-title">Quando Usar Framework Simples</div>
+                </div>
+                <div class="card-content">
+                    <div class="section-subtitle">✅ Situações Ideais:</div>
+                    <ul class="checkbox-list">
+                        <li>Cliente conhecido e qualificado</li>
+                        <li>Produto/serviço padronizado</li>
+                        <li>Decisor único ou bem definido</li>
+                        <li>Urgência real e imediata</li>
+                        <li>Relacionamento estabelecido</li>
+                        <li>Processo de compra simples</li>
+                    </ul>
+                    
+                    <div class="section-subtitle">📊 Resultados Esperados:</div>
+                    <div class="process-step">
+                        <strong>Taxa de Sucesso:</strong> 70-80%<br>
+                        <strong>Eficiência:</strong> Alta produtividade<br>
+                        <strong>ROI Tempo:</strong> Excelente
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Elaborado pelo <strong>Prof. Paulo H. Donassolo</strong></p>
+            <p style="font-size: 0.9em; margin-top: 10px; opacity: 0.8;">
+                Framework Simples - Máxima eficiência para negociações diretas
+            </p>
+        </div>
+    </div>
+</body>
+</html>
