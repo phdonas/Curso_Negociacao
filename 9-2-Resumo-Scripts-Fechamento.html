@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scripts de Fechamento | Seção 9.2</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1B4F72 0%, #148F77 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            padding: 30px 20px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-bottom: 15px;
+        }
+
+        .header h1 {
+            font-size: 2.4em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Intro Section */
+        .intro-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .intro-card h2 {
+            color: #1B4F72;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .intro-card p {
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .key-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .key-point {
+            background: linear-gradient(135deg, #EBF5FB, #D4E6F1);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .key-point .icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .key-point .title {
+            font-weight: 700;
+            color: #1B4F72;
+            font-size: 0.95rem;
+        }
+
+        .key-point .desc {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Technique Cards */
+        .technique-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .technique-header {
+            padding: 20px 25px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .technique-header.resumo { background: linear-gradient(135deg, #2980B9, #1F618D); }
+        .technique-header.alternativa { background: linear-gradient(135deg, #27AE60, #1E8449); }
+        .technique-header.teste { background: linear-gradient(135deg, #8E44AD, #6C3483); }
+        .technique-header.proximo-passo { background: linear-gradient(135deg, #E67E22, #CA6F1E); }
+        .technique-header.urgencia { background: linear-gradient(135deg, #C0392B, #A93226); }
+
+        .technique-number {
+            width: 50px;
+            height: 50px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .technique-title {
+            flex: 1;
+        }
+
+        .technique-title h3 {
+            font-size: 1.4rem;
+            margin-bottom: 3px;
+        }
+
+        .technique-title span {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .technique-body {
+            padding: 25px;
+        }
+
+        /* When to Use */
+        .when-to-use {
+            background: #F8F9FA;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .when-to-use h4 {
+            color: #1B4F72;
+            margin-bottom: 12px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .when-to-use ul {
+            margin-left: 20px;
+            color: #555;
+        }
+
+        .when-to-use li {
+            margin-bottom: 6px;
+        }
+
+        /* Script Box */
+        .script-box {
+            background: linear-gradient(135deg, #2C3E50, #34495E);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .script-box h4 {
+            color: #F1C40F;
+            margin-bottom: 15px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .script-item {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 12px;
+            border-left: 4px solid #F1C40F;
+        }
+
+        .script-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .script-label {
+            color: #F1C40F;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .script-text {
+            color: #ECF0F1;
+            font-size: 1rem;
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        .script-text strong {
+            color: #F1C40F;
+            font-style: normal;
+        }
+
+        /* Variations */
+        .variations {
+            margin-top: 20px;
+        }
+
+        .variations h4 {
+            color: #1B4F72;
+            margin-bottom: 12px;
+            font-size: 1rem;
+        }
+
+        .variation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .variation-item {
+            background: #FEF9E7;
+            border: 1px solid #F7DC6F;
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .variation-item .context {
+            font-weight: 600;
+            color: #B7950B;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+        }
+
+        .variation-item .text {
+            color: #555;
+            font-size: 0.95rem;
+            font-style: italic;
+        }
+
+        /* Tips */
+        .tips-box {
+            background: #E8F8F5;
+            border: 1px solid #1ABC9C;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-top: 20px;
+        }
+
+        .tips-box h4 {
+            color: #148F77;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        .tips-box p {
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+        /* Quick Reference */
+        .quick-reference {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .quick-reference h2 {
+            color: #1B4F72;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.5rem;
+        }
+
+        .reference-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .reference-table th {
+            background: #1B4F72;
+            color: white;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .reference-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #E8E8E8;
+            vertical-align: top;
+        }
+
+        .reference-table tr:nth-child(even) {
+            background: #F8F9FA;
+        }
+
+        .reference-table .technique-name {
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .technique-name.resumo { color: #2980B9; }
+        .technique-name.alternativa { color: #27AE60; }
+        .technique-name.teste { color: #8E44AD; }
+        .technique-name.proximo-passo { color: #E67E22; }
+        .technique-name.urgencia { color: #C0392B; }
+
+        /* Signals Section */
+        .signals-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .signals-card h2 {
+            color: #1B4F72;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .signals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .signal-category {
+            background: #F8F9FA;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .signal-category h4 {
+            color: #1B4F72;
+            margin-bottom: 12px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .signal-category ul {
+            margin-left: 20px;
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+        .signal-category li {
+            margin-bottom: 6px;
+        }
+
+        /* Checklist Section */
+        .checklist-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .checklist-card h2 {
+            color: #1B4F72;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checklist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 15px;
+            background: #F8F9FA;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .checklist-item:hover {
+            background: #E8E8E8;
+        }
+
+        .checklist-item.checked {
+            background: #E8F8F0;
+            border: 1px solid #27AE60;
+        }
+
+        .check-box {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #CCC;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.3s;
+        }
+
+        .checklist-item.checked .check-box {
+            background: #27AE60;
+            border-color: #27AE60;
+            color: white;
+        }
+
+        .check-text {
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: white;
+            padding: 20px;
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .container {
+                max-width: 100%;
+            }
+
+            .header {
+                color: #1B4F72;
+                padding: 20px 0;
+            }
+
+            .badge {
+                background: #E8E8E8;
+                color: #333;
+            }
+
+            .intro-card,
+            .technique-card,
+            .quick-reference,
+            .signals-card,
+            .checklist-card {
+                box-shadow: none;
+                border: 1px solid #DDD;
+                page-break-inside: avoid;
+            }
+
+            .technique-card {
+                page-break-inside: avoid;
+            }
+
+            .script-box {
+                background: #F5F5F5;
+                border: 1px solid #DDD;
+            }
+
+            .script-box h4 {
+                color: #B7950B;
+            }
+
+            .script-item {
+                background: white;
+                border: 1px solid #DDD;
+            }
+
+            .script-label {
+                color: #B7950B;
+            }
+
+            .script-text {
+                color: #333;
+            }
+
+            .script-text strong {
+                color: #B7950B;
+            }
+
+            .footer {
+                color: #666;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .technique-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .technique-number {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="badge">Módulo 9 • Seção 9.2 • Fechamento</div>
+            <h1>📋 Scripts de Fechamento</h1>
+            <p>5 técnicas consultivas com scripts prontos para usar no mercado brasileiro</p>
+        </div>
+
+        <!-- Introdução -->
+        <div class="intro-card">
+            <h2>🎯 Fechamento Consultivo</h2>
+            <p>Esqueça técnicas agressivas de fechamento. O mercado brasileiro valoriza relacionamento e confiança. Estas 5 técnicas respeitam o cliente e funcionam muito bem na nossa cultura de negócios.</p>
+            
+            <div class="key-points">
+                <div class="key-point">
+                    <div class="icon">👂</div>
+                    <div class="title">Identifique Sinais</div>
+                    <div class="desc">Reconheça quando o cliente está pronto</div>
+                </div>
+                <div class="key-point">
+                    <div class="icon">🎯</div>
+                    <div class="title">Escolha a Técnica</div>
+                    <div class="desc">Use a mais adequada ao contexto</div>
+                </div>
+                <div class="key-point">
+                    <div class="icon">💬</div>
+                    <div class="title">Seja Natural</div>
+                    <div class="desc">Adapte o script ao seu estilo</div>
+                </div>
+                <div class="key-point">
+                    <div class="icon">✅</div>
+                    <div class="title">Confirme o Acordo</div>
+                    <div class="desc">Documente tudo por escrito</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TÉCNICA 1: RESUMO -->
+        <div class="technique-card">
+            <div class="technique-header resumo">
+                <div class="technique-number">1</div>
+                <div class="technique-title">
+                    <h3>Fechamento por RESUMO</h3>
+                    <span>Recapitule os pontos acordados e peça confirmação</span>
+                </div>
+            </div>
+            <div class="technique-body">
+                <div class="when-to-use">
+                    <h4>📍 Quando Usar</h4>
+                    <ul>
+                        <li>Quando vocês já discutiram muitos pontos durante a negociação</li>
+                        <li>Após resolver várias objeções do cliente</li>
+                        <li>Quando o cliente concordou com aspectos específicos ao longo da conversa</li>
+                        <li>Em reuniões longas onde é fácil perder o fio da meada</li>
+                    </ul>
+                </div>
+
+                <div class="script-box">
+                    <h4>📝 Scripts Prontos</h4>
+                    
+                    <div class="script-item">
+                        <div class="script-label">Script Principal</div>
+                        <div class="script-text">"Então, recapitulando o que conversamos: vocês precisam de <strong>[solução]</strong> para resolver <strong>[problema]</strong>, com prazo de implementação de <strong>[prazo]</strong>, e o investimento fica em <strong>[valor]</strong>. Tudo isso está alinhado com o que discutimos, certo?"</div>
+                    </div>
+                    
+                    <div class="script-item">
+                        <div class="script-label">Após Confirmação</div>
+                        <div class="script-text">"Ótimo! Podemos então formalizar para começarmos na data combinada? Vou preparar o contrato com esses termos."</div>
+                    </div>
+                    
+                    <div class="script-item">
+                        <div class="script-label">Se Houver Hesitação</div>
+                        <div class="script-text">"Percebo que ainda há alguma dúvida. Qual ponto você gostaria de revisarmos antes de avançar?"</div>
+                    </div>
+                </div>
+
+                <div class="variations">
+                    <h4>💡 Variações por Contexto</h4>
+                    <div class="variation-grid">
+                        <div class="variation-item">
+                            <div class="context">Para negociações complexas:</div>
+                            <div class="text">"Deixa eu fazer um resumo dos principais pontos que alinhamos hoje..."</div>
+                        </div>
+                        <div class="variation-item">
+                            <div class="context">Para múltiplos decisores:</div>
+                            <div class="text">"Antes de concluirmos, vou recapitular para garantir que todos estamos na mesma página..."</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tips-box">
+                    <h4>💎 Dica do Professor</h4>
+                    <p>Ao fazer o resumo, use as mesmas palavras que o cliente usou durante a conversa. Isso cria conexão e mostra que você ouviu atentamente.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TÉCNICA 2: ALTERNATIVA -->
+        <div class="technique-card">
+            <div class="technique-header alternativa">
+                <div class="technique-number">2</div>
+                <div class="technique-title">
+                    <h3>Fechamento por ALTERNATIVA</h3>
+                    <span>Ofereça duas opções, ambas favoráveis</span>
+                </div>
+            </div>
+            <div class="technique-body">
+                <div class="when-to-use">
+                    <h4>📍 Quando Usar</h4>
+                    <ul>
+                        <li>Quando o cliente está indeciso entre opções</li>
+                        <li>Para facilitar a tomada de decisão sem pressionar</li>
+                        <li>Quando você tem flexibilidade para oferecer pacotes diferentes</li>
+                        <li>Para avançar em aspectos secundários (data, forma de pagamento)</li>
+                    </ul>
+                </div>
+
+                <div class="script-box">
+                    <h4>📝 Scripts Prontos</h4>
+                    
+                    <div class="script-item">
+                        <div class="script-label">Escolha de Pacote</div>
+                        <div class="script-text">"Podemos avançar com o <strong>pacote completo</strong>, que inclui todos os módulos, ou vocês preferem <strong>começar com a versão básica</strong> e expandir conforme a necessidade? Qual faz mais sentido para vocês?"</div>
+                    </div>
+                    
+                    <div class="script-item">
+                        <div class="script-label">Escolha de Prazo</div>
+                        <div class="script-text">"A implementação pode ser <strong>esta semana</strong> ou <strong>na próxima</strong>. Qual funciona melhor para a agenda de vocês?"</div>
+                    </div>
+                    
+                    <div class="script-item">
+                        <div class="script-label">Escolha de Pagamento</div>
+                        <div class="script-text">"Podemos fazer em <strong>parcela única com desconto</strong> ou em <strong>3x sem juros</strong>. Como vocês preferem?"</div>
+                    </div>
+                </div>
+
+                <div class="variations">
+                    <h4>💡 Variações por Contexto</h4>
+                    <div class="variation-grid">
+                        <div class="variation-item">
+                            <div class="context">Para projetos grandes:</div>
+                            <div class="text">"Podemos iniciar com um piloto em uma área ou já fazer a implementação completa. O que faz mais sentido estrategicamente?"</div>
+                        </div>
+                        <div class="variation-item">
+                            <div class="context">Para decisão de início:</div>
+                            <div class="text">"Vocês preferem começar já em janeiro para pegar o ano novo ou março após o carnaval?"</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tips-box">
+                    <h4>💎 Dica do Professor</h4>
+                    <p>As duas opções devem ser genuínas e boas para o cliente. Nunca ofereça uma opção "falsa" só para direcionar. O cliente percebe e perde a confiança.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TÉCNICA 3: TESTE -->
+        <div class="technique-card">
+            <div class="technique-header teste">
+                <div class="technique-number">3</div>
+                <div class="technique-title">
+                    <h3>Fechamento por TESTE</h3>
+                    <span>Teste a disposição do cliente sem pedir o fechamento direto</span>
+                </div>
+            </div>
+            <div class="technique-body">
+                <div class="when-to-use">
+                    <h4>📍 Quando Usar</h4>
+                    <ul>
+                        <li>Quando você suspeita que ainda existem objeções ocultas</li>
+                        <li>Para verificar se o cliente está realmente pronto</li>
+                        <li>Antes de investir mais tempo em detalhes operacionais</li>
+                        <li>Quando quer entender o que falta para o cliente decidir</li>
+                    </ul>
+                </div>
+
+                <div class="script-box">
+                    <h4>📝 Scripts Prontos</h4>
+                    
+                    <div class="script-item">
+                        <div class="script-label">Teste Condicional</div>
+                        <div class="script-text">"Se conseguirmos resolver a questão do <strong>[objeção mencionada]</strong>, vocês estariam prontos para avançar?"</div>
+                    </div>
+                    
+                    <div class="script-item">
+                        <div class="script-label">Teste de Aprovação</div>
+                        <div class="script-text">"Supondo que o <strong>financeiro/diretor/comitê</strong> aprove, podemos agendar a implementação para o mês que vem?"</div>
+                    </div>
+                    
+                    <div class="script-item">
+                        <div class="script-label">Teste de Prioridade</div>
+                        <div class="script-text">"Se dependesse só de você, já teríamos fechado? O que mais precisamos alinhar?"</div>
+                    </div>
+                </div>
+
+                <div class="variations">
+                    <h4>💡 Variações por Contexto</h4>
+                    <div class="variation-grid">
+                        <div class="variation-item">
+                            <div class="context">Para descobrir bloqueios:</div>
+                            <div class="text">"O que precisaria acontecer para vocês se sentirem confortáveis em avançar?"</div>
+                        </div>
+                        <div class="variation-item">
+                            <div class="context">Para validar interesse real:</div>
+                            <div class="text">"Em uma escala de 1 a 10, quão próximos estamos de um acordo? O que falta para chegar ao 10?"</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tips-box">
+                    <h4>💎 Dica do Professor</h4>
+                    <p>A resposta do cliente ao teste revela muito. Se ele disser "sim" e você resolver o ponto, mas ele ainda não fechar, havia uma objeção oculta. Investigue mais.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TÉCNICA 4: PRÓXIMO PASSO -->
+        <div class="technique-card">
+            <div class="technique-header proximo-passo">
+                <div class="technique-number">4</div>
+                <div class="technique-title">
+                    <h3>Fechamento por PRÓXIMO PASSO</h3>
+                    <span>Proponha uma ação concreta que avança o processo</span>
+                </div>
+            </div>
+            <div class="technique-body">
+                <div class="when-to-use">
+                    <h4>📍 Quando Usar</h4>
+                    <ul>
+                        <li>Quando o fechamento direto seria prematuro</li>
+                        <li>Para ciclos de venda mais longos</li>
+                        <li>Quando há múltiplos decisores e etapas</li>
+                        <li>Para manter momentum quando o cliente não pode decidir na hora</li>
+                    </ul>
+                </div>
+
+                <div class="script-box">
+                    <h4>📝 Scripts Prontos</h4>
+                    
+                    <div class="script-item">
+                        <div class="script-label">Próxima Reunião</div>
+                        <div class="script-text">"O próximo passo seria agendarmos uma reunião com o <strong>time técnico/financeiro</strong> para definir os detalhes de implementação. <strong>Quinta ou sexta</strong> funciona melhor?"</div>
+                    </div>
+                    
+                    <div class="script-item">
+                        <div class="script-label">Envio de Proposta</div>
+                        <div class="script-text">"Vou preparar a <strong>proposta formal</strong> com todas as condições que discutimos. Posso enviar até amanhã para vocês revisarem?"</div>
+                    </div>
+                    
+                    <div class="script-item">
+                        <div class="script-label">Demonstração</div>
+                        <div class="script-text">"Que tal agendarmos uma <strong>demonstração prática</strong> para o time que vai usar o sistema? Assim eles podem tirar dúvidas técnicas."</div>
+                    </div>
+                </div>
+
+                <div class="variations">
+                    <h4>💡 Variações por Contexto</h4>
+                    <div class="variation-grid">
+                        <div class="variation-item">
+                            <div class="context">Para envolver mais pessoas:</div>
+                            <div class="text">"Podemos agendar uma apresentação para os outros decisores? Assim todos ficam alinhados."</div>
+                        </div>
+                        <div class="variation-item">
+                            <div class="context">Para criar compromisso:</div>
+                            <div class="text">"Vou preparar o contrato. Podemos revisar juntos na quinta às 14h?"</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tips-box">
+                    <h4>💎 Dica do Professor</h4>
+                    <p>Sempre saia de uma reunião com um próximo passo definido: data, hora e responsável. Nunca deixe no ar "depois a gente se fala".</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TÉCNICA 5: URGÊNCIA LEGÍTIMA -->
+        <div class="technique-card">
+            <div class="technique-header urgencia">
+                <div class="technique-number">5</div>
+                <div class="technique-title">
+                    <h3>Fechamento por URGÊNCIA LEGÍTIMA</h3>
+                    <span>Apresente uma limitação real de tempo ou disponibilidade</span>
+                </div>
+            </div>
+            <div class="technique-body">
+                <div class="when-to-use">
+                    <h4>📍 Quando Usar</h4>
+                    <ul>
+                        <li><strong>APENAS</strong> quando a urgência for verdadeira</li>
+                        <li>Quando há limitação real de estoque, agenda ou preço</li>
+                        <li>Quando uma condição especial tem prazo definido</li>
+                        <li>Quando o timing do cliente se alinha com uma oportunidade real</li>
+                    </ul>
+                </div>
+
+                <div class="script-box">
+                    <h4>📝 Scripts Prontos</h4>
+                    
+                    <div class="script-item">
+                        <div class="script-label">Agenda Limitada</div>
+                        <div class="script-text">"Nossa agenda de implementação está ficando apertada para este trimestre. Se quiserem garantir a <strong>entrega até março</strong>, precisamos formalizar esta semana."</div>
+                    </div>
+                    
+                    <div class="script-item">
+                        <div class="script-label">Condição com Prazo</div>
+                        <div class="script-text">"A condição especial que negociamos é válida até <strong>sexta-feira</strong> porque o fornecedor vai reajustar os preços no dia primeiro."</div>
+                    </div>
+                    
+                    <div class="script-item">
+                        <div class="script-label">Alinhamento Fiscal</div>
+                        <div class="script-text">"Para vocês conseguirem usar o <strong>orçamento deste ano</strong>, precisamos do pedido até o dia 15. Depois disso, só em janeiro."</div>
+                    </div>
+                </div>
+
+                <div class="variations">
+                    <h4>💡 Variações por Contexto</h4>
+                    <div class="variation-grid">
+                        <div class="variation-item">
+                            <div class="context">Limitação de equipe:</div>
+                            <div class="text">"Nosso especialista em implementação só tem disponibilidade nas próximas duas semanas. Depois só em fevereiro."</div>
+                        </div>
+                        <div class="variation-item">
+                            <div class="context">Oportunidade de mercado:</div>
+                            <div class="text">"Com a alta temporada começando em novembro, vocês teriam mais tempo para se preparar se fecharmos agora."</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tips-box">
+                    <h4>⚠️ Alerta Importante</h4>
+                    <p>A urgência PRECISA ser verdadeira. Urgência falsa destrói credibilidade. Se o cliente descobrir que você criou pressão artificial, você perde a venda e o relacionamento.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabela de Referência Rápida -->
+        <div class="quick-reference">
+            <h2>📊 Referência Rápida: Qual Técnica Usar?</h2>
+            <table class="reference-table">
+                <thead>
+                    <tr>
+                        <th>Técnica</th>
+                        <th>Use Quando...</th>
+                        <th>Frase-Chave</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="technique-name resumo">RESUMO</td>
+                        <td>Muitos pontos foram discutidos e acordados ao longo da conversa</td>
+                        <td><em>"Recapitulando o que conversamos..."</em></td>
+                    </tr>
+                    <tr>
+                        <td class="technique-name alternativa">ALTERNATIVA</td>
+                        <td>Cliente está indeciso ou você tem flexibilidade para oferecer opções</td>
+                        <td><em>"Podemos fazer X ou Y. Qual prefere?"</em></td>
+                    </tr>
+                    <tr>
+                        <td class="technique-name teste">TESTE</td>
+                        <td>Suspeita de objeções ocultas ou quer validar prontidão real</td>
+                        <td><em>"Se resolvermos isso, podemos avançar?"</em></td>
+                    </tr>
+                    <tr>
+                        <td class="technique-name proximo-passo">PRÓXIMO PASSO</td>
+                        <td>Fechamento direto seria prematuro ou há múltiplas etapas</td>
+                        <td><em>"O próximo passo seria..."</em></td>
+                    </tr>
+                    <tr>
+                        <td class="technique-name urgencia">URGÊNCIA</td>
+                        <td>Existe uma limitação REAL de tempo, preço ou disponibilidade</td>
+                        <td><em>"Para garantir [benefício], precisamos..."</em></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Sinais de Compra -->
+        <div class="signals-card">
+            <h2>👀 Sinais de Compra: Quando Fechar</h2>
+            <div class="signals-grid">
+                <div class="signal-category">
+                    <h4>💬 Sinais Verbais</h4>
+                    <ul>
+                        <li>Perguntas sobre prazo de entrega</li>
+                        <li>Questões sobre condições de pagamento</li>
+                        <li>Dúvidas sobre garantias e suporte</li>
+                        <li>Frases como "Se a gente fechar..." ou "Quando começarmos..."</li>
+                        <li>Pedido de referências ou cases</li>
+                    </ul>
+                </div>
+                <div class="signal-category">
+                    <h4>🎯 Sinais Comportamentais</h4>
+                    <ul>
+                        <li>Solicitar proposta por escrito</li>
+                        <li>Apresentar você a outros decisores</li>
+                        <li>Pedir demonstração adicional</li>
+                        <li>Fazer anotações detalhadas</li>
+                        <li>Compartilhar informações internas</li>
+                    </ul>
+                </div>
+                <div class="signal-category">
+                    <h4>🙂 Linguagem Corporal</h4>
+                    <ul>
+                        <li>Inclinar-se para frente</li>
+                        <li>Acenar positivamente com a cabeça</li>
+                        <li>Relaxar a postura</li>
+                        <li>Sorrir ao ver números/resultados</li>
+                        <li>Manter contato visual prolongado</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Checklist Pós-Fechamento -->
+        <div class="checklist-card">
+            <h2>✅ Após o Fechamento: Confirme o Acordo</h2>
+            <div class="checklist-grid">
+                <div class="checklist-item" onclick="this.classList.toggle('checked')">
+                    <div class="check-box">✓</div>
+                    <div class="check-text"><strong>O QUE:</strong> Descrição exata do produto/serviço</div>
+                </div>
+                <div class="checklist-item" onclick="this.classList.toggle('checked')">
+                    <div class="check-box">✓</div>
+                    <div class="check-text"><strong>QUANTO:</strong> Valor, forma de pagamento, parcelas</div>
+                </div>
+                <div class="checklist-item" onclick="this.classList.toggle('checked')">
+                    <div class="check-box">✓</div>
+                    <div class="check-text"><strong>QUANDO:</strong> Prazos de entrega e implementação</div>
+                </div>
+                <div class="checklist-item" onclick="this.classList.toggle('checked')">
+                    <div class="check-box">✓</div>
+                    <div class="check-text"><strong>QUEM:</strong> Responsáveis de cada lado</div>
+                </div>
+                <div class="checklist-item" onclick="this.classList.toggle('checked')">
+                    <div class="check-box">✓</div>
+                    <div class="check-text"><strong>COMO:</strong> Processo de implementação</div>
+                </div>
+                <div class="checklist-item" onclick="this.classList.toggle('checked')">
+                    <div class="check-box">✓</div>
+                    <div class="check-text"><strong>E SE:</strong> Garantias e contingências</div>
+                </div>
+            </div>
+            <div class="tips-box" style="margin-top: 20px;">
+                <h4>📧 Regra de Ouro</h4>
+                <p>Nunca saia de uma reunião de fechamento sem enviar um e-mail de confirmação no mesmo dia, resumindo todos os pontos acordados e pedindo validação por escrito.</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>📚 Negociação para Vendas: Método do Professor | Prof. Paulo H. Donassolo</p>
+            <p>Módulo 9 • Seção 9.2 • Scripts de Fechamento</p>
+        </div>
+    </div>
+</body>
+</html>
