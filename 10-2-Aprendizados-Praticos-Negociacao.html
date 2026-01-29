@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A.3 - Registro de Lições Aprendidas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --azul-principal: #1e3a5f;
+            --azul-claro: #2d5a87;
+            --vermelho-principal: #c41e3a;
+            --vermelho-claro: #e63946;
+            --verde: #28a745;
+            --verde-claro: #d4edda;
+            --amarelo: #ffc107;
+            --amarelo-claro: #fff3cd;
+            --roxo: #6f42c1;
+            --roxo-claro: #e9d5ff;
+            --laranja: #fd7e14;
+            --laranja-claro: #ffe5d0;
+            --cinza-fundo: #f8f9fa;
+            --cinza-borda: #dee2e6;
+            --branco: #ffffff;
+            --texto-escuro: #212529;
+            --texto-medio: #495057;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 50%, #1e3a5f 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Cabeçalho */
+        .header {
+            text-align: center;
+            color: var(--branco);
+            margin-bottom: 30px;
+            padding: 30px 20px;
+        }
+
+        .header-badge {
+            display: inline-block;
+            background: var(--vermelho-principal);
+            color: var(--branco);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        .fase-badge {
+            display: inline-block;
+            background: var(--roxo);
+            color: var(--branco);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Card Principal */
+        .card-principal {
+            background: var(--branco);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        /* Identificação da Negociação */
+        .identificacao-header {
+            background: linear-gradient(135deg, var(--roxo) 0%, #5a32a3 100%);
+            padding: 25px 30px;
+            color: var(--branco);
+        }
+
+        .identificacao-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+
+        .identificacao-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            background: var(--cinza-fundo);
+            padding: 20px 30px;
+            border-bottom: 1px solid var(--cinza-borda);
+        }
+
+        .id-campo {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .id-campo label {
+            font-size: 0.8rem;
+            color: var(--texto-medio);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .id-campo input,
+        .id-campo select {
+            padding: 10px 12px;
+            border: 2px solid var(--cinza-borda);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Source Sans Pro', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .id-campo input:focus,
+        .id-campo select:focus {
+            outline: none;
+            border-color: var(--roxo);
+            box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.15);
+        }
+
+        /* Seções */
+        .secao {
+            padding: 30px;
+            border-bottom: 1px solid var(--cinza-borda);
+        }
+
+        .secao:last-of-type {
+            border-bottom: none;
+        }
+
+        .secao-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .secao-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .secao-icon.sucesso { background: var(--verde-claro); }
+        .secao-icon.melhoria { background: var(--amarelo-claro); }
+        .secao-icon.insight { background: var(--roxo-claro); }
+        .secao-icon.acao { background: var(--laranja-claro); }
+
+        .secao-titulo {
+            flex: 1;
+        }
+
+        .secao-titulo h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--azul-principal);
+            font-size: 1.3rem;
+            margin-bottom: 3px;
+        }
+
+        .secao-titulo p {
+            font-size: 0.95rem;
+            color: var(--texto-medio);
+        }
+
+        /* Cards de Lições */
+        .licoes-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .licao-card {
+            background: var(--cinza-fundo);
+            border-radius: 15px;
+            padding: 20px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .licao-card:hover {
+            border-color: var(--azul-claro);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .licao-card.sucesso { border-left: 5px solid var(--verde); }
+        .licao-card.melhoria { border-left: 5px solid var(--amarelo); }
+        .licao-card.insight { border-left: 5px solid var(--roxo); }
+        .licao-card.acao { border-left: 5px solid var(--laranja); }
+
+        .licao-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .licao-numero {
+            font-weight: 700;
+            color: var(--azul-principal);
+            font-size: 0.9rem;
+        }
+
+        .btn-remover-licao {
+            background: var(--vermelho-claro);
+            color: var(--branco);
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            opacity: 0.7;
+        }
+
+        .btn-remover-licao:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .licao-campos {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .campo {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .campo label {
+            font-weight: 600;
+            color: var(--azul-principal);
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .campo input,
+        .campo textarea,
+        .campo select {
+            padding: 12px 14px;
+            border: 2px solid var(--cinza-borda);
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: 'Source Sans Pro', sans-serif;
+            transition: all 0.3s ease;
+            background: var(--branco);
+        }
+
+        .campo input:focus,
+        .campo textarea:focus,
+        .campo select:focus {
+            outline: none;
+            border-color: var(--azul-claro);
+            box-shadow: 0 0 0 4px rgba(45, 90, 135, 0.1);
+        }
+
+        .campo textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .campo-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .campo-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Botão Adicionar */
+        .btn-adicionar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 15px 25px;
+            background: var(--branco);
+            border: 2px dashed var(--cinza-borda);
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--texto-medio);
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .btn-adicionar:hover {
+            border-color: var(--azul-claro);
+            color: var(--azul-principal);
+            background: #f8fbff;
+        }
+
+        /* Resumo de Aprendizados */
+        .resumo-container {
+            background: linear-gradient(135deg, var(--azul-principal) 0%, var(--azul-claro) 100%);
+            padding: 30px;
+            color: var(--branco);
+        }
+
+        .resumo-header {
+            margin-bottom: 25px;
+        }
+
+        .resumo-header h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            margin-bottom: 5px;
+        }
+
+        .resumo-header p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .resumo-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.15);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .stat-card.destaque {
+            background: var(--vermelho-principal);
+        }
+
+        .stat-numero {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .reflexao-area {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .reflexao-area label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .reflexao-area textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-size: 1rem;
+            resize: vertical;
+        }
+
+        /* Compromissos Futuros */
+        .compromissos-lista {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .compromisso-item {
+            display: grid;
+            grid-template-columns: 1fr 150px 120px 40px;
+            gap: 10px;
+            align-items: center;
+            background: var(--cinza-fundo);
+            padding: 12px 15px;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 700px) {
+            .compromisso-item {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+        }
+
+        .compromisso-item input,
+        .compromisso-item select {
+            padding: 8px 10px;
+            border: 1px solid var(--cinza-borda);
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+
+        /* Ações */
+        .acoes {
+            display: flex;
+            gap: 15px;
+            padding: 25px 30px;
+            background: var(--cinza-fundo);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: none;
+        }
+
+        .btn-primario {
+            background: var(--azul-principal);
+            color: var(--branco);
+        }
+
+        .btn-primario:hover {
+            background: var(--azul-claro);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(30, 58, 95, 0.3);
+        }
+
+        .btn-secundario {
+            background: var(--branco);
+            color: var(--azul-principal);
+            border: 2px solid var(--azul-principal);
+        }
+
+        .btn-secundario:hover {
+            background: var(--azul-principal);
+            color: var(--branco);
+        }
+
+        .btn-roxo {
+            background: var(--roxo);
+            color: var(--branco);
+        }
+
+        .btn-roxo:hover {
+            background: #5a32a3;
+        }
+
+        .btn-vermelho {
+            background: var(--vermelho-principal);
+            color: var(--branco);
+        }
+
+        .btn-vermelho:hover {
+            background: var(--vermelho-claro);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--branco);
+            border-radius: 20px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 80vh;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            background: var(--roxo);
+            color: var(--branco);
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+        }
+
+        .btn-fechar {
+            background: transparent;
+            border: none;
+            color: var(--branco);
+            font-size: 1.5rem;
+            cursor: pointer;
+            opacity: 0.8;
+        }
+
+        .btn-fechar:hover {
+            opacity: 1;
+        }
+
+        .modal-body {
+            padding: 25px;
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+
+        .json-output {
+            width: 100%;
+            height: 300px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.85rem;
+            padding: 15px;
+            border: 2px solid var(--cinza-borda);
+            border-radius: 10px;
+            background: #f8f9fa;
+            resize: none;
+        }
+
+        .modal-footer {
+            padding: 15px 25px;
+            background: var(--cinza-fundo);
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        /* Citação */
+        .citacao {
+            background: var(--cinza-fundo);
+            padding: 20px 25px;
+            border-left: 4px solid var(--roxo);
+            margin: 0 30px 20px;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .citacao p {
+            font-style: italic;
+            color: var(--texto-medio);
+            font-size: 1.05rem;
+            margin-bottom: 5px;
+        }
+
+        .citacao cite {
+            font-size: 0.9rem;
+            color: var(--roxo);
+            font-weight: 600;
+        }
+
+        /* Status de Salvamento */
+        .status-salvamento {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--verde);
+            color: var(--branco);
+            padding: 12px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 100;
+        }
+
+        .status-salvamento.visivel {
+            opacity: 1;
+        }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .secao {
+                padding: 20px;
+            }
+
+            .acoes {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Impressão */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .card-principal {
+                box-shadow: none;
+                border: 1px solid var(--cinza-borda);
+            }
+
+            .btn-remover-licao,
+            .btn-adicionar,
+            .acoes {
+                display: none !important;
+            }
+
+            .resumo-container {
+                background: var(--azul-principal) !important;
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Cabeçalho -->
+        <div class="header">
+            <div class="header-badge">Processo P.I.A.</div>
+            <span class="fase-badge">FASE A - AVALIAÇÃO</span>
+            <h1>📚 Registro de Lições Aprendidas</h1>
+            <p>Transforme cada negociação em uma oportunidade de crescimento contínuo</p>
+        </div>
+
+        <!-- Card Principal -->
+        <div class="card-principal">
+            <!-- Identificação -->
+            <div class="identificacao-header">
+                <h2>📋 Identificação da Negociação</h2>
+            </div>
+            <div class="identificacao-grid">
+                <div class="id-campo">
+                    <label>Negociação/Cliente</label>
+                    <input type="text" id="nomeNegociacao" placeholder="Nome da oportunidade" oninput="salvarDados()">
+                </div>
+                <div class="id-campo">
+                    <label>Data da Negociação</label>
+                    <input type="date" id="dataNegociacao" oninput="salvarDados()">
+                </div>
+                <div class="id-campo">
+                    <label>Resultado</label>
+                    <select id="resultadoNegociacao" onchange="salvarDados()">
+                        <option value="">Selecione...</option>
+                        <option value="fechado">✅ Fechado (Ganho)</option>
+                        <option value="perdido">❌ Perdido</option>
+                        <option value="adiado">⏳ Adiado</option>
+                        <option value="andamento">🔄 Em Andamento</option>
+                    </select>
+                </div>
+                <div class="id-campo">
+                    <label>Vendedor</label>
+                    <input type="text" id="vendedor" placeholder="Seu nome" oninput="salvarDados()">
+                </div>
+            </div>
+
+            <!-- Citação Inspiradora -->
+            <div class="citacao">
+                <p>"A experiência não é o que acontece com você, mas o que você faz com o que acontece com você."</p>
+                <cite>— Aldous Huxley</cite>
+            </div>
+
+            <!-- Seção: O que funcionou bem -->
+            <div class="secao">
+                <div class="secao-header">
+                    <div class="secao-icon sucesso">✅</div>
+                    <div class="secao-titulo">
+                        <h3>O que Funcionou Bem</h3>
+                        <p>Estratégias e comportamentos que trouxeram resultados positivos</p>
+                    </div>
+                </div>
+                <div class="licoes-container" id="containerSucessos">
+                    <!-- Lições de sucesso serão adicionadas aqui -->
+                </div>
+                <button class="btn-adicionar" onclick="adicionarLicao('sucesso')">
+                    ➕ Adicionar Ponto Positivo
+                </button>
+            </div>
+
+            <!-- Seção: O que pode melhorar -->
+            <div class="secao">
+                <div class="secao-header">
+                    <div class="secao-icon melhoria">⚠️</div>
+                    <div class="secao-titulo">
+                        <h3>O que Pode Melhorar</h3>
+                        <p>Pontos de desenvolvimento identificados</p>
+                    </div>
+                </div>
+                <div class="licoes-container" id="containerMelhorias">
+                    <!-- Lições de melhoria serão adicionadas aqui -->
+                </div>
+                <button class="btn-adicionar" onclick="adicionarLicao('melhoria')">
+                    ➕ Adicionar Ponto de Melhoria
+                </button>
+            </div>
+
+            <!-- Seção: Insights e Descobertas -->
+            <div class="secao">
+                <div class="secao-header">
+                    <div class="secao-icon insight">💡</div>
+                    <div class="secao-titulo">
+                        <h3>Insights e Descobertas</h3>
+                        <p>Aprendizados sobre o cliente, mercado ou processo</p>
+                    </div>
+                </div>
+                <div class="licoes-container" id="containerInsights">
+                    <!-- Insights serão adicionados aqui -->
+                </div>
+                <button class="btn-adicionar" onclick="adicionarLicao('insight')">
+                    ➕ Adicionar Insight
+                </button>
+            </div>
+
+            <!-- Seção: Plano de Ação -->
+            <div class="secao">
+                <div class="secao-header">
+                    <div class="secao-icon acao">🎯</div>
+                    <div class="secao-titulo">
+                        <h3>Compromissos de Melhoria</h3>
+                        <p>Ações concretas para aplicar nas próximas negociações</p>
+                    </div>
+                </div>
+                <div class="compromissos-lista" id="containerCompromissos">
+                    <!-- Compromissos serão adicionados aqui -->
+                </div>
+                <button class="btn-adicionar" onclick="adicionarCompromisso()">
+                    ➕ Adicionar Compromisso
+                </button>
+            </div>
+
+            <!-- Resumo de Aprendizados -->
+            <div class="resumo-container">
+                <div class="resumo-header">
+                    <h3>📊 Resumo dos Aprendizados</h3>
+                    <p>Visão geral do que você registrou</p>
+                </div>
+                <div class="resumo-stats">
+                    <div class="stat-card">
+                        <div class="stat-numero" id="statSucessos">0</div>
+                        <div class="stat-label">Pontos Positivos</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-numero" id="statMelhorias">0</div>
+                        <div class="stat-label">Melhorias</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-numero" id="statInsights">0</div>
+                        <div class="stat-label">Insights</div>
+                    </div>
+                    <div class="stat-card destaque">
+                        <div class="stat-numero" id="statCompromissos">0</div>
+                        <div class="stat-label">Compromissos</div>
+                    </div>
+                </div>
+                <div class="reflexao-area">
+                    <label>💭 Reflexão Final - O que essa negociação me ensinou?</label>
+                    <textarea id="reflexaoFinal" 
+                        placeholder="Escreva uma breve reflexão sobre o aprendizado mais importante desta experiência..."
+                        oninput="salvarDados()"></textarea>
+                </div>
+            </div>
+
+            <!-- Ações -->
+            <div class="acoes">
+                <button class="btn btn-roxo" onclick="abrirModalExportacao()">
+                    📤 Exportar para JSON
+                </button>
+                <button class="btn btn-primario" onclick="gerarRelatorio()">
+                    📄 Gerar Relatório
+                </button>
+                <button class="btn btn-secundario" onclick="window.print()">
+                    🖨️ Imprimir
+                </button>
+                <button class="btn btn-vermelho" onclick="limparTudo()">
+                    🗑️ Limpar Tudo
+                </button>
+            </div>
+        </div>
+
+        <!-- Rodapé -->
+        <div style="text-align: center; color: var(--branco); margin-top: 25px; opacity: 0.8; font-size: 0.9rem;">
+            <p>Ferramenta A.3 do Processo P.I.A. | Negociação para Vendas | Prof. Paulo</p>
+            <p style="margin-top: 5px;">💡 Use este registro para alimentar seu Plano de Desenvolvimento Pessoal</p>
+        </div>
+    </div>
+
+    <!-- Status de Salvamento -->
+    <div class="status-salvamento" id="statusSalvamento">
+        ✓ Salvo automaticamente
+    </div>
+
+    <!-- Modal de Exportação -->
+    <div class="modal" id="modalExportacao">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📤 Exportar Lições Aprendidas</h3>
+                <button class="btn-fechar" onclick="fecharModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 15px; color: var(--texto-medio);">
+                    Este JSON pode ser usado para integração com o Assistente de Negociação e análise de padrões de desenvolvimento.
+                </p>
+                <textarea class="json-output" id="jsonOutput" readonly></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secundario" onclick="copiarJSON()">📋 Copiar</button>
+                <button class="btn btn-primario" onclick="baixarJSON()">💾 Baixar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Storage Key
+        const STORAGE_KEY = 'licoes_aprendidas_negociacao';
+
+        // Contadores
+        let contadores = {
+            sucesso: 0,
+            melhoria: 0,
+            insight: 0,
+            compromisso: 0
+        };
+
+        // Dados
+        let dadosLicoes = {
+            id: null,
+            identificacao: {},
+            sucessos: [],
+            melhorias: [],
+            insights: [],
+            compromissos: [],
+            reflexaoFinal: ''
+        };
+
+        // Gerar UUID
+        function gerarUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0;
+                const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            dadosLicoes.id = gerarUUID();
+            document.getElementById('dataNegociacao').value = new Date().toISOString().split('T')[0];
+            carregarDados();
+            
+            // Adicionar itens iniciais se vazio
+            if (dadosLicoes.sucessos.length === 0) adicionarLicao('sucesso');
+            if (dadosLicoes.melhorias.length === 0) adicionarLicao('melhoria');
+            if (dadosLicoes.insights.length === 0) adicionarLicao('insight');
+            if (dadosLicoes.compromissos.length === 0) adicionarCompromisso();
+            
+            atualizarEstatisticas();
+        });
+
+        // Adicionar Lição
+        function adicionarLicao(tipo, dados = {}) {
+            contadores[tipo]++;
+            const id = `${tipo}-${contadores[tipo]}`;
+            const container = document.getElementById(`container${capitalizar(tipo)}s`);
+            
+            const card = document.createElement('div');
+            card.className = `licao-card ${tipo}`;
+            card.id = id;
+            
+            const categorias = {
+                sucesso: ['Técnica de vendas', 'Comunicação', 'Preparação', 'Relacionamento', 'Negociação', 'Fechamento', 'Outro'],
+                melhoria: ['Preparação', 'Escuta ativa', 'Objeções', 'Tempo', 'Postura', 'Técnica', 'Conhecimento', 'Outro'],
+                insight: ['Sobre o cliente', 'Sobre o mercado', 'Sobre concorrência', 'Sobre produto', 'Sobre processo', 'Outro']
+            };
+            
+            card.innerHTML = `
+                <div class="licao-header">
+                    <span class="licao-numero">${tipo === 'sucesso' ? '✅' : tipo === 'melhoria' ? '⚠️' : '💡'} ${capitalizar(tipo)} #${contadores[tipo]}</span>
+                    <button class="btn-remover-licao" onclick="removerLicao('${id}', '${tipo}')">×</button>
+                </div>
+                <div class="licao-campos">
+                    <div class="campo-row">
+                        <div class="campo">
+                            <label>Categoria</label>
+                            <select onchange="salvarDados()">
+                                <option value="">Selecione...</option>
+                                ${categorias[tipo].map(cat => `<option value="${cat}" ${dados.categoria === cat ? 'selected' : ''}>${cat}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="campo">
+                            <label>Impacto</label>
+                            <select onchange="salvarDados()">
+                                <option value="">Selecione...</option>
+                                <option value="alto" ${dados.impacto === 'alto' ? 'selected' : ''}>🔴 Alto</option>
+                                <option value="medio" ${dados.impacto === 'medio' ? 'selected' : ''}>🟡 Médio</option>
+                                <option value="baixo" ${dados.impacto === 'baixo' ? 'selected' : ''}>🟢 Baixo</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="campo">
+                        <label>${tipo === 'sucesso' ? 'O que fiz bem?' : tipo === 'melhoria' ? 'O que poderia ter feito diferente?' : 'O que descobri/aprendi?'}</label>
+                        <textarea placeholder="Descreva em detalhes..." oninput="salvarDados()">${dados.descricao || ''}</textarea>
+                    </div>
+                    <div class="campo">
+                        <label>${tipo === 'sucesso' ? 'Como posso replicar?' : tipo === 'melhoria' ? 'Como vou melhorar?' : 'Como posso aplicar?'}</label>
+                        <textarea placeholder="Ações concretas para o futuro..." oninput="salvarDados()">${dados.acao || ''}</textarea>
+                    </div>
+                </div>
+            `;
+            
+            container.appendChild(card);
+            atualizarEstatisticas();
+            salvarDados();
+        }
+
+        // Adicionar Compromisso
+        function adicionarCompromisso(dados = {}) {
+            contadores.compromisso++;
+            const id = `compromisso-${contadores.compromisso}`;
+            const container = document.getElementById('containerCompromissos');
+            
+            const item = document.createElement('div');
+            item.className = 'compromisso-item';
+            item.id = id;
+            
+            item.innerHTML = `
+                <input type="text" placeholder="Descreva o compromisso..." value="${dados.descricao || ''}" oninput="salvarDados()">
+                <select onchange="salvarDados()">
+                    <option value="">Prioridade...</option>
+                    <option value="alta" ${dados.prioridade === 'alta' ? 'selected' : ''}>🔴 Alta</option>
+                    <option value="media" ${dados.prioridade === 'media' ? 'selected' : ''}>🟡 Média</option>
+                    <option value="baixa" ${dados.prioridade === 'baixa' ? 'selected' : ''}>🟢 Baixa</option>
+                </select>
+                <input type="date" value="${dados.prazo || ''}" oninput="salvarDados()">
+                <button class="btn-remover-licao" onclick="removerCompromisso('${id}')" style="width: 32px; height: 32px;">×</button>
+            `;
+            
+            container.appendChild(item);
+            atualizarEstatisticas();
+            salvarDados();
+        }
+
+        // Remover Lição
+        function removerLicao(id, tipo) {
+            const elemento = document.getElementById(id);
+            if (elemento && confirm('Remover este item?')) {
+                elemento.remove();
+                atualizarEstatisticas();
+                salvarDados();
+            }
+        }
+
+        // Remover Compromisso
+        function removerCompromisso(id) {
+            const elemento = document.getElementById(id);
+            if (elemento && confirm('Remover este compromisso?')) {
+                elemento.remove();
+                atualizarEstatisticas();
+                salvarDados();
+            }
+        }
+
+        // Capitalizar
+        function capitalizar(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        // Atualizar Estatísticas
+        function atualizarEstatisticas() {
+            const sucessos = document.querySelectorAll('#containerSucessos .licao-card').length;
+            const melhorias = document.querySelectorAll('#containerMelhorias .licao-card').length;
+            const insights = document.querySelectorAll('#containerInsights .licao-card').length;
+            const compromissos = document.querySelectorAll('#containerCompromissos .compromisso-item').length;
+            
+            document.getElementById('statSucessos').textContent = sucessos;
+            document.getElementById('statMelhorias').textContent = melhorias;
+            document.getElementById('statInsights').textContent = insights;
+            document.getElementById('statCompromissos').textContent = compromissos;
+        }
+
+        // Coletar Dados
+        function coletarDados() {
+            const coletarLicoes = (containerId) => {
+                const licoes = [];
+                document.querySelectorAll(`#${containerId} .licao-card`).forEach(card => {
+                    const selects = card.querySelectorAll('select');
+                    const textareas = card.querySelectorAll('textarea');
+                    if (textareas[0].value.trim()) {
+                        licoes.push({
+                            categoria: selects[0].value,
+                            impacto: selects[1].value,
+                            descricao: textareas[0].value.trim(),
+                            acao: textareas[1].value.trim()
+                        });
+                    }
+                });
+                return licoes;
+            };
+            
+            const coletarCompromissos = () => {
+                const compromissos = [];
+                document.querySelectorAll('#containerCompromissos .compromisso-item').forEach(item => {
+                    const input = item.querySelector('input[type="text"]');
+                    const select = item.querySelector('select');
+                    const date = item.querySelector('input[type="date"]');
+                    if (input.value.trim()) {
+                        compromissos.push({
+                            descricao: input.value.trim(),
+                            prioridade: select.value,
+                            prazo: date.value
+                        });
+                    }
+                });
+                return compromissos;
+            };
+            
+            return {
+                _meta: {
+                    tipo: "licoes_aprendidas",
+                    versao: "1.0",
+                    fase: "A.3",
+                    exportadoEm: new Date().toISOString()
+                },
+                id: dadosLicoes.id,
+                identificacao: {
+                    nomeNegociacao: document.getElementById('nomeNegociacao').value,
+                    dataNegociacao: document.getElementById('dataNegociacao').value,
+                    resultado: document.getElementById('resultadoNegociacao').value,
+                    vendedor: document.getElementById('vendedor').value
+                },
+                sucessos: coletarLicoes('containerSucessos'),
+                melhorias: coletarLicoes('containerMelhorias'),
+                insights: coletarLicoes('containerInsights'),
+                compromissos: coletarCompromissos(),
+                reflexaoFinal: document.getElementById('reflexaoFinal').value,
+                estatisticas: {
+                    totalSucessos: document.querySelectorAll('#containerSucessos .licao-card').length,
+                    totalMelhorias: document.querySelectorAll('#containerMelhorias .licao-card').length,
+                    totalInsights: document.querySelectorAll('#containerInsights .licao-card').length,
+                    totalCompromissos: document.querySelectorAll('#containerCompromissos .compromisso-item').length
+                }
+            };
+        }
+
+        // Salvar Dados
+        function salvarDados() {
+            const dados = coletarDados();
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(dados));
+            
+            // Mostrar status
+            const status = document.getElementById('statusSalvamento');
+            status.classList.add('visivel');
+            setTimeout(() => status.classList.remove('visivel'), 2000);
+        }
+
+        // Carregar Dados
+        function carregarDados() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                const dados = JSON.parse(saved);
+                
+                dadosLicoes.id = dados.id || gerarUUID();
+                
+                if (dados.identificacao) {
+                    document.getElementById('nomeNegociacao').value = dados.identificacao.nomeNegociacao || '';
+                    document.getElementById('dataNegociacao').value = dados.identificacao.dataNegociacao || '';
+                    document.getElementById('resultadoNegociacao').value = dados.identificacao.resultado || '';
+                    document.getElementById('vendedor').value = dados.identificacao.vendedor || '';
+                }
+                
+                document.getElementById('reflexaoFinal').value = dados.reflexaoFinal || '';
+                
+                // Carregar lições
+                if (dados.sucessos) dados.sucessos.forEach(s => adicionarLicao('sucesso', s));
+                if (dados.melhorias) dados.melhorias.forEach(m => adicionarLicao('melhoria', m));
+                if (dados.insights) dados.insights.forEach(i => adicionarLicao('insight', i));
+                if (dados.compromissos) dados.compromissos.forEach(c => adicionarCompromisso(c));
+            }
+        }
+
+        // Limpar Tudo
+        function limparTudo() {
+            if (confirm('Tem certeza que deseja limpar todos os dados? Esta ação não pode ser desfeita.')) {
+                localStorage.removeItem(STORAGE_KEY);
+                location.reload();
+            }
+        }
+
+        // Gerar Relatório
+        function gerarRelatorio() {
+            const dados = coletarDados();
+            const dataFormatada = dados.identificacao.dataNegociacao ? 
+                new Date(dados.identificacao.dataNegociacao + 'T00:00:00').toLocaleDateString('pt-BR') : 
+                new Date().toLocaleDateString('pt-BR');
+            
+            let relatorio = `
+═══════════════════════════════════════════════════════
+           RELATÓRIO DE LIÇÕES APRENDIDAS
+═══════════════════════════════════════════════════════
+
+📋 IDENTIFICAÇÃO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+• Negociação: ${dados.identificacao.nomeNegociacao || 'Não informado'}
+• Data: ${dataFormatada}
+• Resultado: ${dados.identificacao.resultado || 'Não informado'}
+• Vendedor: ${dados.identificacao.vendedor || 'Não informado'}
+
+═══════════════════════════════════════════════════════
+✅ O QUE FUNCIONOU BEM (${dados.sucessos.length} itens)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+`;
+            dados.sucessos.forEach((s, i) => {
+                relatorio += `
+${i + 1}. [${s.categoria || 'Geral'}] - Impacto: ${s.impacto || 'N/A'}
+   ${s.descricao}
+   → Como replicar: ${s.acao || 'Não definido'}
+`;
+            });
+
+            relatorio += `
+═══════════════════════════════════════════════════════
+⚠️ PONTOS DE MELHORIA (${dados.melhorias.length} itens)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+`;
+            dados.melhorias.forEach((m, i) => {
+                relatorio += `
+${i + 1}. [${m.categoria || 'Geral'}] - Impacto: ${m.impacto || 'N/A'}
+   ${m.descricao}
+   → Plano de melhoria: ${m.acao || 'Não definido'}
+`;
+            });
+
+            relatorio += `
+═══════════════════════════════════════════════════════
+💡 INSIGHTS E DESCOBERTAS (${dados.insights.length} itens)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+`;
+            dados.insights.forEach((i, idx) => {
+                relatorio += `
+${idx + 1}. [${i.categoria || 'Geral'}]
+   ${i.descricao}
+   → Aplicação: ${i.acao || 'Não definido'}
+`;
+            });
+
+            relatorio += `
+═══════════════════════════════════════════════════════
+🎯 COMPROMISSOS DE MELHORIA (${dados.compromissos.length} itens)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+`;
+            dados.compromissos.forEach((c, i) => {
+                relatorio += `
+${i + 1}. ${c.descricao}
+   Prioridade: ${c.prioridade || 'N/A'} | Prazo: ${c.prazo || 'Não definido'}
+`;
+            });
+
+            relatorio += `
+═══════════════════════════════════════════════════════
+💭 REFLEXÃO FINAL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${dados.reflexaoFinal || 'Não registrada'}
+
+═══════════════════════════════════════════════════════
+Gerado em: ${new Date().toLocaleString('pt-BR')}
+Ferramenta A.3 - Processo P.I.A. | Prof. Paulo
+═══════════════════════════════════════════════════════
+`;
+
+            // Abrir em nova janela para impressão
+            const win = window.open('', '_blank');
+            win.document.write(`<pre style="font-family: Consolas, monospace; white-space: pre-wrap; padding: 20px;">${relatorio}</pre>`);
+            win.document.title = 'Relatório de Lições Aprendidas';
+            win.print();
+        }
+
+        // Modal de Exportação
+        function abrirModalExportacao() {
+            const dados = coletarDados();
+            document.getElementById('jsonOutput').value = JSON.stringify(dados, null, 2);
+            document.getElementById('modalExportacao').classList.add('active');
+        }
+
+        function fecharModal() {
+            document.getElementById('modalExportacao').classList.remove('active');
+        }
+
+        function copiarJSON() {
+            const textarea = document.getElementById('jsonOutput');
+            textarea.select();
+            try {
+                navigator.clipboard.writeText(textarea.value).then(() => {
+                    alert('JSON copiado!');
+                });
+            } catch (err) {
+                document.execCommand('copy');
+                alert('JSON copiado!');
+            }
+        }
+
+        function baixarJSON() {
+            try {
+                const dados = coletarDados();
+                const jsonStr = JSON.stringify(dados, null, 2);
+                const blob = new Blob([jsonStr], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                const nome = document.getElementById('nomeNegociacao').value.replace(/\s+/g, '_') || 'negociacao';
+                a.download = `A3_licoes_${nome}_${new Date().toISOString().slice(0,10)}.json`;
+                
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                fecharModal();
+            } catch (err) {
+                alert('Erro ao baixar. Copie o conteúdo manualmente.');
+            }
+        }
+
+        // Debounce
+        function debounce(func, wait) {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        }
+
+        // Auto-save em todos os inputs
+        function setupAutoSave() {
+            const inputs = document.querySelectorAll('input, textarea, select');
+            inputs.forEach(el => {
+                el.addEventListener('input', debounce(salvarDados, 500));
+                el.addEventListener('change', salvarDados);
+            });
+        }
+
+        // Event Listeners
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') fecharModal();
+        });
+
+        document.getElementById('modalExportacao').addEventListener('click', function(e) {
+            if (e.target === this) fecharModal();
+        });
+
+        // Iniciar auto-save
+        setupAutoSave();
+
+        // Auto-save periódico a cada 30 segundos
+        setInterval(salvarDados, 30000);
+    </script>
+</body>
+</html>
