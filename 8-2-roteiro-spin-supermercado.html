@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roteiro SPIN - Moinho para Rede de Supermercados</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2e7d32 0%, #66bb6a 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #66bb6a 0%, #2e7d32 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .header .description {
+            font-size: 1rem;
+            opacity: 0.8;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .context-section {
+            background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c8 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #4caf50;
+        }
+
+        .context-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2e7d32;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .context-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+
+        .context-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .context-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 3px solid #4caf50;
+        }
+
+        .context-card h4 {
+            color: #2e7d32;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .context-card p {
+            color: #424242;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .portfolio-section {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #ff9800;
+        }
+
+        .portfolio-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #e65100;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .skus-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .sku-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #ff9800;
+        }
+
+        .sku-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .sku-name {
+            font-weight: 600;
+            color: #e65100;
+            margin-bottom: 5px;
+        }
+
+        .sku-description {
+            font-size: 0.85rem;
+            color: #424242;
+        }
+
+        .spin-intro {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #2196f3;
+        }
+
+        .spin-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #1976d2;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .spin-description {
+            color: #424242;
+            font-size: 1rem;
+            line-height: 1.7;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .spin-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .spin-section.situacao { border-left-color: #2196f3; }
+        .spin-section.problema { border-left-color: #ff5722; }
+        .spin-section.implicacao { border-left-color: #ff9800; }
+        .spin-section.necessidade { border-left-color: #4caf50; }
+
+        .spin-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .spin-icon {
+            font-size: 3rem;
+            margin-right: 20px;
+        }
+
+        .spin-icon.situacao { color: #2196f3; }
+        .spin-icon.problema { color: #ff5722; }
+        .spin-icon.implicacao { color: #ff9800; }
+        .spin-icon.necessidade { color: #4caf50; }
+
+        .spin-header-text h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .spin-header-text p {
+            color: #7f8c8d;
+            font-size: 1rem;
+        }
+
+        .questions-container {
+            display: grid;
+            gap: 20px;
+        }
+
+        .question-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid;
+            transition: transform 0.3s ease;
+        }
+
+        .question-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .question-card.situacao { border-left-color: #2196f3; }
+        .question-card.problema { border-left-color: #ff5722; }
+        .question-card.implicacao { border-left-color: #ff9800; }
+        .question-card.necessidade { border-left-color: #4caf50; }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .question-objective {
+            color: #6c757d;
+            font-size: 0.9rem;
+            font-style: italic;
+            margin-bottom: 8px;
+        }
+
+        .question-followup {
+            color: #495057;
+            font-size: 0.85rem;
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 2px solid #dee2e6;
+        }
+
+        .followup-label {
+            font-weight: 600;
+            color: #343a40;
+            margin-bottom: 5px;
+        }
+
+        .strategy-section {
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #9c27b0;
+        }
+
+        .strategy-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #4a148c;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .strategy-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+
+        .strategy-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .strategy-step {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #9c27b0;
+        }
+
+        .step-number {
+            background: #9c27b0;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin: 0 auto 15px;
+        }
+
+        .step-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #4a148c;
+            margin-bottom: 10px;
+        }
+
+        .step-description {
+            color: #424242;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .tips-section {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            border-radius: 15px;
+            padding: 30px;
+            border-left: 5px solid #f44336;
+        }
+
+        .tips-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #c62828;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .tips-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .tip-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 3px solid #f44336;
+        }
+
+        .tip-title {
+            font-weight: 600;
+            color: #c62828;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .tip-text {
+            color: #424242;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .container { margin: 10px; }
+            .header { padding: 30px 20px; }
+            .content { padding: 25px 20px; }
+            .header h1 { font-size: 2.2rem; }
+            .context-grid { grid-template-columns: 1fr; }
+            .skus-grid { grid-template-columns: 1fr; }
+            .strategy-steps { grid-template-columns: 1fr; }
+            .tips-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛒 Roteiro SPIN Selling</h1>
+            <div class="subtitle">Moinho para Rede de Supermercados</div>
+            <div class="description">Estratégia completa para conquista de nova rede varejista com crescimento sustentável</div>
+        </div>
+
+        <div class="content">
+            <div class="context-section">
+                <h2 class="context-title">
+                    <span class="context-icon">🎯</span>
+                    Contexto Estratégico da Negociação
+                </h2>
+                <div class="context-grid">
+                    <div class="context-card">
+                        <h4>Cliente Alvo</h4>
+                        <p>Rede de 10 supermercados em 3 cidades de médio porte no interior, influente na região</p>
+                    </div>
+                    <div class="context-card">
+                        <h4>Situação Atual</h4>
+                        <p>Rede não compra atualmente da nossa marca, mas é estratégica para expansão regional</p>
+                    </div>
+                    <div class="context-card">
+                        <h4>Posicionamento</h4>
+                        <p>Preços equivalentes ao mercado, marca tradicional entre as 4 melhores do estado</p>
+                    </div>
+                    <div class="context-card">
+                        <h4>Objetivo</h4>
+                        <p>Transformar em cliente com compras recorrentes e crescentes nos 6 SKUs de farinha</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="portfolio-section">
+                <h3 class="portfolio-title">📦 Portfólio de Produtos Oferecidos</h3>
+                <div class="skus-grid">
+                    <div class="sku-card">
+                        <div class="sku-icon">🌾</div>
+                        <div class="sku-name">Farinha Comum 1kg</div>
+                        <div class="sku-description">Tradicional para uso doméstico</div>
+                    </div>
+                    <div class="sku-card">
+                        <div class="sku-icon">🌾</div>
+                        <div class="sku-name">Farinha Comum 5kg</div>
+                        <div class="sku-description">Formato familiar e comercial</div>
+                    </div>
+                    <div class="sku-card">
+                        <div class="sku-icon">🍃</div>
+                        <div class="sku-name">Farinha Integral 1kg</div>
+                        <div class="sku-description">Linha saudável premium</div>
+                    </div>
+                    <div class="sku-card">
+                        <div class="sku-icon">🍃</div>
+                        <div class="sku-name">Farinha Integral 5kg</div>
+                        <div class="sku-description">Formato família saudável</div>
+                    </div>
+                    <div class="sku-card">
+                        <div class="sku-icon">🧁</div>
+                        <div class="sku-name">Farinha c/ Fermento 1kg</div>
+                        <div class="sku-description">Praticidade para bolos e pães</div>
+                    </div>
+                    <div class="sku-card">
+                        <div class="sku-icon">🧁</div>
+                        <div class="sku-name">Farinha c/ Fermento 5kg</div>
+                        <div class="sku-description">Formato econômico prático</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="spin-intro">
+                <h2 class="spin-title">🎯 Estratégia SPIN para Conquistar Nova Rede</h2>
+                <div class="spin-description">
+                    O objetivo é usar o método SPIN para identificar oportunidades de crescimento, problemas com fornecedores atuais e necessidades não atendidas, posicionando nossa marca como solução estratégica para expandir vendas e satisfação dos consumidores finais.
+                </div>
+            </div>
+
+            <!-- SITUAÇÃO -->
+            <div class="spin-section situacao">
+                <div class="spin-header">
+                    <div class="spin-icon situacao">📊</div>
+                    <div class="spin-header-text">
+                        <h2>SITUAÇÃO</h2>
+                        <p>Mapeamento do cenário atual e oportunidades de mercado</p>
+                    </div>
+                </div>
+
+                <div class="questions-container">
+                    <div class="question-card situacao">
+                        <div class="question-text">"Como está a performance da categoria farinha nas lojas de vocês? Quais produtos têm maior saída?"</div>
+                        <div class="question-objective">Objetivo: Entender participação da categoria e produtos de maior giro</div>
+                        <div class="question-followup">
+                            <div class="followup-label">Desdobramento:</div>
+                            "Qual é o volume mensal de farinha que vocês vendem? Há diferença de performance entre as lojas?"
+                        </div>
+                    </div>
+
+                    <div class="question-card situacao">
+                        <div class="question-text">"Quantas marcas de farinha vocês trabalham atualmente? Como é feita a seleção de fornecedores?"</div>
+                        <div class="question-objective">Objetivo: Mapear concorrência atual e processo de decisão</div>
+                        <div class="question-followup">
+                            <div class="followup-label">Desdobramento:</div>
+                            "Quais critérios são mais importantes: preço, margem, giro, marca conhecida?"
+                        </div>
+                    </div>
+
+                    <div class="question-card situacao">
+                        <div class="question-text">"Como vocês percebem o comportamento dos consumidores na categoria farinha? Eles são fiéis à marca ou compram por preço?"</div>
+                        <div class="question-objective">Objetivo: Entender sensibilidade a preço vs. valor da marca</div>
+                        <div class="question-followup">
+                            <div class="followup-label">Desdobramento:</div>
+                            "Vocês notaram mudança nos hábitos? Aumento na procura por farinha integral ou com fermento?"
+                        </div>
+                    </div>
+
+                    <div class="question-card situacao">
+                        <div class="question-text">"Como funciona a gestão de estoque de farinha? Vocês trabalham com estoque mínimo ou fazem pedidos programados?"</div>
+                        <div class="question-objective">Objetivo: Entender logística e frequência de reposição</div>
+                        <div class="question-followup">
+                            <div class="followup-label">Desdobramento:</div>
+                            "Com que frequência fazem pedidos? Há sazonalidade nas vendas de farinha?"
+                        </div>
+                    </div>
+
+                    <div class="question-card situacao">
+                        <div class="question-text">"Qual é a participação das farinhas especiais (integral, com fermento) no mix de vocês? Tem crescido?"</div>
+                        <div class="question-objective">Objetivo: Identificar oportunidades de categorias premium</div>
+                        <div class="question-followup">
+                            <div class="followup-label">Desdobramento:</div>
+                            "O público de vocês tem demandado mais produtos saudáveis ou práticos?"
+                        </div>
+                    </div>
+
+                    <div class="question-card situacao">
+                        <div class="question-text">"Como é a margem da categoria farinha comparada com outras categorias? Vocês estão satisfeitos com a rentabilidade?"</div>
+                        <div class="question-objective">Objetivo: Entender importância econômica da categoria</div>
+                        <div class="question-followup">
+                            <div class="followup-label">Desdobramento:</div>
+                            "Há oportunidade de melhorar margem trabalhando com marcas mais valorizadas?"
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROBLEMA -->
+            <div class="spin-section problema">
+                <div class="spin-header">
+                    <div class="spin-icon problema">⚠️</div>
+                    <div class="spin-header-text">
+                        <h2>PROBLEMA</h2>
+                        <p>Identificação de desafios e limitações atuais</p>
+                    </div>
+                </div>
+
+                <div class="questions-container">
+                    <div class="question-card problema">
+                        <div class="question-text">"Vocês já tiveram problemas com fornecedores de farinha? Falta de produto, qualidade ou prazo de entrega?"</div>
+                        <div class="question-objective">Objetivo: Identificar falhas dos fornecedores atuais</div>
+                        <div class="question-followup">
+                            <div class="followup-label">Desdobramento:</div>
+                            "Com que frequência isso acontece? Afeta as vendas quando fica em falta?"
+                        </div>
+                    </div>
+
+                    <div class="question-card problema">
+                        <div class="question-text">"Alguma vez receberam reclamações de clientes sobre qualidade de farinha? Como lidam com isso?"</div>
+                        <div class="question-objective">Objetivo: Explorar problemas de qualidade que afetam consumidor final</div>
+                        <div class="question-followup">
+                            <div class="followup-label">Desdobramento:</div>
+                            "Isso afeta a credibilidade da loja? Os clientes param de comprar farinha em vocês?"
+                        </div>
+                    </div>
+
+                    <div class="question-card problema">
+                        <div class="question-text">"Como está a competitividade de preços de vocês na categoria farinha comparado aos concorrentes da região?"</div>
+                        <div class="question-objective">Objetivo: Descobrir pressão competitiva por preços</div>
+                        <div class="question-followup">
+                            <div class="followup-label">Desdobramento:</div>
+                            "Vocês perdem clientes para outros supermercados por causa do preço da farinha?"
+                        </div>
+                    </div>
+
+                    <div class="question-card problema">
+                        <div class="question-text">"Há dificuldade em conseguir variedade de produtos de farinha? Marcas premium ou produtos especiais?"</div>
+                        <div class="question-objective">Objetivo: Identificar limitações no mix de produtos</div>
+                        <div class="question-followup">
+                            <div class="followup-label">Desdobramento:</div>
+                            "Clientes já pediram produtos que vocês não tinham? Isso afeta a imagem de loja completa?"
+                        </div>
+                    </div>
+
+                    <div class="question-card problema">
+                        <div class="question-text">"Como é o relacionamento comercial com os fornecedores atuais? Vocês recebem suporte em marketing ou promoções?"</div>
+                        <div class="question-objective">Objetivo: Avaliar qualidade do suporte recebido</div>
+                        <div class="question-followup">
+                            <div class="followup-label">Desdobramento:</div>
+                            "Gostariam de mais apoio em materiais promocionais, treinamento da equipe ou campanhas?"
+                        </div>
+                    </div>
+
+                    <div class="question-card problema">
+                        <div class="question-text">"Vocês conseguem crescer na categoria farinha ou está estagnada? O que limitaria o crescimento?"</div>
+                        <div class="question-objective">Objetivo: Identificar barreiras para crescimento</div>
+                        <div class="question-followup">
+                            <div class="followup-label">Desdobramento:</div>
+                            "Acham que é problema de marca, preço, variedade ou algo específico da região?"
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- IMPLICAÇÃO -->
+            <div class="spin-section implicacao">
+                <div class="spin-header">
+                    <div class="spin-icon implicacao">💥</div>
+                    <div class="spin-header-text">
+                        <h2>IMPLICAÇÃO</h2>
+                        <p>Desenvolvimento das consequências dos problemas identificados</p>
+                    </div>
+                </div>
+
+                <div class="questions-container">
+                    <div class="question-card implicacao">
+                        <div class="question-text">"Quando falta farinha ou há problemas de qualidade, isso afeta a credibilidade da loja com os consumidores?"</div>
+                        <div class="question-objective">Objetivo: Ampliar impacto para reputação da rede</div>
+                        <div class="question-followup">
+                            <div class="followup-label">Desdobramento:</div>
+                            "Clientes deixam de vir fazer compras completas por não confiar na qualidade dos produtos básicos?"
+                        </div>
+                    </div>
+
+                    <div class="question-card implicacao">
+                        <div class="question-text">"Se vocês perdem vendas de farinha para concorrentes, isso afeta outras categorias também?"</div>
+                        <div class="question-objective">Objetivo: Conectar perda na categoria com impacto geral</div>
+                        <div class="question-followup">
+                            <div class="followup-label">Desdobramento:</div>
+                            "Um cliente que vai comprar farinha em outro lugar acaba fazendo outras compras lá também?"
+                        </div>
+                    </div>
+
+                    <div class="question-card implicacao">
+                        <div class="question-text">"Como a limitação de variedade afeta a percepção dos clientes sobre o posicionamento das lojas?"</div>
+                        <div class="question-objective">Objetivo: Conectar mix limitado com posicionamento de mercado</div>
+                        <div class="question-followup">
+                            <div class="followup-label">Desdobramento:</div>
+                            "Isso dificulta atrair consumidores de maior poder aquisitivo que buscam produtos premium?"
+                        </div>
+                    </div>
+
+                    <div class="question-card implicacao">
+                        <div class="question-text">"Se a categoria farinha não cresce, isso impacta os resultados gerais da rede?"</div>
+                        <div class="question-objective">Objetivo: Quantificar impacto financeiro da estagnação</div>
+                        <div class="question-followup">
+                            <div class="followup-label">Desdobramento:</div>
+                            "Vocês têm metas de crescimento que dependem de melhor performance nas categorias básicas?"
+                        </div>
+                    </div>
+
+                    <div class="question-card implicacao">
+                        <div class="question-text">"A falta de suporte dos fornecedores dificulta vocês competirem com redes maiores?"</div>
+                        <div class="question-objective">Objetivo: Ampliar para desvantagem competitiva</div>
+                        <div class="question-followup">
+                            <div class="followup-label">Desdobramento:</div>
+                            "Redes maiores conseguem preços melhores e mais apoio de marketing dos fornecedores?"
+                        </div>
+                    </div>
+
+                    <div class="question-card implicacao">
+                        <div class="question-text">"Como esses problemas afetam a motivação e confiança da equipe de compras e vendas?"</div>
+                        <div class="question-objective">Objetivo: Conectar com impacto na equipe interna</div>
+                        <div class="question-followup">
+                            <div class="followup-label">Desdobramento:</div>
+                            "É frustrante para a equipe não ter produtos para oferecer ou receber reclamações de qualidade?"
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NECESSIDADE-BENEFÍCIO -->
+            <div class="spin-section necessidade">
+                <div class="spin-header">
+                    <div class="spin-icon necessidade">✅</div>
+                    <div class="spin-header-text">
+                        <h2>NECESSIDADE-BENEFÍCIO</h2>
+                        <p>Criação de valor e visualização dos benefícios da parceria</p>
+                    </div>
+                </div>
+
+                <div class="questions-container">
+                    <div class="question-card necessidade">
+                        <div class="question-text">"Se vocês tivessem uma marca de farinha tradicional e reconhecida, que diferença isso faria para a credibilidade das lojas?"</div>
+                        <div class="question-objective">Objetivo: Valorizar força da marca tradicional</div>
+                        <div class="question-followup">
+                            <div class="followup-label">Desdobramento:</div>
+                            "Clientes se sentiriam mais confiantes comprando uma marca que já conhecem e confiam?"
+                        </div>
+                    </div>
+
+                    <div class="question-card necessidade">
+                        <div class="question-text">"Como seria ter um fornecedor que garantisse 100% de disponibilidade e qualidade consistente?"</div>
+                        <div class="question-objective">Objetivo: Valorizar confiabilidade operacional</div>
+                        <div class="question-followup">
+                            <div class="followup-label">Desdobramento:</div>
+                            "Isso permitiria focar nas vendas em vez de se preocupar com problemas de fornecimento?"
+                        </div>
+                    </div>
+
+                    <div class="question-card necessidade">
+                        <div class="question-text">"Que valor teria para vocês um parceiro que oferecesse o portfólio completo - comum, integral e com fermento?"</div>
+                        <div class="question-objective">Objetivo: Valorizar completude do portfólio</div>
+                        <div class="question-followup">
+                            <div class="followup-label">Desdobramento:</div>
+                            "Isso simplificaria as compras e daria mais opções para atender diferentes perfis de consumidores?"
+                        </div>
+                    </div>
+
+                    <div class="question-card necessidade">
+                        <div class="question-text">"Se pudessem oferecer produtos premium com boa margem, como isso impactaria a rentabilidade da categoria?"</div>
+                        <div class="question-objective">Objetivo: Criar valor para produtos de maior margem</div>
+                        <div class="question-followup">
+                            <div class="followup-label">Desdobramento:</div>
+                            "Conseguiriam aumentar o ticket médio oferecendo variedades mais valorizadas pelo consumidor?"
+                        </div>
+                    </div>
+
+                    <div class="question-card necessidade">
+                        <div class="question-text">"Como seria ter um fornecedor que apoiasse com material promocional, treinamento e ações de marketing?"</div>
+                        <div class="question-objective">Objetivo: Valorizar suporte comercial diferenciado</div>
+                        <div class="question-followup">
+                            <div class="followup-label">Desdobramento:</div>
+                            "Isso ajudaria vocês a competir melhor com as grandes redes da região?"
+                        </div>
+                    </div>
+
+                    <div class="question-card necessidade">
+                        <div class="question-text">"Se conseguissem crescer 20-30% na categoria farinha, que impacto isso teria nos resultados gerais?"</div>
+                        <div class="question-objective">Objetivo: Quantificar benefício do crescimento</div>
+                        <div class="question-followup">
+                            <div class="followup-label">Desdobramento:</div>
+                            "Além da receita direta, isso traria mais movimento para as lojas e vendas cruzadas?"
+                        </div>
+                    </div>
+
+                    <div class="question-card necessidade">
+                        <div class="question-text">"Como seria para vocês ter fornecedores parceiros que ajudassem a construir uma imagem de qualidade e tradição?"</div>
+                        <div class="question-objective">Objetivo: Posicionar como parceiro estratégico de marca</div>
+                        <div class="question-followup">
+                            <div class="followup-label">Desdobramento:</div>
+                            "Isso fortaleceria o posicionamento das lojas como lugar de produtos confiáveis e de qualidade?"
+                        </div>
+                    </div>
+
+                    <div class="question-card necessidade">
+                        <div class="question-text">"Se pudessem ter condições comerciais competitivas com uma marca forte, isso daria vantagem sobre concorrentes?"</div>
+                        <div class="question-objective">Objetivo: Conectar parceria com vantagem competitiva</div>
+                        <div class="question-followup">
+                            <div class="followup-label">Desdobramento:</div>
+                            "Vocês poderiam ser reconhecidos como a rede que tem as melhores marcas da região?"
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="strategy-section">
+                <h2 class="strategy-title">
+                    <span class="strategy-icon">🎯</span>
+                    Estratégia de Implementação SPIN
+                </h2>
+                <div class="strategy-steps">
+                    <div class="strategy-step">
+                        <div class="step-number">1</div>
+                        <div class="step-title">Mapear Oportunidades</div>
+                        <div class="step-description">Use perguntas de Situação para identificar gaps no portfólio e potencial de crescimento</div>
+                    </div>
+                    <div class="strategy-step">
+                        <div class="step-number">2</div>
+                        <div class="step-title">Descobrir Insatisfações</div>
+                        <div class="step-description">Explore problemas com fornecedores atuais e limitações de crescimento</div>
+                    </div>
+                    <div class="strategy-step">
+                        <div class="step-number">3</div>
+                        <div class="step-title">Ampliar Consequências</div>
+                        <div class="step-description">Conecte problemas pontuais com impactos estratégicos e competitivos</div>
+                    </div>
+                    <div class="strategy-step">
+                        <div class="step-number">4</div>
+                        <div class="step-title">Criar Valor Percebido</div>
+                        <div class="step-description">Demonstre como a parceria resolve problemas e gera crescimento</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tips-section">
+                <h2 class="tips-title">
+                    <span class="tips-icon">💡</span>
+                    Dicas Estratégicas para esta Negociação
+                </h2>
+                <div class="tips-grid">
+                    <div class="tip-card">
+                        <div class="tip-title">Enfatize Tradição e Credibilidade</div>
+                        <div class="tip-text">Use o fato de estar entre as 4 melhores marcas do estado para construir confiança e reduzir risco percebido.</div>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-title">Explore Competitividade Regional</div>
+                        <div class="tip-text">Conecte problemas atuais com desvantagem competitiva frente a outras redes da região.</div>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-title">Valorize Portfólio Completo</div>
+                        <div class="tip-text">Posicione os 6 SKUs como solução completa que simplifica compras e atende todos os públicos.</div>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-title">Quantifique Oportunidades</div>
+                        <div class="tip-text">Ajude a calcular potencial de crescimento em receita e margem com produtos premium.</div>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-title">Ofereça Suporte Diferenciado</div>
+                        <div class="tip-text">Posicione-se como parceiro que oferece mais que produto: suporte, marketing, treinamento.</div>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-title">Foque em Crescimento Sustentável</div>
+                        <div class="tip-text">Demonstre como a parceria pode gerar crescimento recorrente e de longo prazo na categoria.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%); border-radius: 15px; padding: 30px; margin-top: 30px; border-left: 5px solid #9c27b0;">
+                <h3 style="color: #4a148c; font-size: 1.4rem; margin-bottom: 15px; display: flex; align-items: center;">
+                    <span style="font-size: 2rem; margin-right: 15px;">🚀</span>
+                    Próximos Passos após o SPIN
+                </h3>
+                <p style="color: #424242; font-size: 1rem; line-height: 1.6; margin-bottom: 15px;">
+                    <strong>Após completar o roteiro SPIN</strong>, você terá identificado necessidades específicas e criado valor percebido. Este é o momento de apresentar:
+                </p>
+                <ul style="color: #424242; font-size: 0.95rem; line-height: 1.6; margin-left: 20px; margin-bottom: 15px;">
+                    <li><strong>Proposta comercial personalizada</strong> para os 6 SKUs com condições atrativas</li>
+                    <li><strong>Plano de crescimento</strong> baseado nos gaps identificados</li>
+                    <li><strong>Programa de suporte</strong> com materiais promocionais e treinamento</li>
+                    <li><strong>Teste piloto</strong> em 2-3 lojas para demonstrar resultados</li>
+                    <li><strong>Cronograma de implementação</strong> gradual nas 10 lojas</li>
+                </ul>
+                <p style="color: #4a148c; font-weight: 600; font-size: 1rem;">
+                    💡 <em>Lembre-se: O objetivo é uma parceria de longo prazo com crescimento recorrente, não apenas uma venda pontual.</em>
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

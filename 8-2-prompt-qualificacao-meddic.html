@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt para Qualificação MEDDIC</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6f42c1 0%, #9c27b0 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #9c27b0 0%, #6f42c1 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .header .description {
+            font-size: 1rem;
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .intro-section {
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #9c27b0;
+        }
+
+        .intro-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #4a148c;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .intro-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+
+        .intro-text {
+            color: #424242;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .methodology-section {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-left: 5px solid #2196f3;
+            text-align: center;
+        }
+
+        .methodology-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0d47a1;
+            margin-bottom: 15px;
+        }
+
+        .methodology-description {
+            color: #6c757d;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .meddic-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .category-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            border-left: 4px solid;
+            transition: transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .category-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .category-card.metrics { border-left-color: #4caf50; }
+        .category-card.economic { border-left-color: #ff9800; }
+        .category-card.decision { border-left-color: #2196f3; }
+        .category-card.decision-criteria { border-left-color: #f44336; }
+        .category-card.identify { border-left-color: #9c27b0; }
+        .category-card.champion { border-left-color: #00bcd4; }
+
+        .category-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .category-icon.metrics { color: #4caf50; }
+        .category-icon.economic { color: #ff9800; }
+        .category-icon.decision { color: #2196f3; }
+        .category-icon.decision-criteria { color: #f44336; }
+        .category-icon.identify { color: #9c27b0; }
+        .category-icon.champion { color: #00bcd4; }
+
+        .category-name {
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        .category-description {
+            font-size: 0.8rem;
+            color: #6c757d;
+            line-height: 1.4;
+        }
+
+        .instructions-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #fd7e14;
+        }
+
+        .instructions-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #d63384;
+            margin-bottom: 20px;
+        }
+
+        .instruction-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border-left: 3px solid #fd7e14;
+        }
+
+        .instruction-step {
+            font-weight: 600;
+            color: #d63384;
+            margin-bottom: 8px;
+        }
+
+        .instruction-detail {
+            color: #495057;
+            font-size: 0.95rem;
+        }
+
+        .prompt-container {
+            background: #2c3e50;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .prompt-header {
+            background: linear-gradient(135deg, #6f42c1 0%, #9c27b0 100%);
+            color: white;
+            padding: 20px;
+            margin: -30px -30px 30px -30px;
+            text-align: center;
+        }
+
+        .prompt-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .prompt-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .prompt-text {
+            background: #34495e;
+            color: #ecf0f1;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            line-height: 1.8;
+            padding: 25px;
+            border-radius: 10px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-x: auto;
+            border: 2px solid #9c27b0;
+        }
+
+        .variable-highlight {
+            background: linear-gradient(135deg, #ff5722 0%, #d84315 100%);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .section-divider {
+            color: #9c27b0;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin: 20px 0 15px 0;
+        }
+
+        .copy-button {
+            background: linear-gradient(135deg, #ff5722 0%, #d84315 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 20px auto;
+            box-shadow: 0 5px 15px rgba(255, 87, 34, 0.3);
+        }
+
+        .copy-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 87, 34, 0.4);
+        }
+
+        .usage-tips {
+            background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c8 100%);
+            border-radius: 15px;
+            padding: 30px;
+            border-left: 5px solid #4caf50;
+        }
+
+        .tips-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #2e7d32;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .tips-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .tip-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 3px solid #4caf50;
+        }
+
+        .tip-title {
+            font-weight: 600;
+            color: #2e7d32;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .tip-text {
+            color: #424242;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .container { margin: 10px; }
+            .header { padding: 30px 20px; }
+            .content { padding: 25px 20px; }
+            .header h1 { font-size: 2.2rem; }
+            .prompt-text { font-size: 0.9rem; }
+            .meddic-categories { grid-template-columns: repeat(2, 1fr); }
+            .tips-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Qualificação MEDDIC</h1>
+            <div class="subtitle">Prompt para Inteligência Artificial</div>
+            <div class="description">Ferramenta para criar roteiros de qualificação MEDDIC para vendas complexas e estratégicas</div>
+        </div>
+
+        <div class="content">
+            <div class="intro-section">
+                <h2 class="intro-title">
+                    <span class="intro-icon">🎯</span>
+                    Objetivo do Prompt
+                </h2>
+                <div class="intro-text">
+                    Este prompt foi desenvolvido para gerar roteiros personalizados de qualificação MEDDIC (Metrics, Economic Buyer, Decision Criteria, Decision Process, Identify Pain, Champion) especializados em vendas complexas com múltiplos stakeholders e ciclos longos. Ele orienta a IA a criar estratégias estruturadas para navegar organizações complexas.
+                </div>
+            </div>
+
+            <div class="methodology-section">
+                <div class="methodology-title">🎯 Metodologia MEDDIC</div>
+                <div class="methodology-description">
+                    Framework criado pela PTC para vendas complexas B2B, focando em qualificação rigorosa através de seis critérios específicos que garantem maior previsibilidade e taxa de sucesso em negociações de alto valor.
+                </div>
+            </div>
+
+            <div class="meddic-categories">
+                <div class="category-card metrics">
+                    <div class="category-icon metrics">📊</div>
+                    <div class="category-name">METRICS</div>
+                    <div class="category-description">Métricas e benefícios quantificáveis</div>
+                </div>
+                <div class="category-card economic">
+                    <div class="category-icon economic">💰</div>
+                    <div class="category-name">ECONOMIC BUYER</div>
+                    <div class="category-description">Decisor econômico com poder de orçamento</div>
+                </div>
+                <div class="category-card decision">
+                    <div class="category-icon decision">⚖️</div>
+                    <div class="category-name">DECISION CRITERIA</div>
+                    <div class="category-description">Critérios específicos de avaliação</div>
+                </div>
+                <div class="category-card decision-criteria">
+                    <div class="category-icon decision-criteria">🔄</div>
+                    <div class="category-name">DECISION PROCESS</div>
+                    <div class="category-description">Processo formal de tomada de decisão</div>
+                </div>
+                <div class="category-card identify">
+                    <div class="category-icon identify">🎯</div>
+                    <div class="category-name">IDENTIFY PAIN</div>
+                    <div class="category-description">Dores específicas e impactos no negócio</div>
+                </div>
+                <div class="category-card champion">
+                    <div class="category-icon champion">🏆</div>
+                    <div class="category-name">CHAMPION</div>
+                    <div class="category-description">Defensor interno da solução</div>
+                </div>
+            </div>
+
+            <div class="instructions-section">
+                <h2 class="instructions-title">📋 Como Usar Este Prompt</h2>
+                
+                <div class="instruction-item">
+                    <div class="instruction-step">1. Foque em Vendas Complexas</div>
+                    <div class="instruction-detail">MEDDIC é ideal para vendas de alto valor, múltiplos stakeholders e processos formais.</div>
+                </div>
+                
+                <div class="instruction-item">
+                    <div class="instruction-step">2. Mapeie a Organização</div>
+                    <div class="instruction-detail">Detalhe estrutura organizacional, hierarquias e relacionamentos de poder.</div>
+                </div>
+                
+                <div class="instruction-item">
+                    <div class="instruction-step">3. Personalize por Complexidade</div>
+                    <div class="instruction-detail">Adapte profundidade baseado no valor e complexidade da oportunidade.</div>
+                </div>
+                
+                <div class="instruction-item">
+                    <div class="instruction-step">4. Execute Sistematicamente</div>
+                    <div class="instruction-detail">Use no ChatGPT, Claude ou sua IA para gerar estratégias estruturadas.</div>
+                </div>
+                
+                <div class="instruction-item">
+                    <div class="instruction-step">5. Documente e Acompanhe</div>
+                    <div class="instruction-detail">MEDDIC requer documentação rigorosa para rastrear progresso em cada critério.</div>
+                </div>
+            </div>
+
+            <div class="prompt-container">
+                <div class="prompt-header">
+                    <div class="prompt-title">🤖 Prompt Completo</div>
+                    <div class="prompt-subtitle">Copie, personalize e use na sua IA</div>
+                </div>
+                
+                <div class="prompt-text">Atue como especialista em metodologia MEDDIC e qualificação de vendas complexas B2B no Brasil, com mais de 15 anos de experiência em negociações estratégicas, análise organizacional e gestão de stakeholders múltiplos.
+
+Crie um roteiro completo de qualificação MEDDIC (Metrics, Economic Buyer, Decision Criteria, Decision Process, Identify Pain, Champion) para o seguinte contexto:
+
+<span class="section-divider">═══ CONTEXTO DA VENDA COMPLEXA ═══</span>
+
+<strong>INFORMAÇÕES DA OPORTUNIDADE:</strong>
+- Solução oferecida: <span class="variable-highlight">[produto/serviço detalhado]</span>
+- Valor da oportunidade: <span class="variable-highlight">[faixa de investimento em R$]</span>
+- Ciclo de vendas estimado: <span class="variable-highlight">[tempo esperado para fechamento]</span>
+- Complexidade: <span class="variable-highlight">[técnica, comercial, política, regulatória]</span>
+- Implementação: <span class="variable-highlight">[tempo e recursos necessários]</span>
+
+<strong>PERFIL ORGANIZACIONAL:</strong>
+- Empresa: <span class="variable-highlight">[nome, setor, porte, estrutura]</span>
+- Departamento envolvido: <span class="variable-highlight">[área principal interessada]</span>
+- Estrutura hierárquica: <span class="variable-highlight">[matriz, holding, subsidiárias]</span>
+- Cultura organizacional: <span class="variable-highlight">[conservadora, inovadora, burocrática]</span>
+- Momento da empresa: <span class="variable-highlight">[crescimento, reestruturação, expansão]</span>
+
+<strong>STAKEHOLDERS CONHECIDOS:</strong>
+- Contato inicial: <span class="variable-highlight">[nome, cargo, influência]</span>
+- Área técnica: <span class="variable-highlight">[responsáveis técnicos identificados]</span>
+- Área financeira: <span class="variable-highlight">[quem controla orçamentos]</span>
+- Alta gestão: <span class="variable-highlight">[C-level envolvidos]</span>
+- Usuários finais: <span class="variable-highlight">[quem vai usar a solução]</span>
+
+<strong>CONTEXTO COMPETITIVO:</strong>
+- Concorrentes: <span class="variable-highlight">[principais players avaliados]</span>
+- Status quo: <span class="variable-highlight">[solução atual ou falta dela]</span>
+- Fornecedores atuais: <span class="variable-highlight">[relacionamentos existentes]</span>
+
+<span class="section-divider">═══ ROTEIRO MEDDIC DETALHADO ═══</span>
+
+Desenvolva um roteiro estruturado para cada componente:
+
+<strong>1. METRICS (MÉTRICAS) - Quantificação de Valor</strong>
+
+Crie 4-5 perguntas estratégicas para descobrir:
+- Métricas atuais que serão impactadas
+- Benchmarks de performance desejados
+- ROI esperado e forma de cálculo
+- KPIs que serão monitorados
+- Timeline para ver resultados
+
+Para cada pergunta, forneça:
+- Como conectar com objetivos empresariais
+- Estratégias para quantificar benefícios
+- Formas de validar métricas com dados
+- Como usar métricas para justificar investimento
+
+<strong>2. ECONOMIC BUYER (DECISOR ECONÔMICO) - Poder de Compra</strong>
+
+Desenvolva 4-5 perguntas para identificar:
+- Quem controla o orçamento desta categoria
+- Processo de aprovação orçamentária
+- Critérios pessoais do decisor econômico
+- Histórico de decisões similares
+- Relacionamento com outras áreas
+
+Para cada pergunta, inclua:
+- Como acessar o decisor econômico
+- Estratégias se não tiver acesso direto
+- Como avaliar poder real vs aparente
+- Táticas para influenciar através de terceiros
+
+<strong>3. DECISION CRITERIA (CRITÉRIOS DE DECISÃO) - Avaliação</strong>
+
+Crie 5-6 perguntas para mapear:
+- Critérios formais de avaliação
+- Peso relativo de cada critério
+- Processo de scoring/pontuação
+- Critérios não declarados (hidden criteria)
+- Experiências anteriores com fornecedores
+
+Para cada pergunta, estruture:
+- Como influenciar critérios a seu favor
+- Estratégias para descobrir critérios ocultos
+- Como se posicionar vs concorrência
+- Formas de adicionar novos critérios relevantes
+
+<strong>4. DECISION PROCESS (PROCESSO DE DECISÃO) - Workflow</strong>
+
+Desenvolva 5-6 perguntas sobre:
+- Etapas formais do processo
+- Stakeholders em cada etapa
+- Documentação necessária
+- Cronograma e marcos importantes
+- Aprovações necessárias e sequência
+
+Para cada pergunta, forneça:
+- Como acelerar o processo apropriadamente
+- Pontos de travamento mais comuns
+- Estratégias para cada etapa
+- Como preparar stakeholders para próximas fases
+
+<strong>5. IDENTIFY PAIN (IDENTIFICAÇÃO DE DORES) - Problemas</strong>
+
+Crie 5-6 perguntas para explorar:
+- Dores específicas por stakeholder
+- Impacto quantificado das dores
+- Tentativas anteriores de solução
+- Consequências de não resolver
+- Urgência e criticidade por área
+
+Para cada pergunta, inclua:
+- Como amplificar dores apropriadamente
+- Conexão entre dores e sua solução
+- Estratégias para cada tipo de stakeholder
+- Como usar dores para criar urgência
+
+<strong>6. CHAMPION (DEFENSOR) - Aliado Interno</strong>
+
+Desenvolva 4-5 perguntas para:
+- Identificar defensores em potencial
+- Avaliar motivação e credibilidade
+- Entender influência real na organização
+- Descobrir como apoiar o champion
+- Mapear relacionamentos internos
+
+Para cada pergunta, estruture:
+- Como desenvolver relationship com champion
+- Estratégias se não houver champion natural
+- Como equipar champion com argumentos
+- Formas de proteger champion politicamente
+
+<span class="section-divider">═══ SISTEMA DE PONTUAÇÃO MEDDIC ═══</span>
+
+Crie sistema onde cada componente recebe nota 0-10:
+
+<strong>METRICS (Peso 20%):</strong>
+- 9-10: Métricas claras, quantificadas e validadas
+- 7-8: Métricas definidas mas necessitam validação
+- 5-6: Métricas vagas ou não quantificadas
+- 3-4: Benefícios percebidos mas não mensurados
+- 0-2: Nenhuma métrica clara identificada
+
+<strong>ECONOMIC BUYER (Peso 20%):</strong>
+- 9-10: Acesso direto e engajamento confirmado
+- 7-8: Identificado mas sem acesso direto
+- 5-6: Parcialmente identificado
+- 3-4: Incerteza sobre decisor real
+- 0-2: Não identificado ou inacessível
+
+<strong>DECISION CRITERIA (Peso 15%):</strong>
+- 9-10: Critérios conhecidos e favoráveis
+- 7-8: Critérios mapeados, posição competitiva
+- 5-6: Critérios parcialmente conhecidos
+- 3-4: Critérios vagos ou desfavoráveis
+- 0-2: Critérios desconhecidos
+
+<strong>DECISION PROCESS (Peso 15%):</strong>
+- 9-10: Processo mapeado e cronograma definido
+- 7-8: Processo conhecido, timing estimado
+- 5-6: Processo parcialmente entendido
+- 3-4: Processo confuso ou informal
+- 0-2: Nenhum processo claro
+
+<strong>IDENTIFY PAIN (Peso 15%):</strong>
+- 9-10: Dores críticas quantificadas
+- 7-8: Dores claras com impacto definido
+- 5-6: Dores identificadas mas não críticas
+- 3-4: Dores vagas ou questionáveis
+- 0-2: Nenhuma dor significativa
+
+<strong>CHAMPION (Peso 15%):</strong>
+- 9-10: Champion forte e bem posicionado
+- 7-8: Champion identificado mas necessita desenvolvimento
+- 5-6: Potencial champion sem compromisso
+- 3-4: Apoio fraco ou incerto
+- 0-2: Nenhum defensor interno
+
+<strong>CLASSIFICAÇÃO FINAL (média ponderada):</strong>
+- 8.5-10.0: OPORTUNIDADE PREMIUM (investimento total)
+- 7.0-8.4: OPORTUNIDADE FORTE (alta prioridade)
+- 5.5-6.9: OPORTUNIDADE QUALIFICADA (investir seletivamente)
+- 4.0-5.4: OPORTUNIDADE FRACA (baixa prioridade)
+- 0-3.9: OPORTUNIDADE INVIÁVEL (descartar)
+
+<span class="section-divider">═══ PLANO DE AÇÃO POR CRITÉRIO ═══</span>
+
+Para cada critério com pontuação baixa, forneça:
+- Ações específicas para melhorar pontuação
+- Stakeholders a serem envolvidos
+- Cronograma de atividades
+- Recursos necessários
+- Sinais de progresso a monitorar
+
+Adapte todas as estratégias para o contexto brasileiro, considerando particularidades da cultura empresarial, hierarquias organizacionais e processos decisórios típicos das empresas nacionais.</div>
+                
+                <button class="copy-button" onclick="copyPrompt()">📋 Copiar Prompt Completo</button>
+            </div>
+
+            <div class="usage-tips">
+                <h2 class="tips-title">
+                    <span class="tips-icon">💡</span>
+                    Dicas para MEDDIC em Vendas Complexas
+                </h2>
+                <div class="tips-grid">
+                    <div class="tip-card">
+                        <div class="tip-title">Documente Rigorosamente</div>
+                        <div class="tip-text">MEDDIC exige documentação detalhada. Mantenha registros atualizados de cada critério para toda a equipe.</div>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-title">Invista no Champion</div>
+                        <div class="tip-text">Um champion forte pode compensar deficiências em outros critérios. Desenvolva e proteja esta relação.</div>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-title">Valide Métricas Constantemente</div>
+                        <div class="tip-text">Métricas mal definidas causam perda de credibilidade. Valide números com múltiplas fontes.</div>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-title">Mapeie Política Organizacional</div>
+                        <div class="tip-text">Em vendas complexas, política importa tanto quanto técnica. Entenda dinâmicas de poder.</div>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-title">Qualifique Ruthlessly</div>
+                        <div class="tip-text">MEDDIC serve para desqualificar oportunidades ruins. Seja honesto sobre pontuações baixas.</div>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-title">Adapte à Cultura Brasileira</div>
+                        <div class="tip-text">Relacionamentos são cruciais no Brasil. Invista tempo em networking e confiança pessoal.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function copyPrompt() {
+            const promptText = document.querySelector('.prompt-text').textContent;
+            navigator.clipboard.writeText(promptText).then(function() {
+                const button = document.querySelector('.copy-button');
+                const originalText = button.textContent;
+                button.textContent = '✅ Prompt Copiado!';
+                button.style.background = 'linear-gradient(135deg, #27ae60 0%, #2ecc71 100%)';
+                
+                setTimeout(function() {
+                    button.textContent = originalText;
+                    button.style.background = 'linear-gradient(135deg, #ff5722 0%, #d84315 100%)';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

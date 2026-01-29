@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt para Qualificação BANT</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #388e3c 0%, #66bb6a 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #66bb6a 0%, #388e3c 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .header .description {
+            font-size: 1rem;
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .intro-section {
+            background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c8 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #4caf50;
+        }
+
+        .intro-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2e7d32;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .intro-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+
+        .intro-text {
+            color: #424242;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .methodology-section {
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-left: 5px solid #9c27b0;
+            text-align: center;
+        }
+
+        .methodology-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #4a148c;
+            margin-bottom: 15px;
+        }
+
+        .methodology-description {
+            color: #6c757d;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .bant-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .category-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            border-left: 4px solid;
+            transition: transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .category-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .category-card.budget { border-left-color: #4caf50; }
+        .category-card.authority { border-left-color: #ff9800; }
+        .category-card.need { border-left-color: #2196f3; }
+        .category-card.timeline { border-left-color: #f44336; }
+
+        .category-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .category-icon.budget { color: #4caf50; }
+        .category-icon.authority { color: #ff9800; }
+        .category-icon.need { color: #2196f3; }
+        .category-icon.timeline { color: #f44336; }
+
+        .category-name {
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .category-description {
+            font-size: 0.9rem;
+            color: #6c757d;
+            line-height: 1.5;
+        }
+
+        .instructions-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #17a2b8;
+        }
+
+        .instructions-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #0c5460;
+            margin-bottom: 20px;
+        }
+
+        .instruction-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border-left: 3px solid #17a2b8;
+        }
+
+        .instruction-step {
+            font-weight: 600;
+            color: #0c5460;
+            margin-bottom: 8px;
+        }
+
+        .instruction-detail {
+            color: #495057;
+            font-size: 0.95rem;
+        }
+
+        .prompt-container {
+            background: #2c3e50;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .prompt-header {
+            background: linear-gradient(135deg, #388e3c 0%, #66bb6a 100%);
+            color: white;
+            padding: 20px;
+            margin: -30px -30px 30px -30px;
+            text-align: center;
+        }
+
+        .prompt-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .prompt-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .prompt-text {
+            background: #34495e;
+            color: #ecf0f1;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            line-height: 1.8;
+            padding: 25px;
+            border-radius: 10px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-x: auto;
+            border: 2px solid #4caf50;
+        }
+
+        .variable-highlight {
+            background: linear-gradient(135deg, #f44336 0%, #c62828 100%);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .section-divider {
+            color: #66bb6a;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin: 20px 0 15px 0;
+        }
+
+        .copy-button {
+            background: linear-gradient(135deg, #f44336 0%, #c62828 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 20px auto;
+            box-shadow: 0 5px 15px rgba(244, 67, 54, 0.3);
+        }
+
+        .copy-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(244, 67, 54, 0.4);
+        }
+
+        .usage-tips {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-radius: 15px;
+            padding: 30px;
+            border-left: 5px solid #ff9800;
+        }
+
+        .tips-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #e65100;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .tips-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .tip-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 3px solid #ff9800;
+        }
+
+        .tip-title {
+            font-weight: 600;
+            color: #e65100;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .tip-text {
+            color: #424242;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .container { margin: 10px; }
+            .header { padding: 30px 20px; }
+            .content { padding: 25px 20px; }
+            .header h1 { font-size: 2.2rem; }
+            .prompt-text { font-size: 0.9rem; }
+            .bant-categories { grid-template-columns: 1fr; }
+            .tips-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💰 Qualificação BANT</h1>
+            <div class="subtitle">Prompt para Inteligência Artificial</div>
+            <div class="description">Ferramenta para criar roteiros de qualificação BANT personalizados por oportunidade</div>
+        </div>
+
+        <div class="content">
+            <div class="intro-section">
+                <h2 class="intro-title">
+                    <span class="intro-icon">🎯</span>
+                    Objetivo do Prompt
+                </h2>
+                <div class="intro-text">
+                    Este prompt foi desenvolvido para gerar roteiros personalizados de qualificação BANT (Budget, Authority, Need, Timeline) que ajudam a determinar se um prospect tem potencial real de se tornar cliente. Ele orienta a IA a criar perguntas estratégicas que descobrem orçamento, autoridade de decisão, necessidade real e cronograma de compra.
+                </div>
+            </div>
+
+            <div class="methodology-section">
+                <div class="methodology-title">💡 Metodologia BANT</div>
+                <div class="methodology-description">
+                    Framework de qualificação criado pela IBM que avalia quatro critérios essenciais para determinar a viabilidade de uma oportunidade de venda: orçamento disponível, autoridade para decidir, necessidade real e cronograma definido.
+                </div>
+            </div>
+
+            <div class="bant-categories">
+                <div class="category-card budget">
+                    <div class="category-icon budget">💰</div>
+                    <div class="category-name">BUDGET</div>
+                    <div class="category-description">Orçamento disponível e capacidade financeira para investir</div>
+                </div>
+                <div class="category-card authority">
+                    <div class="category-icon authority">👑</div>
+                    <div class="category-name">AUTHORITY</div>
+                    <div class="category-description">Autoridade e poder de decisão para aprovar a compra</div>
+                </div>
+                <div class="category-card need">
+                    <div class="category-icon need">🎯</div>
+                    <div class="category-name">NEED</div>
+                    <div class="category-description">Necessidade real e urgência para resolver o problema</div>
+                </div>
+                <div class="category-card timeline">
+                    <div class="category-icon timeline">⏰</div>
+                    <div class="category-name">TIMELINE</div>
+                    <div class="category-description">Cronograma definido e prazo para tomar decisão</div>
+                </div>
+            </div>
+
+            <div class="instructions-section">
+                <h2 class="instructions-title">📋 Como Usar Este Prompt</h2>
+                
+                <div class="instruction-item">
+                    <div class="instruction-step">1. Defina o Contexto da Oportunidade</div>
+                    <div class="instruction-detail">Detalhe produto, valor, tipo de cliente e situação específica para personalização.</div>
+                </div>
+                
+                <div class="instruction-item">
+                    <div class="instruction-step">2. Preencha as Informações Disponíveis</div>
+                    <div class="instruction-detail">Complete todos os campos entre [colchetes] com dados específicos do prospect.</div>
+                </div>
+                
+                <div class="instruction-item">
+                    <div class="instruction-step">3. Execute na IA</div>
+                    <div class="instruction-detail">Use no ChatGPT, Claude ou sua IA preferida para gerar o roteiro de qualificação.</div>
+                </div>
+                
+                <div class="instruction-item">
+                    <div class="instruction-step">4. Aplique Estrategicamente</div>
+                    <div class="instruction-detail">Use as perguntas de forma natural durante descoberta, não como questionário.</div>
+                </div>
+                
+                <div class="instruction-item">
+                    <div class="instruction-step">5. Classifique a Oportunidade</div>
+                    <div class="instruction-detail">Use os resultados para decidir investimento de tempo e recursos na oportunidade.</div>
+                </div>
+            </div>
+
+            <div class="prompt-container">
+                <div class="prompt-header">
+                    <div class="prompt-title">🤖 Prompt Completo</div>
+                    <div class="prompt-subtitle">Copie, personalize e use na sua IA</div>
+                </div>
+                
+                <div class="prompt-text">Atue como especialista em qualificação de oportunidades de vendas B2B no Brasil, com expertise na metodologia BANT e mais de 10 anos de experiência em análise de viabilidade comercial e otimização de pipeline de vendas.
+
+Crie um roteiro de qualificação BANT (Budget, Authority, Need, Timeline) personalizado para o seguinte contexto:
+
+<span class="section-divider">═══ INFORMAÇÕES DA OPORTUNIDADE ═══</span>
+
+<strong>DADOS DO PRODUTO/SERVIÇO:</strong>
+- Solução oferecida: <span class="variable-highlight">[descrição detalhada do produto/serviço]</span>
+- Valor estimado: <span class="variable-highlight">[faixa de investimento em R$]</span>
+- Tipo de compra: <span class="variable-highlight">[nova aquisição, substituição, expansão]</span>
+- Complexidade: <span class="variable-highlight">[simples, média, alta complexidade]</span>
+- Ciclo de implementação: <span class="variable-highlight">[tempo necessário para implantação]</span>
+
+<strong>PERFIL DO PROSPECT:</strong>
+- Empresa: <span class="variable-highlight">[nome, setor, porte]</span>
+- Contato principal: <span class="variable-highlight">[nome, cargo, nível hierárquico]</span>
+- Como chegou até você: <span class="variable-highlight">[inbound, prospecção, indicação]</span>
+- Interesse demonstrado: <span class="variable-highlight">[alto, médio, baixo]</span>
+- Informações disponíveis: <span class="variable-highlight">[o que você já sabe sobre a empresa]</span>
+
+<strong>CONTEXTO DA NEGOCIAÇÃO:</strong>
+- Estágio atual: <span class="variable-highlight">[primeiro contato, reunião agendada, proposta]</span>
+- Problema identificado: <span class="variable-highlight">[dor ou necessidade percebida]</span>
+- Concorrência conhecida: <span class="variable-highlight">[competitors envolvidos]</span>
+- Urgência aparente: <span class="variable-highlight">[sinais de pressa ou tempo]</span>
+
+<span class="section-divider">═══ ROTEIRO BANT SOLICITADO ═══</span>
+
+Desenvolva um roteiro completo estruturado da seguinte forma:
+
+<strong>1. QUALIFICAÇÃO DE BUDGET (ORÇAMENTO)</strong>
+
+Crie 4-5 perguntas estratégicas para descobrir:
+- Orçamento disponível ou faixa de investimento
+- Processo de aprovação orçamentária
+- Comparação com alternativas avaliadas
+- Sensibilidade a preço vs valor
+- Flexibilidade de pagamento
+
+Para cada pergunta, forneça:
+- Pergunta principal (direta mas diplomática)
+- Abordagem alternativa (se a primeira for muito direta)
+- Como interpretar a resposta
+- Sinais de alerta ou oportunidade
+
+<strong>2. QUALIFICAÇÃO DE AUTHORITY (AUTORIDADE)</strong>
+
+Desenvolva 4-5 perguntas para mapear:
+- Quem tem poder de decisão final
+- Processo decisório da empresa
+- Influenciadores e stakeholders
+- Critérios de avaliação utilizados
+- Histórico de decisões similares
+
+Para cada pergunta, inclua:
+- Forma de abordar sem ofender
+- Como identificar o real decisor
+- Estratégias para acessar autoridade
+- Sinais de influência real vs aparente
+
+<strong>3. QUALIFICAÇÃO DE NEED (NECESSIDADE)</strong>
+
+Crie 4-5 perguntas para validar:
+- Necessidade real vs desejo
+- Urgência e prioridade do problema
+- Impacto de não resolver
+- Tentativas anteriores de solução
+- Critérios de sucesso esperados
+
+Para cada pergunta, estruture:
+- Como conectar com dores reais
+- Perguntas de aprofundamento
+- Sinais de necessidade genuína
+- Como quantificar o problema
+
+<strong>4. QUALIFICAÇÃO DE TIMELINE (CRONOGRAMA)</strong>
+
+Desenvolva 4-5 perguntas sobre:
+- Prazo ideal para implementação
+- Fatores que aceleram/atrasam decisão
+- Dependências externas ou internas
+- Consequências de atraso
+- Processo de avaliação e aprovação
+
+Para cada pergunta, forneça:
+- Como descobrir urgência real
+- Sinais de cronograma realista
+- Fatores que podem mudar timing
+- Como criar urgência apropriada
+
+<span class="section-divider">═══ SISTEMA DE PONTUAÇÃO ═══</span>
+
+Crie um sistema de classificação onde:
+
+<strong>BUDGET (25 pontos máximo):</strong>
+- 20-25 pontos: Orçamento confirmado e adequado
+- 15-19 pontos: Orçamento provável, processo claro
+- 10-14 pontos: Orçamento em discussão
+- 0-9 pontos: Sem orçamento ou muito baixo
+
+<strong>AUTHORITY (25 pontos máximo):</strong>
+- 20-25 pontos: Acesso direto ao decisor final
+- 15-19 pontos: Contato com forte influência
+- 10-14 pontos: Influenciador com acesso limitado
+- 0-9 pontos: Sem acesso à autoridade real
+
+<strong>NEED (25 pontos máximo):</strong>
+- 20-25 pontos: Necessidade crítica e urgente
+- 15-19 pontos: Necessidade clara e quantificada
+- 10-14 pontos: Necessidade percebida mas não urgente
+- 0-9 pontos: Necessidade questionável
+
+<strong>TIMELINE (25 pontos máximo):</strong>
+- 20-25 pontos: Cronograma definido até 3 meses
+- 15-19 pontos: Decisão prevista até 6 meses
+- 10-14 pontos: Timeline vago até 12 meses
+- 0-9 pontos: Sem urgência definida
+
+<strong>CLASSIFICAÇÃO FINAL:</strong>
+- 80-100 pontos: Oportunidade QUENTE (prioridade alta)
+- 60-79 pontos: Oportunidade MORNA (acompanhar)
+- 40-59 pontos: Oportunidade FRIA (nurturing)
+- 0-39 pontos: Oportunidade DESCARTADA
+
+<span class="section-divider">═══ ORIENTAÇÕES PRÁTICAS ═══</span>
+
+<strong>COMO APLICAR:</strong>
+- Integre perguntas naturalmente na conversa
+- Não faça como questionário formal
+- Use informações obtidas para próximas perguntas
+- Adapte baseado nas respostas recebidas
+
+<strong>SINAIS DE ALERTA:</strong>
+- Respostas vagas ou evasivas
+- Falta de urgência real
+- Processo decisório confuso
+- Orçamento muito abaixo do necessário
+
+<strong>PRÓXIMOS PASSOS POR CLASSIFICAÇÃO:</strong>
+- QUENTE: Proposta formal imediata
+- MORNA: Reunião com decisores
+- FRIA: Nurturing e educação
+- DESCARTADA: Encerrar ou revisitar em 6 meses
+
+Adapte todas as perguntas ao contexto brasileiro, considerando cultura empresarial e sensibilidades locais sobre discussão de orçamento e autoridade.</div>
+                
+                <button class="copy-button" onclick="copyPrompt()">📋 Copiar Prompt Completo</button>
+            </div>
+
+            <div class="usage-tips">
+                <h2 class="tips-title">
+                    <span class="tips-icon">💡</span>
+                    Dicas para Qualificação BANT Eficaz
+                </h2>
+                <div class="tips-grid">
+                    <div class="tip-card">
+                        <div class="tip-title">Seja Sutil com Orçamento</div>
+                        <div class="tip-text">No Brasil, perguntas diretas sobre orçamento podem causar desconforto. Use abordagens indiretas e foque no valor primeiro.</div>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-title">Mapeie a Autoridade Real</div>
+                        <div class="tip-text">O título nem sempre indica autoridade real. Descubra quem realmente influencia e decide no processo.</div>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-title">Valide Necessidade Real</div>
+                        <div class="tip-text">Diferencie entre "seria legal ter" e "precisamos urgentemente". Foque em dores que causam impacto real.</div>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-title">Teste o Timeline</div>
+                        <div class="tip-text">Cronogramas vagos indicam baixa prioridade. Descubra fatores externos que podem acelerar a decisão.</div>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-title">Use a Pontuação como Guia</div>
+                        <div class="tip-text">O sistema de pontos ajuda a priorizar esforços, mas considere sempre o contexto específico de cada oportunidade.</div>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-title">Requalifique Regularmente</div>
+                        <div class="tip-text">BANT não é estático. Situações mudam, então requalifique oportunidades periodicamente.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function copyPrompt() {
+            const promptText = document.querySelector('.prompt-text').textContent;
+            navigator.clipboard.writeText(promptText).then(function() {
+                const button = document.querySelector('.copy-button');
+                const originalText = button.textContent;
+                button.textContent = '✅ Prompt Copiado!';
+                button.style.background = 'linear-gradient(135deg, #27ae60 0%, #2ecc71 100%)';
+                
+                setTimeout(function() {
+                    button.textContent = originalText;
+                    button.style.background = 'linear-gradient(135deg, #f44336 0%, #c62828 100%)';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

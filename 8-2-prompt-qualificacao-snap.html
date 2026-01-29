@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt para Qualificação SNAP</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ff5722 0%, #ff8a65 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff8a65 0%, #ff5722 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .header .description {
+            font-size: 1rem;
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .intro-section {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #f44336;
+        }
+
+        .intro-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #c62828;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .intro-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+
+        .intro-text {
+            color: #424242;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .methodology-section {
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-left: 5px solid #9c27b0;
+            text-align: center;
+        }
+
+        .methodology-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #4a148c;
+            margin-bottom: 15px;
+        }
+
+        .methodology-description {
+            color: #6c757d;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .snap-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .category-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            border-left: 4px solid;
+            transition: transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .category-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .category-card.situation { border-left-color: #2196f3; }
+        .category-card.needs { border-left-color: #4caf50; }
+        .category-card.access { border-left-color: #ff9800; }
+        .category-card.priority { border-left-color: #f44336; }
+
+        .category-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .category-icon.situation { color: #2196f3; }
+        .category-icon.needs { color: #4caf50; }
+        .category-icon.access { color: #ff9800; }
+        .category-icon.priority { color: #f44336; }
+
+        .category-name {
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .category-description {
+            font-size: 0.9rem;
+            color: #6c757d;
+            line-height: 1.5;
+        }
+
+        .instructions-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #6f42c1;
+        }
+
+        .instructions-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #4a148c;
+            margin-bottom: 20px;
+        }
+
+        .instruction-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border-left: 3px solid #6f42c1;
+        }
+
+        .instruction-step {
+            font-weight: 600;
+            color: #4a148c;
+            margin-bottom: 8px;
+        }
+
+        .instruction-detail {
+            color: #495057;
+            font-size: 0.95rem;
+        }
+
+        .prompt-container {
+            background: #2c3e50;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .prompt-header {
+            background: linear-gradient(135deg, #ff5722 0%, #ff8a65 100%);
+            color: white;
+            padding: 20px;
+            margin: -30px -30px 30px -30px;
+            text-align: center;
+        }
+
+        .prompt-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .prompt-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .prompt-text {
+            background: #34495e;
+            color: #ecf0f1;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            line-height: 1.8;
+            padding: 25px;
+            border-radius: 10px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-x: auto;
+            border: 2px solid #ff5722;
+        }
+
+        .variable-highlight {
+            background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .section-divider {
+            color: #ff8a65;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin: 20px 0 15px 0;
+        }
+
+        .copy-button {
+            background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 20px auto;
+            box-shadow: 0 5px 15px rgba(33, 150, 243, 0.3);
+        }
+
+        .copy-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(33, 150, 243, 0.4);
+        }
+
+        .usage-tips {
+            background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c8 100%);
+            border-radius: 15px;
+            padding: 30px;
+            border-left: 5px solid #4caf50;
+        }
+
+        .tips-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #2e7d32;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .tips-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .tip-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 3px solid #4caf50;
+        }
+
+        .tip-title {
+            font-weight: 600;
+            color: #2e7d32;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .tip-text {
+            color: #424242;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .container { margin: 10px; }
+            .header { padding: 30px 20px; }
+            .content { padding: 25px 20px; }
+            .header h1 { font-size: 2.2rem; }
+            .prompt-text { font-size: 0.9rem; }
+            .snap-categories { grid-template-columns: 1fr; }
+            .tips-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚡ Qualificação SNAP</h1>
+            <div class="subtitle">Prompt para Inteligência Artificial</div>
+            <div class="description">Ferramenta para criar roteiros de qualificação SNAP focados em clientes ocupados e decisores ágeis</div>
+        </div>
+
+        <div class="content">
+            <div class="intro-section">
+                <h2 class="intro-title">
+                    <span class="intro-icon">🎯</span>
+                    Objetivo do Prompt
+                </h2>
+                <div class="intro-text">
+                    Este prompt foi desenvolvido para gerar roteiros personalizados de qualificação SNAP (Situation, Needs, Access, Priority) especialmente adaptados para executivos ocupados e ambientes de alta pressão. Ele orienta a IA a criar abordagens rápidas e eficazes que respeitam o tempo limitado dos decisores modernos.
+                </div>
+            </div>
+
+            <div class="methodology-section">
+                <div class="methodology-title">⚡ Metodologia SNAP</div>
+                <div class="methodology-description">
+                    Framework de qualificação criado por Jill Konrath, focado em decisores ocupados que precisam de abordagens rápidas, relevantes e de alto valor. Enfatiza velocidade, simplicidade e relevância imediata.
+                </div>
+            </div>
+
+            <div class="snap-categories">
+                <div class="category-card situation">
+                    <div class="category-icon situation">📊</div>
+                    <div class="category-name">SITUATION</div>
+                    <div class="category-description">Situação atual e contexto específico do cliente</div>
+                </div>
+                <div class="category-card needs">
+                    <div class="category-icon needs">🎯</div>
+                    <div class="category-name">NEEDS</div>
+                    <div class="category-description">Necessidades reais e gaps identificados</div>
+                </div>
+                <div class="category-card access">
+                    <div class="category-icon access">🚪</div>
+                    <div class="category-name">ACCESS</div>
+                    <div class="category-description">Acesso aos decisores e stakeholders chave</div>
+                </div>
+                <div class="category-card priority">
+                    <div class="category-icon priority">🔥</div>
+                    <div class="category-name">PRIORITY</div>
+                    <div class="category-description">Prioridade e urgência para tomar ação</div>
+                </div>
+            </div>
+
+            <div class="instructions-section">
+                <h2 class="instructions-title">📋 Como Usar Este Prompt</h2>
+                
+                <div class="instruction-item">
+                    <div class="instruction-step">1. Foque em Executivos Ocupados</div>
+                    <div class="instruction-detail">Este método é ideal para C-level, diretores e gerentes seniores com agenda limitada.</div>
+                </div>
+                
+                <div class="instruction-item">
+                    <div class="instruction-step">2. Personalize o Contexto</div>
+                    <div class="instruction-detail">Detalhe setor, desafios específicos e pressões atuais do mercado/cliente.</div>
+                </div>
+                
+                <div class="instruction-item">
+                    <div class="instruction-step">3. Execute com Agilidade</div>
+                    <div class="instruction-detail">Use no ChatGPT, Claude ou sua IA preferida para gerar abordagens rápidas.</div>
+                </div>
+                
+                <div class="instruction-item">
+                    <div class="instruction-step">4. Aplique com Velocidade</div>
+                    <div class="instruction-detail">SNAP é sobre eficiência - seja direto, relevante e demonstre valor rapidamente.</div>
+                </div>
+                
+                <div class="instruction-item">
+                    <div class="instruction-step">5. Avalie Prioridade Real</div>
+                    <div class="instruction-detail">Foque em determinar se há urgência genuína e disposição para agir.</div>
+                </div>
+            </div>
+
+            <div class="prompt-container">
+                <div class="prompt-header">
+                    <div class="prompt-title">🤖 Prompt Completo</div>
+                    <div class="prompt-subtitle">Copie, personalize e use na sua IA</div>
+                </div>
+                
+                <div class="prompt-text">Atue como especialista em metodologia SNAP Selling e qualificação rápida de executivos ocupados no Brasil, com expertise em abordagens de alto valor para decisores seniores e mais de 12 anos de experiência em vendas para C-level.
+
+Crie um roteiro de qualificação SNAP (Situation, Needs, Access, Priority) otimizado para executivos ocupados:
+
+<span class="section-divider">═══ CONTEXTO DO DECISOR ═══</span>
+
+<strong>PERFIL DO EXECUTIVO:</strong>
+- Cargo/Nível: <span class="variable-highlight">[C-level, VP, Diretor, Gerente Senior]</span>
+- Setor da empresa: <span class="variable-highlight">[indústria específica]</span>
+- Porte da empresa: <span class="variable-highlight">[startup, PME, multinacional]</span>
+- Pressões atuais: <span class="variable-highlight">[crescimento, redução custos, digital, compliance]</span>
+- Estilo de comunicação: <span class="variable-highlight">[analítico, direto, visual, colaborativo]</span>
+
+<strong>SOLUÇÃO OFERECIDA:</strong>
+- Produto/Serviço: <span class="variable-highlight">[descrição concisa da solução]</span>
+- Valor principal: <span class="variable-highlight">[benefício #1 mais relevante]</span>
+- Diferencial competitivo: <span class="variable-highlight">[vantagem única]</span>
+- ROI típico: <span class="variable-highlight">[retorno esperado ou tempo de payback]</span>
+- Implementação: <span class="variable-highlight">[complexidade e tempo necessário]</span>
+
+<strong>CONTEXTO DA ABORDAGEM:</strong>
+- Tempo disponível: <span class="variable-highlight">[15 min call, 30 min reunião, email]</span>
+- Como chegou ao contato: <span class="variable-highlight">[referência, LinkedIn, evento, cold]</span>
+- Informações prévias: <span class="variable-highlight">[o que você já sabe sobre a empresa]</span>
+- Momento do mercado: <span class="variable-highlight">[tendências que afetam o setor]</span>
+
+<span class="section-divider">═══ ROTEIRO SNAP SOLICITADO ═══</span>
+
+Desenvolva um roteiro ágil e eficaz estruturado em:
+
+<strong>1. SITUATION (SITUAÇÃO) - 2-3 minutos</strong>
+
+Crie 3-4 perguntas concisas para rapidamente entender:
+- Situação atual da empresa/departamento
+- Principais iniciativas em andamento
+- Desafios mais urgentes do momento
+- Contexto competitivo ou de mercado
+
+Para cada pergunta, forneça:
+- Pergunta direta e focada (máximo 15 palavras)
+- Por que esta informação é crítica
+- Como usar a resposta para próxima pergunta
+- Sinais de que há oportunidade real
+
+<strong>2. NEEDS (NECESSIDADES) - 3-4 minutos</strong>
+
+Desenvolva 3-4 perguntas estratégicas para identificar:
+- Gaps entre situação atual e objetivos
+- Problemas que impedem crescimento/eficiência
+- Frustrações com soluções atuais
+- Impacto de não resolver os problemas
+
+Para cada pergunta, inclua:
+- Como conectar com pressões do executivo
+- Perguntas de aprofundamento (1-2 por tópico)
+- Como quantificar o impacto rapidamente
+- Sinais de necessidade genuína vs "nice to have"
+
+<strong>3. ACCESS (ACESSO) - 1-2 minutos</strong>
+
+Crie 2-3 perguntas diplomáticas para mapear:
+- Processo de decisão e aprovação
+- Outros stakeholders envolvidos
+- Critérios de avaliação utilizados
+- Timeline de avaliação e decisão
+
+Para cada pergunta, estruture:
+- Abordagem respeitosa para não ofender
+- Como identificar influenciadores reais
+- Estratégias para conseguir acesso a outros
+- Sinais de que tem influência real
+
+<strong>4. PRIORITY (PRIORIDADE) - 2-3 minutos</strong>
+
+Desenvolva 3-4 perguntas para avaliar:
+- Nível de prioridade desta solução
+- Urgência real vs declarada
+- Consequências de adiar decisão
+- Fatores que aceleram/atrasam ação
+
+Para cada pergunta, forneça:
+- Como descobrir prioridade genuína
+- Perguntas para testar comprometimento
+- Sinais de urgência real
+- Como criar urgência apropriada
+
+<span class="section-divider">═══ ADAPTAÇÕES PARA EXECUTIVOS ═══</span>
+
+<strong>LINGUAGEM EXECUTIVA:</strong>
+- Use terminologia de negócios (ROI, EBITDA, market share)
+- Foque em impactos estratégicos, não operacionais
+- Conecte com objetivos de crescimento/competitividade
+- Evite jargões técnicos desnecessários
+
+<strong>ABORDAGEM RESPEITOSA:</strong>
+- Demonstre conhecimento do setor/empresa
+- Seja direto mas não agressivo
+- Respeite limitações de tempo
+- Ofereça valor mesmo se não houver venda
+
+<strong>FOCO EM RESULTADOS:</strong>
+- Quantifique benefícios rapidamente
+- Use benchmarks do setor
+- Mencione cases de empresas similares
+- Conecte com objetivos pessoais do executivo
+
+<span class="section-divider">═══ SISTEMA DE QUALIFICAÇÃO RÁPIDA ═══</span>
+
+Crie critérios de avaliação onde cada dimensão recebe nota 1-5:
+
+<strong>SITUATION (Peso 20%):</strong>
+- 5: Situação crítica que demanda ação imediata
+- 4: Desafios claros com impacto significativo
+- 3: Problemas percebidos mas não críticos
+- 2: Situação estável com melhorias desejadas
+- 1: Nenhum problema ou desafio identificado
+
+<strong>NEEDS (Peso 30%):</strong>
+- 5: Necessidade crítica e quantificada
+- 4: Necessidade clara com impacto definido
+- 3: Necessidade percebida mas não urgente
+- 2: Desejo de melhoria sem necessidade clara
+- 1: Nenhuma necessidade real identificada
+
+<strong>ACCESS (Peso 25%):</strong>
+- 5: Decisor final ou forte influência confirmada
+- 4: Acesso direto ao processo decisório
+- 3: Influenciador com acesso limitado
+- 2: Contato sem influência significativa
+- 1: Impossibilidade de acessar decisores
+
+<strong>PRIORITY (Peso 25%):</strong>
+- 5: Máxima prioridade com cronograma definido
+- 4: Alta prioridade com urgência clara
+- 3: Prioridade média no radar da empresa
+- 2: Baixa prioridade ou timing incerto
+- 1: Não é prioridade atual
+
+<strong>AÇÕES POR PONTUAÇÃO TOTAL:</strong>
+- 18-20 pontos: Oportunidade PREMIUM (foco total)
+- 14-17 pontos: Oportunidade QUALIFICADA (investir tempo)
+- 10-13 pontos: Oportunidade POTENCIAL (nurturing)
+- 6-9 pontos: Oportunidade FRACA (baixa prioridade)
+- 0-5 pontos: DESCARTAR ou revisitar em 6-12 meses
+
+Adapte todo o conteúdo para a realidade brasileira, considerando hierarquias organizacionais e protocolos de relacionamento executivo típicos no país.</div>
+                
+                <button class="copy-button" onclick="copyPrompt()">📋 Copiar Prompt Completo</button>
+            </div>
+
+            <div class="usage-tips">
+                <h2 class="tips-title">
+                    <span class="tips-icon">💡</span>
+                    Dicas para SNAP com Executivos
+                </h2>
+                <div class="tips-grid">
+                    <div class="tip-card">
+                        <div class="tip-title">Seja Direto e Relevante</div>
+                        <div class="tip-text">Executivos valorizam tempo. Vá direto ao ponto e demonstre relevância nos primeiros 30 segundos.</div>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-title">Prepare-se Intensivamente</div>
+                        <div class="tip-text">Pesquise a empresa, setor e pressões atuais. Executivos notam quando você não fez o dever de casa.</div>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-title">Foque em Impacto Estratégico</div>
+                        <div class="tip-text">Conecte sua solução com objetivos de crescimento, competitividade ou redução de riscos estratégicos.</div>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-title">Use Linguagem de Negócios</div>
+                        <div class="tip-text">Fale em termos de ROI, market share, vantagem competitiva e impactos no resultado final.</div>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-title">Teste a Prioridade Real</div>
+                        <div class="tip-text">Executivos podem dizer que algo é prioridade por educação. Teste com perguntas sobre cronograma e recursos.</div>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-title">Respeite o Protocolo</div>
+                        <div class="tip-text">No Brasil, hierarquia importa. Seja respeitoso mas assertivo, e entenda a dinâmica organizacional.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function copyPrompt() {
+            const promptText = document.querySelector('.prompt-text').textContent;
+            navigator.clipboard.writeText(promptText).then(function() {
+                const button = document.querySelector('.copy-button');
+                const originalText = button.textContent;
+                button.textContent = '✅ Prompt Copiado!';
+                button.style.background = 'linear-gradient(135deg, #27ae60 0%, #2ecc71 100%)';
+                
+                setTimeout(function() {
+                    button.textContent = originalText;
+                    button.style.background = 'linear-gradient(135deg, #2196f3 0%, #1976d2 100%)';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
+            
